@@ -1,111 +1,235 @@
--- LocalScript в StarterPlayerScripts
+local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 
-local Players = game:GetService("Players")
-local UserInputService = game:GetService("UserInputService")
-local RunService = game:GetService("RunService")
+local Window = Rayfield:CreateWindow({
+   Name = "e",
+   LoadingTitle = "e",
+   LoadingSubtitle = "e", 
+})
 
-local player = Players.LocalPlayer
-local mouse = player:GetMouse()
+local Tab = Window:CreateTab("Player", 7992557358) -- Title, Image
 
--- Создаем интерфейс
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "SpeedButtonGui"
-screenGui.Parent = player.PlayerGui
+local Section = Tab:CreateSection("Settings")
 
--- Создаем кнопку
-local button = Instance.new("TextButton")
-button.Name = "SpeedButton"
-button.Size = UDim2.new(0, 100, 0, 50)
-button.Position = UDim2.new(0, 50, 0, 50)
-button.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
-button.TextColor3 = Color3.fromRGB(255, 255, 255)
-button.Text = "Ускориться"
-button.TextScaled = true
-button.Parent = screenGui
+local Slider = Tab:CreateSlider({
+   Name = "Speed",
+   Range = {0, 500},
+   Increment = 1,
+   Suffix = "Studs",
+   CurrentValue = 16,
+   Flag = "Slider1",
+   Callback = function(Value)
+   if Value == 69 then
+	   print("ВАААА шесдесят девят посхалко")
+   else
+      print(Value)
 
--- Переменные для перетаскивания
-local isDragging = false
-local dragStartPosition
-local buttonStartPosition
+	  end
+      
+      local character = game.Players.LocalPlayer.Character
+      if character and character:FindFirstChild("Humanoid") then
+          character.Humanoid.WalkSpeed = Value
+		  
+      end
+   end,
+})
 
--- Переменная для отслеживания состояния скорости
-local isSpeedBoosted = false
-local originalWalkSpeed
+local Slider = Tab:CreateSlider({
+   Name = "JumpPower",
+   Range = {0, 500},
+   Increment = 1,
+   Suffix = "Studs",
+   CurrentValue = 50,
+   Flag = "Slider1",
+   Callback = function(Value)
+   if Value == 69 then
+	   print("ВАААА шесдесят девят посхалко")
+   else
+      print(Value)
 
--- Функция для получения текущей скорости персонажа
-local function getCurrentWalkSpeed()
-    local character = player.Character or player.CharacterAdded:Wait()
-    local humanoid = character:FindFirstChildOfClass("Humanoid")
-    return humanoid and humanoid.WalkSpeed or 16
-end
+	  end
+      
+      local character = game.Players.LocalPlayer.Character
+      if character and character:FindFirstChild("Humanoid") then
+          character.Humanoid.JumpPower = Value
+		  
+      end
+   end,
+})
 
--- Функция для установки скорости
-local function setWalkSpeed(speed)
-    local character = player.Character
-    if character then
-        local humanoid = character:FindFirstChildOfClass("Humanoid")
-        if humanoid then
-            humanoid.WalkSpeed = speed
+local Slider = Tab:CreateSlider({
+   Name = "Gravity",
+   Range = {0, 500},
+   Increment = 1,
+   Suffix = " ",
+   CurrentValue = 196,
+   Flag = "Slider1",
+   Callback = function(Value)
+   if Value == 69 then
+	   print("ВАААА шесдесят девят посхалко")
+   else
+      print(Value)
+
+	  end
+	  
+	  game.Workspace.Gravity = Value
+
+   end,
+})
+
+local Slider = Tab:CreateSlider({
+   Name = "FOV",
+   Range = {30, 120},
+   Increment = 1,
+   Suffix = " ",
+   CurrentValue = 70,
+   Flag = "Slider1",
+   Callback = function(Value)
+   if Value == 69 then
+	   print("ВАААА шесдесят девят посхалко")
+   else
+      print(Value)
+
+	  end
+	  
+	  game.Workspace.Camera.FieldOfView = Value
+
+   end,
+})
+
+local Toggle = Tab:CreateToggle({
+   Name = "Noclip",
+   CurrentValue = false,
+   Callback = function(Value)
+   game.workspace.geroi345678.Character.Torso.CanCollide = Value
+   game.workspace.geroi345678.Head.CanCollide = Value
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Sit",
+   Callback = function()
+game.Players.LocalPlayer.Character.Humanoid.Sit = true
+
+	Rayfield:Notify({
+   Title = "Sit",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+   end,
+})  
+
+local Button = Tab:CreateButton({
+   Name = "Reset",
+   Callback = function()
+game.Players.LocalPlayer.Character.Humanoid.Health = 0
+
+	Rayfield:Notify({
+   Title = "Reset",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+   end,
+})  
+
+local Tab = Window:CreateTab("FTAP", 4483362458) -- Title, Image
+
+local Section = Tab:CreateSection("Settings")
+
+local Button = Tab:CreateButton({
+   Name = "Disable Barrier Collisions",
+   Callback = function()
+	local group = game.Workspace.Plots.Plot1:FindFirstChild("Barrier")
+if group then
+    for _, part in ipairs(group:GetChildren()) do
+        if part.Name == "PlotBarrier" and part:IsA("Part") then
+            part.CanCollide = false
         end
     end
 end
-
--- Обработчик нажатия на кнопку (для переключения скорости)
-button.MouseButton1Click:Connect(function()
-    local character = player.Character
-    if character then
-        local humanoid = character:FindFirstChildOfClass("Humanoid")
-        if humanoid then
-            if not isSpeedBoosted then
-                -- Сохраняем оригинальную скорость и увеличиваем в 2 раза
-                originalWalkSpeed = humanoid.WalkSpeed
-                humanoid.WalkSpeed = originalWalkSpeed * 2
-                isSpeedBoosted = true
-                button.Text = "Обычная\nскорость"
-                button.BackgroundColor3 = Color3.fromRGB(255, 100, 0)
-            else
-                -- Возвращаем обычную скорость
-                humanoid.WalkSpeed = originalWalkSpeed
-                isSpeedBoosted = false
-                button.Text = "Ускориться"
-                button.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
-            end
+	local group = game.Workspace.Plots.Plot2:FindFirstChild("Barrier")
+if group then
+    for _, part in ipairs(group:GetChildren()) do
+        if part.Name == "PlotBarrier" and part:IsA("Part") then
+            part.CanCollide = false
         end
     end
-end)
-
--- Обработчики для перетаскивания кнопки
-button.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        isDragging = true
-        dragStartPosition = Vector2.new(input.Position.X, input.Position.Y)
-        buttonStartPosition = button.Position
+end
+	local group = game.Workspace.Plots.Plot3:FindFirstChild("Barrier")
+if group then
+    for _, part in ipairs(group:GetChildren()) do
+        if part.Name == "PlotBarrier" and part:IsA("Part") then
+            part.CanCollide = false
+        end
     end
-end)
-
-button.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        isDragging = false
+end
+	local group = game.Workspace.Plots.Plot4:FindFirstChild("Barrier")
+if group then
+    for _, part in ipairs(group:GetChildren()) do
+        if part.Name == "PlotBarrier" and part:IsA("Part") then
+            part.CanCollide = false
+        end
     end
-end)
-
-UserInputService.InputChanged:Connect(function(input)
-    if isDragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-        local delta = Vector2.new(input.Position.X, input.Position.Y) - dragStartPosition
-        button.Position = UDim2.new(
-            buttonStartPosition.X.Scale, 
-            buttonStartPosition.X.Offset + delta.X,
-            buttonStartPosition.Y.Scale, 
-            buttonStartPosition.Y.Offset + delta.Y
-        )
+end
+	local group = game.Workspace.Plots.Plot5:FindFirstChild("Barrier")
+if group then
+    for _, part in ipairs(group:GetChildren()) do
+        if part.Name == "PlotBarrier" and part:IsA("Part") then
+            part.CanCollide = false
+        end
     end
-end)
+end
+	print("Done!")
 
--- Обработчик для сброса скорости при смерти персонажа
-player.CharacterAdded:Connect(function(character)
-    character:WaitForChild("Humanoid").Died:Connect(function()
-        isSpeedBoosted = false
-        button.Text = "Ускориться"
-        button.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
-    end)
-end)
+	Rayfield:Notify({
+   Title = "Disable Barrier Collisions",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+   end,
+}) 
+
+local Toggle = Tab:CreateToggle({
+   Name = "WaterWalk",
+   CurrentValue = false,
+   Callback = function(Value)
+   	local group = game.Workspace.Map.AlwaysHereTweenedObjects.Ocean.Object:FindFirstChild("ObjectModel")
+if group then
+    for _, part in ipairs(group:GetChildren()) do
+        if part.Name == "Ocean" and part:IsA("Part") then
+            part.CanCollide = Value
+        end
+    end
+end
+	print("Done!")
+
+		Rayfield:Notify({
+   Title = "WaterWalk",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Remove Map Sounds",
+   Callback = function()
+   game.Workspace.Map.MapNoises:Destroy()
+	print("Done!")
+
+	Rayfield:Notify({
+   Title = "Remove Map Sounds",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
