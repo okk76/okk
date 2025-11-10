@@ -279,6 +279,23 @@ end,
 })
 
 local Button = Tab:CreateButton({
+   Name = "SystemBroken",
+   Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/H20CalibreYT/SystemBroken/main/script"))()
+   
+	print("Done!")
+
+	Rayfield:Notify({
+   Title = "SystemBroken",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
+
+local Button = Tab:CreateButton({
    Name = "Dex",
    Callback = function()
    loadstring(game:HttpGet("https://raw.githubusercontent.com/DarkNetworks/Infinite-Yield/refs/heads/main/dex.lua"))()
