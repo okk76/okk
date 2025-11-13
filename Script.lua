@@ -241,14 +241,34 @@ end
 end,
 })
 
+local Slider = Tab:CreateSlider({
+   Name = "Map Sounds",
+   Range = {0, 1},
+   Increment = 0.01,
+   Suffix = "Volume",
+   CurrentValue = 0.02,
+   Callback = function(Value)
+    game.Workspace.Map.MapNoises.NoisePart1.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart2.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart3.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart4.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart5.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart6.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart7.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart8.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart9.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart10.Sound1.Volume = Value
+   end,
+})
+
 local Button = Tab:CreateButton({
-   Name = "Remove Map Sounds",
+   Name = "Remove Clouds",
    Callback = function()
-   game.Workspace.Map.MapNoises:Destroy()
+   game.Workspace.Terrain.Clouds:Destroy()
 	print("Done!")
 
 	Rayfield:Notify({
-   Title = "Remove Map Sounds",
+   Title = "Remove Clouds",
    Content = "Done",
    Duration = 3,
    Image = 4483362458,
@@ -280,186 +300,23 @@ local Toggle = Tab:CreateButton({
    end,
 })
 
-local Section = Tab:CreateSection("Map Themes")
-
-local Button = Tab:CreateButton({
-   Name = "Default",
-   Callback = function()
-	local group = game.Workspace.Map:FindFirstChild("BaseGround")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "Grass" and part:IsA("Part") then
-            part.BrickColor = BrickColor.new("Moss")
-        end
-    end
-end
-
-local group = game.Workspace.Map:FindFirstChild("BaseGround")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "WasteGrass" and part:IsA("Part") then
-			part.BrickColor = BrickColor.new("Mulberry")
-        end
-    end
-end
-
-local group = game.Workspace.Map:FindFirstChild("Hole")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "WasteGrass" and part:IsA("Part") then
-			part.BrickColor = BrickColor.new("Mulberry")
-        end
-    end
-end
-
-local group = game.Workspace.Map:FindFirstChild("BaseGround")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "Sand" and part:IsA("Part") then
-			part.BrickColor = BrickColor.new("Wheat")
-        end
-    end
-end
-
-local group = game.Workspace.Map:FindFirstChild("BaseGround")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "Rock" and part:IsA("Part") then
-			part.BrickColor = BrickColor.new("Medium stone grey")
-        end
-    end
-end
-
-local group = game.Workspace.Map.CaveMountain:FindFirstChild("Mountain2rocks.1")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "Rock" and part:IsA("Part") then
-			part.BrickColor = BrickColor.new("Medium stone grey")
-        end
-    end
-end
-
-local group = game.Workspace.Map.CaveMountain:FindFirstChild("Mountain2rocks.2")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "Rock" and part:IsA("Part") then
-			part.BrickColor = BrickColor.new("Medium stone grey")
-        end
-    end
-end
-
-local group = game.Workspace.Map.CaveMountain:FindFirstChild("Mountain2rocks.3")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "Rock" and part:IsA("Part") then
-			part.BrickColor = BrickColor.new("Medium stone grey")
-        end
-    end
-end
-
-local group = game.Workspace.Map.CaveMountain:FindFirstChild("Mountain2rocks.4")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "Rock" and part:IsA("Part") then
-			part.BrickColor = BrickColor.new("Medium stone grey")
-        end
-    end
-end
-
-local group = game.Workspace.Map.CaveMountain:FindFirstChild("Mountain2rocks.5")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "Rock" and part:IsA("Part") then
-			part.BrickColor = BrickColor.new("Medium stone grey")
-        end
-    end
-end
-
-local group = game.Workspace.Map:FindFirstChild("BaseGround")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "LushGrass" and part:IsA("Part") then
-			part.BrickColor = BrickColor.new("Parsley green")
-        end
-    end
-end
-
-local group = game.Workspace.Map.BarnHillArea:FindFirstChild("Mountain3Grass")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "LushGrass" and part:IsA("Part") then
-			part.BrickColor = BrickColor.new("Parsley green")
-        end
-    end
-end
-
-local group = game.Workspace.Map.BarnHillArea:FindFirstChild("Mountain3Grass")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "Rock" and part:IsA("Part") then
-			part.BrickColor = BrickColor.new("Medium stone grey")
-        end
-    end
-end
-
-local group = game.Workspace.Map.BarnHillArea:FindFirstChild("Mountain3rocks.1")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "Rock" and part:IsA("Part") then
-			part.BrickColor = BrickColor.new("Medium stone grey")
-        end
-    end
-end
-
-local group = game.Workspace.Map.BarnHillArea:FindFirstChild("Mountain3rocks.2")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "Rock" and part:IsA("Part") then
-			part.BrickColor = BrickColor.new("Medium stone grey")
-        end
-    end
-end
-
-local group = game.Workspace.Map.BarnHillArea:FindFirstChild("Mountain3Wall")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "Rock" and part:IsA("Part") then
-			part.BrickColor = BrickColor.new("Medium stone grey")
-        end
-    end
-end
-
-local group = game.Workspace.Map.BarnHillArea:FindFirstChild("Mountain3Wall")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "Dirt" and part:IsA("Part") then
-			part.BrickColor = BrickColor.new("Linen")
-        end
-    end
-end
-
-local group = game.Workspace.Map:FindFirstChild("MountainSnowTop")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "Snow" and part:IsA("Part") then
-			part.BrickColor = BrickColor.new("Instutitutional white")
-        end
-    end
-end
-
-
-	print("Done!")
-
-	Rayfield:Notify({
-   Title = "Defalut Theme",
-   Content = "Done",
-   Duration = 3,
-   Image = 4483362458,
+local Slider = Tab:CreateSlider({
+   Name = "Line Sounds",
+   Range = {0, 1},
+   Increment = 0.01,
+   Suffix = "Volume",
+   CurrentValue = 0.05,
+   Callback = function(Value)
+   	local newgrab = game.ReplicatedFirst.GrabParts.GrabPart.AttachSound
+	local oldgrab = game.ReplicatedFirst.GrabParts.GrabPart.AttachSound1
+	local newhold = game.ReplicatedFirst.GrabParts.GrabPart.BeamSound
+	local oldhold = game.ReplicatedFirst.GrabParts.GrabPart.BeamSound1
+	newgrab.Volume = Value
+    oldgrab.Volume = VAlue
+	newhold.Volume = Value
+    oldhold.Volume = Value
+   end,
 })
-
-end,
-})
-
 
 
 local Tab = Window:CreateTab("Other Scripts", 4483362458)
