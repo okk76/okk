@@ -277,63 +277,6 @@ local Button = Tab:CreateButton({
 end,
 })
 
-local Button = Tab:CreateButton({
-   Name = "Move Spawn",
-   Callback = function()
-			local spawn = game.Workspace.SpawnLocation
-		spawn.CanCollide = true	
-   spawn.Transparency = 0.7
-spawn.Position = Vector3.new(0, 50, 0)
-
-Rayfield:Notify({
-   Title = "Move Spawn",
-   Content = "Done",
-   Duration = 3,
-   Image = 4483362458,
-})
-			
-end,
-})
-
-local Slider = Tab:CreateSlider({
-   Name = "X",
-   Range = {-1000, 1000},
-   Increment = 0.1,
-   Suffix = "Studs",
-   CurrentValue = 0,
-local spawn = game.Workspace.SpawnLocation
-		if spawn then
-spawn.Position = Vector3.new(Value, spawn.Position.Y, spawn.Position.Z)
-	end
-end,
-})
-
-local Slider = Tab:CreateSlider({
-   Name = "Y",
-   Range = {-1000, 1000},
-   Increment = 0.1,
-   Suffix = "Studs",
-   CurrentValue = 0,
-local spawn = game.Workspace.SpawnLocation
-	if spawn then
-spawn.Position = Vector3.new(spawn.Position.X, Value, spawn.Position.Z)
-	end
-end,
-})
-
-local Slider = Tab:CreateSlider({
-   Name = "X",
-   Range = {-1000, 1000},
-   Increment = 0.1,
-   Suffix = "Studs",
-   CurrentValue = 0,
-local spawn = game.Workspace.SpawnLocation
-if sapwn then
-spawn.Position = Vector3.new(spawn.Position.X, spawn.Position.Y, Value)
-    end
-end,
-})
-
 local Toggle = Tab:CreateButton({
    Name = "Shuffle Line Sounds",
    Callback = function(Value)
@@ -373,6 +316,60 @@ local Slider = Tab:CreateSlider({
 	newhold.Volume = Value
     oldhold.Volume = Value
    end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Move Spawn",
+   Callback = function()
+			local spawn = game.Workspace.SpawnLocation
+		spawn.CanCollide = true	
+   spawn.Transparency = 0.7
+spawn.Position = Vector3.new(0, 50, 0)
+
+Rayfield:Notify({
+   Title = "Move Spawn",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+			
+end,
+})
+
+local Slider = Tab:CreateSlider({
+   Name = "X",
+   Range = {-1000, 1000},
+   Increment = 0.1,
+   Suffix = "Studs",
+   CurrentValue = 0,
+   Callback = function(Value)
+   local S = game.Workspace.SpawnLocation
+S.Position = Vector3.new(Value, S.Position.Y, S.Position.Z)
+end,
+})
+
+local Slider = Tab:CreateSlider({
+   Name = "Y",
+   Range = {-1000, 1000},
+   Increment = 0.1,
+   Suffix = "Studs",
+   CurrentValue = 0,
+   Callback = function(Value)
+    local S = game.Workspace.SpawnLocation
+S.Position = Vector3.new(S.Position.X, Value, S.Position.Z)
+end,
+})
+
+local Slider = Tab:CreateSlider({
+   Name = "Z",
+   Range = {-1000, 1000},
+   Increment = 0.1,
+   Suffix = "Studs",
+   CurrentValue = 0,
+   Callback = function(Value)
+   local S = game.Workspace.SpawnLocation
+S.Position = Vector3.new(S.Position.X, S.Position.Y, Value)
+end,
 })
 
 
