@@ -3,7 +3,7 @@ local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 local Window = Rayfield:CreateWindow({
    Name = "Script",
    LoadingTitle = "Script",
-   LoadingSubtitle = "", 
+   LoadingSubtitle = "Script", 
 })
 
 local Tab = Window:CreateTab("Player", 7992557358)
@@ -272,14 +272,31 @@ local Button = Tab:CreateButton({
    Content = "Done",
    Duration = 3,
    Image = 4483362458,
+}) QQ
+
+end,
 })
 
+local Button = Tab:CreateButton({
+   Name = "Move Spawn",
+   Callback = function()
+		game.Workspace.Spawn.CanCollide = true	
+   game.Workspace.Spawn.Transperency = 0.7
+game.Workspace.Spawn.Vector3.new (0,50,0)
+
+Rayfield:Notify({
+   Title = "Move Spawn",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+			
 end,
 })
 
 local Toggle = Tab:CreateButton({
    Name = "Shuffle Line Sounds",
-   Callback = function(Value)
+   Callback = function(Value)qapppppppppp00000000pppp
 	local newgrab = game.ReplicatedFirst.GrabParts.GrabPart.AttachSound
 	local oldgrab = game.ReplicatedFirst.GrabParts.GrabPart.AttachSound1
 	local newhold = game.ReplicatedFirst.GrabParts.GrabPart.BeamSound
