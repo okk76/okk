@@ -241,26 +241,6 @@ end
 end,
 })
 
-local Slider = Tab:CreateSlider({
-   Name = "Map Sounds",
-   Range = {0, 1},
-   Increment = 0.01,
-   Suffix = "Volume",
-   CurrentValue = 0.02,
-   Callback = function(Value)
-    game.Workspace.Map.MapNoises.NoisePart1.Sound1.Volume = Value
-	game.Workspace.Map.MapNoises.NoisePart2.Sound1.Volume = Value
-	game.Workspace.Map.MapNoises.NoisePart3.Sound1.Volume = Value
-	game.Workspace.Map.MapNoises.NoisePart4.Sound1.Volume = Value
-	game.Workspace.Map.MapNoises.NoisePart5.Sound1.Volume = Value
-	game.Workspace.Map.MapNoises.NoisePart6.Sound1.Volume = Value
-	game.Workspace.Map.MapNoises.NoisePart7.Sound1.Volume = Value
-	game.Workspace.Map.MapNoises.NoisePart8.Sound1.Volume = Value
-	game.Workspace.Map.MapNoises.NoisePart9.Sound1.Volume = Value
-	game.Workspace.Map.MapNoises.NoisePart10.Sound1.Volume = Value
-   end,
-})
-
 local Button = Tab:CreateButton({
    Name = "Remove Clouds",
    Callback = function()
@@ -318,6 +298,38 @@ local Slider = Tab:CreateSlider({
    end,
 })
 
+local Slider = Tab:CreateSlider({
+   Name = "Map Sounds",
+   Range = {0, 1},
+   Increment = 0.01,
+   Suffix = "Volume",
+   CurrentValue = 0.02,
+   Callback = function(Value)
+    game.Workspace.Map.MapNoises.NoisePart1.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart2.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart3.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart4.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart5.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart6.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart7.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart8.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart9.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart10.Sound1.Volume = Value
+   end,
+})
+
+local Slider = Tab:CreateSlider({
+   Name = "Scream Sounds",
+   Range = {0, 1},
+   Increment = 0.01,
+   Suffix = "Volume",
+   CurrentValue = 0.3,
+   Callback = function(Value)
+
+   end,
+})
+
+
 local Button = Tab:CreateButton({
    Name = "Move Spawn",
    Callback = function()
@@ -372,6 +384,27 @@ S.Position = Vector3.new(S.Position.X, S.Position.Y, Value)
 end,
 })
 
+local Section = Tab:CreateSection("Teleport")
+
+local Button = Tab:CreateButton({
+   Name = "Spawn",
+   Callback = function()
+   local c = game.Players.LocalPlayer.Character
+   local v = game.Players.LocalPlayer.Character.Humanoid
+   v.Sit = true
+   c.HumanoidRootPart.Position = Vector3.new(0, 25, 0)
+   c.Head.Position = Vector3.new(0, 25, 0)
+   c.Torso.Position = Vector3.new(0, 25, 0)
+   v.Sit = false
+	Rayfield:Notify({
+   Title = "Tp To Spawn",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
 
 local Tab = Window:CreateTab("Other Scripts", 4483362458)
 
