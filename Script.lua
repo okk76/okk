@@ -272,7 +272,7 @@ local Button = Tab:CreateButton({
    Content = "Done",
    Duration = 3,
    Image = 4483362458,
-}) QQ
+})
 
 end,
 })
