@@ -459,3 +459,152 @@ local Button = Tab:CreateButton({
 
 end,
 })
+
+local Section = Tab:CreateSection("FTAP Scripts")
+
+local Button = Tab:CreateButton({
+   Name = "Posral",
+   Callback = function()
+   loadstring(game:HttpGet('https://raw.githubusercontent.com/Brovaky/Friendly/refs/heads/main/Friendly'))()
+	print("Done!")
+
+	Rayfield:Notify({
+   Title = "Posral",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "TheChosenOne",
+   Callback = function()
+   loadstring(game:HttpGet("https://rawscripts.net/raw/Fling-Things-and-People-The-chosen-one-ftap-script-55069"))()
+	print("Done!")
+
+	Rayfield:Notify({
+   Title = "TheChosenOne",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Tokra",
+   Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/sladostrastnik/TokraScript/refs/heads/main/Loader.luau"))()
+	print("Done!")
+
+	Rayfield:Notify({
+   Title = "Tokra",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Cosmic Hub",
+   Callback = function()
+   getgenv().gethui = function() return game.CoreGui end
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/Jeffepicy/CosmicHub/refs/heads/main/CosmicHub",true))()
+	print("Done!")
+
+	Rayfield:Notify({
+   Title = "Cosmic Hub",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Verbal Hub",
+   Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/VerbalHubz/Verbal-Hub/refs/heads/main/Verbal%20Hub%20V3",true))()
+	print("Done!")
+
+	Rayfield:Notify({
+   Title = "Verbal Hub",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Poop Hub",
+   Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/ilovepoop0653/PoopHUB/refs/heads/main/IlovePoop"))()
+	print("Done!")
+
+	Rayfield:Notify({
+   Title = "Poop",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "BlizT Hub",
+   Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/BlizTBr/scripts/refs/heads/main/FTAP.lua"))()
+	print("Done!")
+
+	Rayfield:Notify({
+   Title = "BlizT Hub",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
+
+
+
+local Button = Tab:CreateButton({
+   Name = "SRV9",
+   Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/Oxwoey/Main/refs/heads/main/ScriptHub/srv9FREE"))()
+	print("Done!")
+
+	Rayfield:Notify({
+   Title = "SRV9",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "RuHub",
+   Callback = function()
+   local Main = game:HttpGet("https://gitlab.com/cooldawghaha/gitlabswitch/-/raw/main/MainBranch?ref_type=heads")
+	print("Done!")
+
+	Rayfield:Notify({
+   Title = "RuHub",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
