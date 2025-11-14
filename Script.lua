@@ -295,6 +295,42 @@ Rayfield:Notify({
 end,
 })
 
+local Slider = Tab:CreateSlider({
+   Name = "X",
+   Range = {-1000, 1000},
+   Increment = 0.1,
+   Suffix = "Studs",
+   CurrentValue = 0,
+local spawn = game.Workspace.SpawnLocation
+spawn.Position = Vector3.new(Value, spawn.Position.Y, spawn.Position.Z)
+
+end,
+})
+
+local Slider = Tab:CreateSlider({
+   Name = "Y",
+   Range = {-1000, 1000},
+   Increment = 0.1,
+   Suffix = "Studs",
+   CurrentValue = 0,
+local spawn = game.Workspace.SpawnLocation
+spawn.Position = Vector3.new(spawn.Position.X, Value, spawn.Position.Z)
+
+end,
+})
+
+local Slider = Tab:CreateSlider({
+   Name = "X",
+   Range = {-1000, 1000},
+   Increment = 0.1,
+   Suffix = "Studs",
+   CurrentValue = 0,
+local spawn = game.Workspace.SpawnLocation
+spawn.Position = Vector3.new(spawn.Position.X, spawn.Position.Y, Value)
+
+end,
+})
+
 local Toggle = Tab:CreateButton({
    Name = "Shuffle Line Sounds",
    Callback = function(Value)
