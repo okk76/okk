@@ -280,11 +280,10 @@ end,
 local Button = Tab:CreateButton({
    Name = "Move Spawn",
    Callback = function()
-local Workspace = game:GetService("Workspace")
 			local spawn = game.Workspace.Spawn
 		spawn.CanCollide = true	
    spawn.Transperency = 0.7
-spawn.Position = spawn.Position  + Vector3.new (0, 50, 0)
+spawn.Position = Vector3.new(0, 50, 0)
 
 Rayfield:Notify({
    Title = "Move Spawn",
