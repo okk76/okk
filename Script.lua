@@ -302,8 +302,9 @@ local Slider = Tab:CreateSlider({
    Suffix = "Studs",
    CurrentValue = 0,
 local spawn = game.Workspace.SpawnLocation
+		if spawn then
 spawn.Position = Vector3.new(Value, spawn.Position.Y, spawn.Position.Z)
-
+	end
 end,
 })
 
@@ -314,8 +315,9 @@ local Slider = Tab:CreateSlider({
    Suffix = "Studs",
    CurrentValue = 0,
 local spawn = game.Workspace.SpawnLocation
+	if spawn then
 spawn.Position = Vector3.new(spawn.Position.X, Value, spawn.Position.Z)
-
+	end
 end,
 })
 
@@ -326,8 +328,9 @@ local Slider = Tab:CreateSlider({
    Suffix = "Studs",
    CurrentValue = 0,
 local spawn = game.Workspace.SpawnLocation
+if sapwn then
 spawn.Position = Vector3.new(spawn.Position.X, spawn.Position.Y, Value)
-
+    end
 end,
 })
 
