@@ -298,7 +298,7 @@ end,
 
 local Toggle = Tab:CreateButton({
    Name = "Shuffle Line Sounds",
-   Callback = function(Value)qapppppppppp00000000pppp
+   Callback = function(Value)
 	local newgrab = game.ReplicatedFirst.GrabParts.GrabPart.AttachSound
 	local oldgrab = game.ReplicatedFirst.GrabParts.GrabPart.AttachSound1
 	local newhold = game.ReplicatedFirst.GrabParts.GrabPart.BeamSound
