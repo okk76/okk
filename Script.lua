@@ -6,38 +6,31 @@ local Window = Rayfield:CreateWindow({
    LoadingSubtitle = "Script", 
 })
 
-local Tab = Window:CreateTab("Player", 7992557358)
+local Tab = Window:CreateTab("Player", 10747373176)
 
 local Section = Tab:CreateSection("Settings")
 
 local Slider = Tab:CreateSlider({
-   Name = "Speed",
+   Name = "WalkSpeed",
    Range = {0, 500},
    Increment = 1,
    Suffix = "Studs",
    CurrentValue = 16,
-   Flag = "Slider1",
    Callback = function(Value)
-   if Value == 69 then
-	   print("ВАААА шесдесят девят посхалко")
-   else
-      print(Value)
-
-	  end
-      
       local character = game.Players.LocalPlayer.Character
       if character and character:FindFirstChild("Humanoid") then
           character.Humanoid.WalkSpeed = Value
-		  
       end
+	  local lp = game.Players.LocalPlayer
+   lp.Character.BobbingAndCrouch.Disabled = true
    end,
 })
 
-local Toggle = Tab:CreateToggle({
-   Name = "Disable Crouch",
-   CurrentValue = false,
+local Toggle = Tab:CreateButton({
+   Name = "Revert Crouch",
    Callback = function(Value)
-   game.Players.LocalPlayer.Character.BobbingAndCrouch.Disable = Value
+   local lp = game.Players.LocalPlayer
+   lp.Character.BobbingAndCrouch.Enabled = true
    end,
 })
 
@@ -47,15 +40,7 @@ local Slider = Tab:CreateSlider({
    Increment = 1,
    Suffix = "Studs",
    CurrentValue = 50,
-   Flag = "Slider1",
    Callback = function(Value)
-   if Value == 69 then
-	   print("ВАААА шесдесят девят посхалко")
-   else
-      print(Value)
-
-	  end
-      
       local character = game.Players.LocalPlayer.Character
       if character and character:FindFirstChild("Humanoid") then
           character.Humanoid.JumpPower = Value
@@ -70,15 +55,7 @@ local Slider = Tab:CreateSlider({
    Increment = 1,
    Suffix = " ",
    CurrentValue = 196,
-   Flag = "Slider1",
    Callback = function(Value)
-   if Value == 69 then
-	   print("ВАААА шесдесят девят посхалко")
-   else
-      print(Value)
-
-	  end
-	  
 	  game.Workspace.Gravity = Value
 
    end,
@@ -90,15 +67,7 @@ local Slider = Tab:CreateSlider({
    Increment = 1,
    Suffix = " ",
    CurrentValue = 70,
-   Flag = "Slider1",
    Callback = function(Value)
-   if Value == 69 then
-	   print("ВАААА шесдесят девят посхалко")
-   else
-      print(Value)
-
-	  end
-	  
 	  game.Workspace.Camera.FieldOfView = Value
 
    end,
@@ -108,8 +77,14 @@ local Toggle = Tab:CreateToggle({
    Name = "Noclip",
    CurrentValue = false,
    Callback = function(Value)
-   game.workspace.LocalPlayer.Character.Torso.CanCollide = Value
-   game.workspace.LocalPlayerHead.CanCollide = Value
+   local e = game.Players.LocalPlayer.Character
+   if Value == true then
+   e.Torso.CanCollide = false
+   e.Head.CanCollide = false
+   else
+   e.Torso.CanCollide = true
+   e.Head.CanCollide = true
+	end
    end,
 })
 
@@ -142,6 +117,65 @@ game.Players.LocalPlayer.Character.Humanoid.Health = 0
 
    end,
 })  
+
+local Tab = Window:CreateTab("Blobman", 10709782230)
+
+local Section = Tab:CreateSection("Settings")
+
+local Button = Tab:CreateSlider({
+	Name = "HitBox Size",
+   Range = {1, 150},
+   Increment = 1,
+   Suffix = "Studs",
+   CurrentValue = 1,
+   Callback = function(Value)
+   local lp = game.Players.LocalPlayer
+   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   toy.CreatureBlobman.LeftDetector.Size = Vector3.new(Value, Value, Value)
+   toy.CreatureBlobman.RightDetector.Size = Vector3.new(Value, Value, Value)
+
+   end,
+})
+
+local Button = Tab:CreateSlider({
+	Name = "Blobman WalkSpeed",
+   Range = {1, 250},
+   Increment = 1,
+   Suffix = "Studs",
+   CurrentValue = 20,
+   Callback = function(Value)
+   local lp = game.Players.LocalPlayer
+   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   toy.CreatureBlobman.HumanoidCreature.WalkSpeed = Value
+
+   end,
+})
+
+local Button = Tab:CreateSlider({
+	Name = "Blobman JumpPower",
+   Range = {1, 250},
+   Increment = 1,
+   Suffix = "Studs",
+   CurrentValue = 50,
+   Callback = function(Value)
+   local lp = game.Players.LocalPlayer
+   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   toy.CreatureBlobman.HumanoidCreature.JumpPower = Value
+
+   end,
+})
+
+local Keybind = Tab:CreateKeybind({
+   Name = "Keybind Example",
+   CurrentKeybind = "C",
+   HoldToInteract = false,
+   Callback = function(Keybind)
+   local lp = game.Players.LocalPlayer
+   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   toy.CreatureBlobman.HumanoidCreature.Jump = true
+   
+   end,
+})
 
 local Tab = Window:CreateTab("FTAP", 4483362458)
 
@@ -414,9 +448,7 @@ local Button = Tab:CreateButton({
    Name = "Spawn",
    Callback = function()
    local spawn = game.Workspace.SpawnLocation
-   game.Players.LocalPlayer.Character.HumanoidRootPart.Position = spawn.Position + Vector3.new(0, 5, 0)
-   game.Players.LocalPlayer.Character.Head.Position = spawn.Position + Vector3.new(0, 5, 0)
-   game.Players.LocalPlayer.Character.Torso.Position = spawn.Position + Vector3.new(0, 5, 0)
+   game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 5, 0)
 	Rayfield:Notify({
    Title = "Tp To Spawn",
    Content = "Done",
@@ -427,7 +459,112 @@ local Button = Tab:CreateButton({
 end,
 })
 
-local Tab = Window:CreateTab("Other Scripts", 4483362458)
+local Button = Tab:CreateButton({
+   Name = "Wicth House",
+   Callback = function()
+   local spawn = game.Workspace.SpawnLocation
+   game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(250, 1, 460)
+	Rayfield:Notify({
+   Title = "Tp To Witch House",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Green House",
+   Callback = function()
+   local spawn = game.Workspace.SpawnLocation
+   game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-535, 5, 90)
+	Rayfield:Notify({
+   Title = "Tp To Green House",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Pink House",
+   Callback = function()
+   local spawn = game.Workspace.SpawnLocation
+   game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-492, 5, -167)
+	Rayfield:Notify({
+   Title = "Tp To Pink House",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Blue House",
+   Callback = function()
+   local spawn = game.Workspace.SpawnLocation
+   game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(512, 85, -340)
+	Rayfield:Notify({
+   Title = "Tp To Blue House",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Chense House",
+   Callback = function()
+   local spawn = game.Workspace.SpawnLocation
+   game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(553, 125, -75)
+	Rayfield:Notify({
+   Title = "Tp To Chense House",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Barn",
+   Callback = function()
+   local spawn = game.Workspace.SpawnLocation
+   game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-195, 65, -285)
+	Rayfield:Notify({
+   Title = "Tp To Barn",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Mountain House",
+   Callback = function()
+   local spawn = game.Workspace.SpawnLocation
+   game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-282, 80, 313)
+	Rayfield:Notify({
+   Title = "Tp To Moiuntain House",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
+
+local Tab = Window:CreateTab("Other Scripts", 10734943448)
 
 local Section = Tab:CreateSection("Scripts")
 
