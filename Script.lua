@@ -629,3 +629,19 @@ local Button = Tab:CreateButton({
 
 end,
 })
+
+local Button = Tab:CreateButton({
+   Name = "Venom X",
+   Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/lololofffff/Venom-X/refs/heads/main/FTAP"))()
+	print("Done!")
+
+	Rayfield:Notify({
+   Title = "Venom X",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
