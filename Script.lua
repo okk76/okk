@@ -33,6 +33,14 @@ local Slider = Tab:CreateSlider({
    end,
 })
 
+local Toggle = Tab:CreateToggle({
+   Name = "Disable Crouch",
+   CurrentValue = false,
+   Callback = function(Value)
+   game.Players.LocalPlayer.Character.BobbingAndCrouch.Disable = Value
+   end,
+})
+
 local Slider = Tab:CreateSlider({
    Name = "JumpPower",
    Range = {0, 500},
@@ -186,6 +194,22 @@ end
 
 	Rayfield:Notify({
    Title = "Disable Barrier Collisions",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Unlock Third Person",
+   Callback = function()
+   game.Players.LocalPlayer.CameraMaxZoomDistance = 100000
+   game.Players.LocalPlayer.CameraMode = Enum.CameraMode.Classic
+
+	Rayfield:Notify({
+   Title = "Unlock Third Person",
    Content = "Done",
    Duration = 3,
    Image = 4483362458,
@@ -389,13 +413,10 @@ local Section = Tab:CreateSection("Teleport")
 local Button = Tab:CreateButton({
    Name = "Spawn",
    Callback = function()
-   local c = game.Players.LocalPlayer.Character
-   local v = game.Players.LocalPlayer.Character.Humanoid
-   v.Sit = true
-   c.HumanoidRootPart.Position = Vector3.new(0, 25, 0)
-   c.Head.Position = Vector3.new(0, 25, 0)
-   c.Torso.Position = Vector3.new(0, 25, 0)
-   v.Sit = false
+   local spawn = game.Workspace.SpawnLocation
+   game.Players.LocalPlayer.Character.HumanoidRootPart.Position = spawn.Position + Vector3.new(0, 5, 0)
+   game.Players.LocalPlayer.Character.Head.Position = spawn.Position + Vector3.new(0, 5, 0)
+   game.Players.LocalPlayer.Character.Torso.Position = spawn.Position + Vector3.new(0, 5, 0)
 	Rayfield:Notify({
    Title = "Tp To Spawn",
    Content = "Done",
