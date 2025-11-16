@@ -166,7 +166,7 @@ local Button = Tab:CreateSlider({
 })
 
 local Keybind = Tab:CreateKeybind({
-   Name = "Keybind Example",
+   Name = "BlobmanJump",
    CurrentKeybind = "C",
    HoldToInteract = false,
    Callback = function(Keybind)
@@ -175,6 +175,31 @@ local Keybind = Tab:CreateKeybind({
    toy.CreatureBlobman.HumanoidCreature.Jump = true
    
    end,
+})
+
+local Button = Tab:CreateKeybind({
+   Name = "Kick",
+   CurrentKeybind = "Q",
+   HoldToInteract = false,
+   Callback = function(Keybind)
+   local lp = game.Players.LocalPlayer
+   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   game.Workspace.Food.SpawningPlatform.CFrame = CFrame.new(335, 15, 391)
+   game.Workspace.Food.SpawningPlatform.Transparency = 0
+   game.Workspace.Food.SpawningPlatform.CanCollide = true
+   game.Workspace.Ladders.SpawningPlatform.CFrame = CFrame.new(324, 7, 338)
+   game.Workspace.Ladders.SpawningPlatform.Orientation = Vector3.new (90, 0, 0) 
+   game.Workspace.Ladders.SpawningPlatform.Transparency = 0.5
+   game.Workspace.Ladders.SpawningPlatform.CanCollide = true
+   toy.CreatureBlobman.HumanoidRootPart.CFrame = CFrame.new(335, 17, 391)
+	Rayfield:Notify({
+   Title = "Kick",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
 })
 
 local Tab = Window:CreateTab("FTAP", 4483362458)
