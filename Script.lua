@@ -469,9 +469,11 @@ end,
 
 local Section = Tab:CreateSection("Teleport")
 
-local Button = Tab:CreateButton({
+local Button = Tab:CreateKeybind({
    Name = "Spawn",
-   Callback = function()
+   CurrentKeybind = "One",
+   HoldToInteract = false,
+   Callback = function(Keybind)
    local spawn = game.Workspace.SpawnLocation
    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 5, 0)
 	Rayfield:Notify({
@@ -484,10 +486,11 @@ local Button = Tab:CreateButton({
 end,
 })
 
-local Button = Tab:CreateButton({
+local Button = Tab:CreateKeybind({
    Name = "Wicth House",
-   Callback = function()
-   local spawn = game.Workspace.SpawnLocation
+   CurrentKeybind = "Four",
+   HoldToInteract = false,
+   Callback = function(Keybind)
    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(250, 1, 460)
 	Rayfield:Notify({
    Title = "Tp To Witch House",
@@ -499,10 +502,11 @@ local Button = Tab:CreateButton({
 end,
 })
 
-local Button = Tab:CreateButton({
+local Button = Tab:CreateKeybind({
    Name = "Green House",
-   Callback = function()
-   local spawn = game.Workspace.SpawnLocation
+   CurrentKeybind = "Three",
+   HoldToInteract = false,
+   Callback = function(Keybind)
    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-535, 5, 90)
 	Rayfield:Notify({
    Title = "Tp To Green House",
@@ -514,10 +518,11 @@ local Button = Tab:CreateButton({
 end,
 })
 
-local Button = Tab:CreateButton({
+local Button = Tab:CreateKeybind({
    Name = "Pink House",
-   Callback = function()
-   local spawn = game.Workspace.SpawnLocation
+   CurrentKeybind = "Two",
+   HoldToInteract = false,
+   Callback = function(Keybind)
    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-492, 5, -167)
 	Rayfield:Notify({
    Title = "Tp To Pink House",
@@ -529,10 +534,11 @@ local Button = Tab:CreateButton({
 end,
 })
 
-local Button = Tab:CreateButton({
+local Button = Tab:CreateKeybind({
    Name = "Blue House",
-   Callback = function()
-   local spawn = game.Workspace.SpawnLocation
+   CurrentKeybind = "Five",
+   HoldToInteract = false,
+   Callback = function(Keybind)
    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(512, 85, -340)
 	Rayfield:Notify({
    Title = "Tp To Blue House",
@@ -544,10 +550,11 @@ local Button = Tab:CreateButton({
 end,
 })
 
-local Button = Tab:CreateButton({
+local Button = Tab:CreateKeybind({
    Name = "Chense House",
-   Callback = function()
-   local spawn = game.Workspace.SpawnLocation
+   CurrentKeybind = "Six",
+   HoldToInteract = false,
+   Callback = function(Keybind)
    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(553, 125, -75)
 	Rayfield:Notify({
    Title = "Tp To Chense House",
@@ -559,10 +566,11 @@ local Button = Tab:CreateButton({
 end,
 })
 
-local Button = Tab:CreateButton({
+local Button = Tab:CreateKeybind({
    Name = "Barn",
-   Callback = function()
-   local spawn = game.Workspace.SpawnLocation
+   CurrentKeybind = "Seven",
+   HoldToInteract = false,
+   Callback = function(Keybind)
    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-195, 65, -285)
 	Rayfield:Notify({
    Title = "Tp To Barn",
@@ -574,10 +582,11 @@ local Button = Tab:CreateButton({
 end,
 })
 
-local Button = Tab:CreateButton({
+local Button = Tab:CreateKeybind({
    Name = "Mountain House",
-   Callback = function()
-   local spawn = game.Workspace.SpawnLocation
+   CurrentKeybind = "Eight",
+   HoldToInteract = false,
+   Callback = function(Keybind)
    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-282, 80, 313)
 	Rayfield:Notify({
    Title = "Tp To Moiuntain House",
