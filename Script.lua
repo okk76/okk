@@ -153,7 +153,7 @@ local Button = Tab:CreateSlider({
 
 local Button = Tab:CreateSlider({
 	Name = "Blobman JumpPower",
-   Range = {1, 250},
+   Range = {0, 250},
    Increment = 1,
    Suffix = "Studs",
    CurrentValue = 50,
@@ -161,6 +161,20 @@ local Button = Tab:CreateSlider({
    local lp = game.Players.LocalPlayer
    local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
    toy.CreatureBlobman.HumanoidCreature.JumpPower = Value
+
+   end,
+})
+
+local Button = Tab:CreateSlider({
+	Name = "Blobman HipHeight",
+   Range = {0, 50},
+   Increment = 1,
+   Suffix = "Studs",
+   CurrentValue = 50,
+   Callback = function(Value)
+   local lp = game.Players.LocalPlayer
+   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   toy.CreatureBlobman.HumanoidCreature.HipHeight = Value
 
    end,
 })
@@ -174,6 +188,22 @@ local Keybind = Tab:CreateKeybind({
    local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
    toy.CreatureBlobman.HumanoidCreature.Jump = true
    
+   end,
+})
+
+local Toggle = Tab:CreateToggle({
+   Name = "TP To Spawn Grab",
+   CurrentValue = false,
+   Callback = function(Value)
+   local lp = game.Players.LocalPlayer
+   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   if Value == true then
+   toy.CreatureBlobman.LeftDetector.LeftWeld.Mode = 0
+   toy.CreatureBlobman.RightDetector.RightWeld.Mode = 0
+   else
+   toy.CreatureBlobman.LeftDetector.LeftWeld.Mode = 1
+   toy.CreatureBlobman.RightDetector.RightWeld.Mode = 1
+	end
    end,
 })
 
@@ -200,6 +230,17 @@ local Button = Tab:CreateKeybind({
 })
 
 end,
+})
+
+local Toggle = Tab:CreateKeybind({
+   Name = "Delete Blobman",
+   CurrentKeybind = "X",
+   HoldToInteract = false,
+   Callback = function(Value)
+   local lp = game.Players.LocalPlayer
+   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   toy.CreatureBlobman:Destroy()
+   end,
 })
 
 local Tab = Window:CreateTab("FTAP", 4483362458)
