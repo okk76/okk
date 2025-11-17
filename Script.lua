@@ -639,6 +639,22 @@ local Button = Tab:CreateKeybind({
 end,
 })
 
+local Button = Tab:CreateKeybind({
+   Name = "Isnalnd",
+   CurrentKeybind = "Nine",
+   HoldToInteract = false,
+   Callback = function(Keybind)
+   game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(67, 350, 335)
+	Rayfield:Notify({
+   Title = "Tp To Island",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
+
 local Tab = Window:CreateTab("Other Scripts", 10734943448)
 
 local Section = Tab:CreateSection("Scripts")
