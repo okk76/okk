@@ -640,7 +640,7 @@ end,
 })
 
 local Button = Tab:CreateKeybind({
-   Name = "Isnalnd",
+   Name = "Island",
    CurrentKeybind = "Nine",
    HoldToInteract = false,
    Callback = function(Keybind)
