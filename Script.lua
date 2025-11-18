@@ -23,13 +23,6 @@ local Slider = Tab:CreateSlider({
       end
 	  local lp = game.Players.LocalPlayer
    lp.Character.BobbingAndCrouch.Disabled = true
-   end,
-})
-
-local Toggle = Tab:CreateButton({
-   Name = "Revert Crouch",
-   Callback = function(Value)
-   local lp = game.Players.LocalPlayer
    lp.Character.BobbingAndCrouch.Enabled = true
    end,
 })
@@ -511,6 +504,16 @@ end,
 local Section = Tab:CreateSection("Teleport")
 
 local Button = Tab:CreateKeybind({
+   Name = "TP To Mouse",
+   CurrentKeybind = "Z",
+   HoldToInteract = false,
+   Callback = function(Keybind)
+   local m = game.Players.LocalPlayer:GetMouse()
+   game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = m.Hit.Position + CFrame.new(0, 3, 0)
+end,
+})
+
+local Button = Tab:CreateKeybind({
    Name = "Spawn",
    CurrentKeybind = "One",
    HoldToInteract = false,
@@ -639,21 +642,7 @@ local Button = Tab:CreateKeybind({
 end,
 })
 
-local Button = Tab:CreateKeybind({
-   Name = "Island",
-   CurrentKeybind = "Nine",
-   HoldToInteract = false,
-   Callback = function(Keybind)
-   game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(67, 350, 335)
-	Rayfield:Notify({
-   Title = "Tp To Island",
-   Content = "Done",
-   Duration = 3,
-   Image = 4483362458,
-})
 
-end,
-})
 
 local Tab = Window:CreateTab("Other Scripts", 10734943448)
 
