@@ -520,6 +520,7 @@ local Button = Tab:CreateKeybind({
    Callback = function(Keybind)
    local spawn = game.Workspace.SpawnLocation
    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 5, 0)
+   game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, 1, 0)
 	Rayfield:Notify({
    Title = "Tp To Spawn",
    Content = "Done",
@@ -536,6 +537,7 @@ local Button = Tab:CreateKeybind({
    HoldToInteract = false,
    Callback = function(Keybind)
    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(250, 1, 460)
+   game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, 1, 0)
 	Rayfield:Notify({
    Title = "Tp To Witch House",
    Content = "Done",
@@ -552,6 +554,7 @@ local Button = Tab:CreateKeybind({
    HoldToInteract = false,
    Callback = function(Keybind)
    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-535, 5, 90)
+   game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, 1, 0)
 	Rayfield:Notify({
    Title = "Tp To Green House",
    Content = "Done",
@@ -568,6 +571,7 @@ local Button = Tab:CreateKeybind({
    HoldToInteract = false,
    Callback = function(Keybind)
    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-492, 5, -167)
+   game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, 1, 0)
 	Rayfield:Notify({
    Title = "Tp To Pink House",
    Content = "Done",
@@ -584,6 +588,7 @@ local Button = Tab:CreateKeybind({
    HoldToInteract = false,
    Callback = function(Keybind)
    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(512, 85, -340)
+   game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, 1, 0)
 	Rayfield:Notify({
    Title = "Tp To Blue House",
    Content = "Done",
@@ -600,6 +605,7 @@ local Button = Tab:CreateKeybind({
    HoldToInteract = false,
    Callback = function(Keybind)
    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(553, 125, -75)
+   game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, 1, 0)
 	Rayfield:Notify({
    Title = "Tp To Chense House",
    Content = "Done",
@@ -616,6 +622,7 @@ local Button = Tab:CreateKeybind({
    HoldToInteract = false,
    Callback = function(Keybind)
    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-195, 65, -285)
+   game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, 1, 0)
 	Rayfield:Notify({
    Title = "Tp To Barn",
    Content = "Done",
@@ -632,8 +639,26 @@ local Button = Tab:CreateKeybind({
    HoldToInteract = false,
    Callback = function(Keybind)
    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-282, 80, 313)
+   game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, 1, 0)
 	Rayfield:Notify({
    Title = "Tp To Moiuntain House",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
+
+local Button = Tab:CreateKeybind({
+   Name = "Island",
+   CurrentKeybind = "Nine",
+   HoldToInteract = false,
+   Callback = function(Keybind)
+   game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(72, 348, 341)
+   game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, 1, 0)
+	Rayfield:Notify({
+   Title = "Tp To Island",
    Content = "Done",
    Duration = 3,
    Image = 4483362458,
