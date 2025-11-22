@@ -3,7 +3,10 @@ local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 local Window = Rayfield:CreateWindow({
    Name = "Script",
    LoadingTitle = "Script",
-   LoadingSubtitle = "Script", 
+   LoadingSubtitle = "Script",
+   Theme = "Amethyst",
+   ToggleUIKeybind = "X",
+   Icon = 10734943448,
 })
 
 local Tab = Window:CreateTab("Player", 10747373176)
@@ -295,21 +298,25 @@ end
    end,
 })
 
-local Button = Tab:CreateButton({
-   Name = "Unlock Third Person",
-   Callback = function()
-   game.Players.LocalPlayer.CameraMaxZoomDistance = 100000
-   game.Players.LocalPlayer.CameraMode = Enum.CameraMode.Classic
+local Toggle = Tab:CreateToggle({
+   Name = "Disable Blur",
+   CurrentValue = false,
+   Callback = function(Value)
+   local B = game.workspace.Camera.Blur
+   if Value == true then
+   B.Enabled = false
+   else
+   B.Enabled = true
+	end
 
 	Rayfield:Notify({
-   Title = "Unlock Third Person",
+   Title = "Disable Blur",
    Content = "Done",
    Duration = 3,
    Image = 4483362458,
 })
-
    end,
-}) 
+})
 
 local Toggle = Tab:CreateToggle({
    Name = "WaterWalk",
@@ -374,6 +381,48 @@ local Button = Tab:CreateButton({
 end,
 })
 
+local Toggle = Tab:CreateToggle({
+   Name = "Revert Default Line Skin",
+   CurrentValue = false,
+   Callback = function(Value)
+   local p = game.Players.LocalPlayer.FartherReach
+   if Value == true then
+   p.Value = false
+
+   Rayfield:Notify({
+   Title = "Revert Default Line Skin",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+   else
+   p.Value = true
+	end
+   end,
+})
+
+local Toggle = Tab:CreateButton({
+   Name = "Get Gamepass Line Skin",
+   Callback = function()
+   local p = game.Players.LocalPlayer.FartherReach
+   if p then
+   return
+   else
+   local x = Instance.new("BoolValue")
+   x.Name = "FartherReach"
+   x.Parent = game.Players.LocalPlayer
+   x.Value = true
+   end
+
+   Rayfield:Notify({
+   Title = "Get Gamepass Line Skin",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+   end,
+})
+
 local Toggle = Tab:CreateButton({
    Name = "Shuffle Line Sounds",
    Callback = function(Value)
@@ -393,6 +442,28 @@ local Toggle = Tab:CreateButton({
    Duration = 3,
    Image = 4483362458,
 })
+
+   end,
+})
+
+local Toggle = Tab:CreateToggle({
+   Name = "Unlock Third Person",
+   CurrentValue = false,
+   Callback = function(Value)
+   local B = game.workspace.Camera.Blur
+   if Value == true then
+   game.Players.LocalPlayer.CameraMaxZoomDistance = 100000
+   game.Players.LocalPlayer.CameraMode = 0
+   	Rayfield:Notify({
+   Title = "Unlock Third Person",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+   else
+   game.Players.LocalPlayer.CameraMaxZoomDistance = 0.5
+   game.Players.LocalPlayer.CameraMode = 1
+	end
 
    end,
 })
@@ -508,9 +579,11 @@ local Toggle = Tab:CreateToggle({
 	local RunService = game:GetService("RunService")
         if enabled then
             autoStruggleCoroutine = RunService.Heartbeat:Connect(function()
-                local character = localPlayer.Character
+                local character = game.Players.LocalPlayer.Character
                 if character and character:FindFirstChild("Head") then
                     local head = character.Head
+					local CharacterEvents = ReplicatedStorage:WaitForChild("CharacterEvents")
+					local Struggle = CharacterEvents:WaitForChild("Struggle")
                     local partOwner = head:FindFirstChild("PartOwner")
                     if partOwner then
                         Struggle:FireServer()
@@ -520,7 +593,7 @@ local Toggle = Tab:CreateToggle({
                                 part.Anchored = true
                             end
                         end
-                        while localPlayer.IsHeld.Value do
+                        while LocalPlayer.IsHeld.Value do
                             wait()
                         end
                         for _, part in pairs(character:GetChildren()) do
