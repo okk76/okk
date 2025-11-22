@@ -405,9 +405,7 @@ local Toggle = Tab:CreateButton({
    Name = "Get Gamepass Line Skin",
    Callback = function()
    local p = game.Players.LocalPlayer.FartherReach
-   if p then
-   return
-   else
+   if not p then
    local x = Instance.new("BoolValue")
    x.Name = "FartherReach"
    x.Parent = game.Players.LocalPlayer
