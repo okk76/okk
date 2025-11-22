@@ -501,6 +501,45 @@ S.Position = Vector3.new(S.Position.X, S.Position.Y, Value)
 end,
 })
 
+local Toggle = Tab:CreateToggle({
+    Name = "Anti Grab",
+    CurrentValue = false,
+    Callback = function(enabled)
+	local RunService = game:GetService("RunService")
+        if enabled then
+            autoStruggleCoroutine = RunService.Heartbeat:Connect(function()
+                local character = localPlayer.Character
+                if character and character:FindFirstChild("Head") then
+                    local head = character.Head
+                    local partOwner = head:FindFirstChild("PartOwner")
+                    if partOwner then
+                        Struggle:FireServer()
+                        ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
+                        for _, part in pairs(character:GetChildren()) do
+                            if part:IsA("BasePart") then
+                                part.Anchored = true
+                            end
+                        end
+                        while localPlayer.IsHeld.Value do
+                            wait()
+                        end
+                        for _, part in pairs(character:GetChildren()) do
+                            if part:IsA("BasePart") then
+                                part.Anchored = false
+                            end
+                        end
+                    end
+                end
+            end)
+        else
+            if autoStruggleCoroutine then
+                autoStruggleCoroutine:Disconnect()
+                autoStruggleCoroutine = nil
+            end
+        end
+    end
+})
+
 local Section = Tab:CreateSection("Teleport")
 
 local Button = Tab:CreateKeybind({
@@ -809,7 +848,7 @@ end,
 local Button = Tab:CreateButton({
    Name = "Bloody",
    Callback = function()
-   loadstring(game:HttpGet("https://raw.githubusercontent.com/ilovepoop0653/PoopHUB/refs/heads/main/IlovePoop"))()
+   loadstring(game:HttpGet("https://pastefy.app/DZLhyq4n/raw",true))()
 	print("Done!")
 
 	Rayfield:Notify({
