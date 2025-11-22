@@ -405,13 +405,15 @@ local Toggle = Tab:CreateButton({
    Name = "Get Gamepass Line Skin",
    Callback = function()
    local l = game.Players.LocalPlayer
-   local p = l.FartherReach
-   if not p then
-   local x = Instance.new("BoolValue")
-   x.Name = "FartherReach"
-   x.Parent = game.Players.LocalPlayer
-   x.Value = true
-   end
+if l then
+    local p = l:FindFirstChild("FartherReach")
+    if not p then
+        local x = Instance.new("BoolValue")
+        x.Name = "FartherReach"
+        x.Parent = l
+        x.Value = true
+    end
+end
 
    Rayfield:Notify({
    Title = "Get Gamepass Line Skin",
