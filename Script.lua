@@ -114,6 +114,23 @@ game.Players.LocalPlayer.Character.Humanoid.Health = 0
    end,
 })  
 
+local Button = Tab:CreateButton({
+   Name = "ESP (loadstring)",
+   Callback = function()
+   game.Players.LocalPlayer.NameDisplayDistance = 0
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/Yahahahau/Ultimate-Esp-v1/refs/heads/main/Ultimate%20esp%20v1.lua"))()
+	print("Done!")
+
+	Rayfield:Notify({
+   Title = "ESP",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
+
 local Tab = Window:CreateTab("Blobman", 10709782230)
 
 local Section = Tab:CreateSection("Settings")
@@ -242,6 +259,22 @@ local Toggle = Tab:CreateKeybind({
 local Tab = Window:CreateTab("FTAP", 4483362458)
 
 local Section = Tab:CreateSection("Settings")
+
+local Toggle = Tab:CreateButton({
+   Name = "PLCD",
+   Callback = function(Value)
+	local pi = game.workspace
+	while true do
+    for _, part in ipairs(pi:GetChildren()) do
+        if part.Name == "PlayerCharacterLocationDetector" and part:IsA("Part") then
+            part.Transparency = 0.7
+			part.BrickColor = BrickColor.new("Hot pink")
+			wait(1)
+				end
+    		end
+		end
+	end,
+})
 
 local Button = Tab:CreateButton({
    Name = "Disable Barrier Collisions",
@@ -404,16 +437,13 @@ local Toggle = Tab:CreateToggle({
 local Toggle = Tab:CreateButton({
    Name = "Get Gamepass Line Skin",
    Callback = function()
-   local l = game.Players.LocalPlayer
-if l then
-    local p = l:FindFirstChild("FartherReach")
-    if not p then
-        local x = Instance.new("BoolValue")
-        x.Name = "FartherReach"
-        x.Parent = l
-        x.Value = true
-    end
-end
+   local p = game.Players.LocalPlayer.FartherReach
+   if not p then
+   local x = Instance.new("BoolValue")
+   x.Name = "FartherReach"
+   x.Parent = game.Players.LocalPlayer
+   x.Value = true
+   end
 
    Rayfield:Notify({
    Title = "Get Gamepass Line Skin",
@@ -451,7 +481,6 @@ local Toggle = Tab:CreateToggle({
    Name = "Unlock Third Person",
    CurrentValue = false,
    Callback = function(Value)
-   local B = game.workspace.Camera.Blur
    if Value == true then
    game.Players.LocalPlayer.CameraMaxZoomDistance = 100000
    game.Players.LocalPlayer.CameraMode = 0
@@ -464,6 +493,25 @@ local Toggle = Tab:CreateToggle({
    else
    game.Players.LocalPlayer.CameraMaxZoomDistance = 0.5
    game.Players.LocalPlayer.CameraMode = 1
+	end
+
+   end,
+})
+
+local Toggle = Tab:CreateToggle({
+   Name = "InvisCam Mode",
+   CurrentValue = false,
+   Callback = function(Value)
+   if Value == true then
+   game.Players.LocalPlayer.DevCameraOcclusionMode = 1
+   	Rayfield:Notify({
+   Title = "InvisCam Mode",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+   else
+   game.Players.LocalPlayer.DevCameraOcclusionMode = 0
 	end
 
    end,
@@ -514,7 +562,12 @@ local Slider = Tab:CreateSlider({
    Suffix = "Volume",
    CurrentValue = 0.3,
    Callback = function(Value)
-
+game.Players.PlayerAdded:Connect(function(pl)
+pl.CharacterAdded:Connect(function(c)
+local hrp = c:WaitForChild("HumanoidRootPart")
+	hrp.Scream.Volume = Value
+end)
+end)
    end,
 })
 
@@ -570,59 +623,6 @@ local Slider = Tab:CreateSlider({
    Callback = function(Value)
    local S = game.Workspace.SpawnLocation
 S.Position = Vector3.new(S.Position.X, S.Position.Y, Value)
-end,
-})
-
-local Toggle = Tab:CreateToggle({
-    Name = "Anti Grab",
-    CurrentValue = false,
-    Callback = function(enabled)
-	local RunService = game:GetService("RunService")
-        if enabled then
-            autoStruggleCoroutine = RunService.Heartbeat:Connect(function()
-                local character = game.Players.LocalPlayer.Character
-                if character and character:FindFirstChild("Head") then
-                    local head = character.Head
-					local CharacterEvents = ReplicatedStorage:WaitForChild("CharacterEvents")
-					local Struggle = CharacterEvents:WaitForChild("Struggle")
-                    local partOwner = head:FindFirstChild("PartOwner")
-                    if partOwner then
-                        Struggle:FireServer()
-                        ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
-                        for _, part in pairs(character:GetChildren()) do
-                            if part:IsA("BasePart") then
-                                part.Anchored = true
-                            end
-                        end
-                        while LocalPlayer.IsHeld.Value do
-                            wait()
-                        end
-                        for _, part in pairs(character:GetChildren()) do
-                            if part:IsA("BasePart") then
-                                part.Anchored = false
-                            end
-                        end
-                    end
-                end
-            end)
-        else
-            if autoStruggleCoroutine then
-                autoStruggleCoroutine:Disconnect()
-                autoStruggleCoroutine = nil
-            end
-        end
-    end
-})
-
-local Section = Tab:CreateSection("Teleport")
-
-local Button = Tab:CreateKeybind({
-   Name = "TP To Mouse",
-   CurrentKeybind = "Z",
-   HoldToInteract = false,
-   Callback = function(Keybind)
-   local m = game.Players.LocalPlayer:GetMouse()
-   game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = m.Hit.Position + CFrame.new(0, 3, 0)
 end,
 })
 
