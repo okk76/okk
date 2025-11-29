@@ -1,9 +1,9 @@
 local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Script",
-   LoadingTitle = "Script",
-   LoadingSubtitle = "Script",
+   Name = "Happy Mod",
+   LoadingTitle = "Happy Mod",
+   LoadingSubtitle = "100% Free",
    Theme = "Amethyst",
    ToggleUIKeybind = "X",
    Icon = 10734943448,
@@ -116,10 +116,9 @@ game.Players.LocalPlayer.Character.Humanoid.Health = 0
 
 local Button = Tab:CreateButton({
    Name = "ESP (loadstring)",
-   Callback = function()
-   game.Players.LocalPlayer.NameDisplayDistance = 0
+   CurrentValue = false,
+   Callback = function(Value)
    loadstring(game:HttpGet("https://raw.githubusercontent.com/Yahahahau/Ultimate-Esp-v1/refs/heads/main/Ultimate%20esp%20v1.lua"))()
-	print("Done!")
 
 	Rayfield:Notify({
    Title = "ESP",
@@ -269,7 +268,7 @@ local Toggle = Tab:CreateButton({
         if part.Name == "PlayerCharacterLocationDetector" and part:IsA("Part") then
             part.Transparency = 0.7
 			part.BrickColor = BrickColor.new("Hot pink")
-			wait(1)
+			wait(0.01)
 				end
     		end
 		end
@@ -344,6 +343,48 @@ local Toggle = Tab:CreateToggle({
 
 	Rayfield:Notify({
    Title = "Disable Blur",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+   end,
+})
+
+local on = nil
+
+local Toggle = Tab:CreateToggle({
+   Name = "Anti Fire",
+   CurrentValue = false,
+   Callback = function(Value)
+       local T = game.workspace.Map.Hole.PoisonSmallHole.ExtinguishPart
+       local o = T.Position
+       
+       if Value then
+           if on then
+               on:Disconnect()
+               on = nil
+           end
+           
+           on = game:GetService("RunService").Heartbeat:Connect(function()
+               local lp = game.Players.LocalPlayer.Character
+               local hrp = lp.HumanoidRootPart
+               
+               if lp.Humanoid.Health > 0 then
+                   if hrp.FirePlayerPart.CanBurn.Value == true then
+                       T.Position = hrp.Position
+                       task.wait(0.03)
+                       T.Position = o
+                   end
+               end
+           end)
+           if on then
+               on:Disconnect()
+               on = nil
+           end
+           T.Position = o
+       end
+	   		Rayfield:Notify({
+   Title = "Anti Burn",
    Content = "Done",
    Duration = 3,
    Image = 4483362458,
