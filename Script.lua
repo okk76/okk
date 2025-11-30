@@ -1,4 +1,4 @@
-local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+ local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 
 local Window = Rayfield:CreateWindow({
    Name = "Happy Mod",
@@ -360,8 +360,12 @@ local Toggle = Tab:CreateButton({
    lp.Character.Torso.CanCollide = false
    t.Anchored = true
    f.Anchored = true
+	f.CanTouch = false
+	f.CanQuery = false
    f.CFrame = t.CFrame + Vector3.new(0, -0.9, 0)
 	f.CFrame= t.CFrame * CFrame.Angles(0, math.rad(180), 0)
+	f.CanTouch = true
+	f.CanQuery = true
    t.Anchored = false
    f.Anchored = false
    wait(1)
