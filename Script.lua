@@ -244,18 +244,52 @@ local Button = Tab:CreateKeybind({
 end,
 })
 
-local Toggle = Tab:CreateKeybind({
-   Name = "Delete Blobman",
-   CurrentKeybind = "X",
-   HoldToInteract = false,
+local Tab = Window:CreateTab("FTAP", 4483362458)
+
+local Section = Tab:CreateSection("GrabLine")
+
+local Toggle = Tab:CreateToggle({
+   Name = "Massless Grab",
+   CurrentValue = false,
    Callback = function(Value)
-   local lp = game.Players.LocalPlayer
-   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-   toy.CreatureBlobman:Destroy()
+   local d = game.ReplicatedFirst.GrabParts.DragPart
+	if Value == true then
+		d.AlignPosition.ForceLimitMode = 1
+		d.AlignPosition.Responsiveness = 200
+		d.AlignPosition.MaxAxesForce = Vector3.new(10e+37, 10e+37, 10e+37)
+		d.AlignOrientation.Responsiveness = 200
+		else
+		d.AlignPosition.ForceLimitMode = 0
+		d.AlignPosition.Responsiveness = 40
+		d.AlignPosition.MaxAxesForce = Vector3.new(10000, 10000, 10000)
+		d.AlignOrientation.Responsiveness = 30
+	end
    end,
 })
 
-local Tab = Window:CreateTab("FTAP", 4483362458)
+local Toggle = Tab:CreateToggle({
+   Name = "Move To Spawn Grab",
+   CurrentValue = false,
+   Callback = function(Value)
+   local d = game.ReplicatedFirst.GrabParts.DragPart
+	if Value == true then
+		d.AlignPosition.Mode = 0
+		else
+		d.AlignPosition.Mode = 1
+	end
+   end,
+})
+
+local Toggle = Tab:CreateKeybind({
+   Name = "Freze Object",
+   CurrentKeybind = "Z",
+   HoldToInteract = false,
+   Callback = function(Value)
+   local lp = game.Players.LocalPlayer
+   lp.Character.GrabbingScript.Disabled = true
+   lp.Character.GrabbingScript.Enabled = true
+   end,
+})
 
 local Section = Tab:CreateSection("Settings")
 
@@ -357,7 +391,7 @@ local Toggle = Tab:CreateToggle({
    CurrentValue = false,
    Callback = function(Value)
        local T = game.workspace.Map.Hole.PoisonSmallHole.ExtinguishPart
-       local o = T.Position
+       local old = T.Position
        
        if Value then
            if on then
@@ -373,7 +407,7 @@ local Toggle = Tab:CreateToggle({
                    if hrp.FirePlayerPart.CanBurn.Value == true then
                        T.Position = hrp.Position
                        task.wait(0.03)
-                       T.Position = o
+                       T.Position = old
                    end
                end
            end)
@@ -381,10 +415,9 @@ local Toggle = Tab:CreateToggle({
                on:Disconnect()
                on = nil
            end
-           T.Position = o
        end
 	   		Rayfield:Notify({
-   Title = "Anti Burn",
+   Title = "Anti Fire",
    Content = "Done",
    Duration = 3,
    Image = 4483362458,
@@ -492,6 +525,79 @@ local Toggle = Tab:CreateButton({
    Duration = 3,
    Image = 4483362458,
 })
+   end,
+})
+
+local Slider = Tab:CreateSlider({
+   Name = "Line Width0",
+   Range = {0, 10},
+   Increment = 0.01,
+   Suffix = " ",
+   CurrentValue = 0.375,
+   Callback = function(Value)
+   local L = game.ReplicatedFirst.GrabParts.BeamPart
+   L.GrabBeam.Width0 = Value
+end,
+})
+
+local Slider = Tab:CreateSlider({
+   Name = "Line Width1",
+   Range = {0, 10},
+   Increment = 0.01,
+   Suffix = " ",
+   CurrentValue = 0.375,
+   Callback = function(Value)
+   local L = game.ReplicatedFirst.GrabParts.BeamPart
+   L.GrabBeam.Width1 = Value
+end,
+})
+
+local Toggle = Tab:CreateButton({
+   Name = "Revert Line Width",
+   Callback = function(Value)
+   local L = game.ReplicatedFirst.GrabParts.BeamPart
+   L.GrabBeam.Width0 = 0.375
+   L.GrabBeam.Width1 = 0.375
+   end,
+})
+
+local Slider = Tab:CreateSlider({
+   Name = "Line Texture Length",
+   Range = {0, 100},
+   Increment = 0.1,
+   Suffix = " ",
+   CurrentValue = 5,
+   Callback = function(Value)
+   local L = game.ReplicatedFirst.GrabParts.BeamPart
+   L.GrabBeam.TextureLength = Value
+end,
+})
+
+local Slider = Tab:CreateSlider({
+   Name = "Line Texture Speed",
+   Range = {0, 10},
+   Increment = 0.1,
+   Suffix = " ",
+   CurrentValue = 6,
+   Callback = function(Value)
+   local L = game.ReplicatedFirst.GrabParts.BeamPart
+   L.GrabBeam.TextureSpeed = Value
+end,
+})
+
+local Toggle = Tab:CreateToggle({
+   Name = "Remove Line Texture",
+   CurrentValue = false,
+   Callback = function(Value)
+   local L = game.ReplicatedFirst.GrabParts.BeamPart
+   local p = game.Players.LocalPlayer.FartherReach
+   if Value == true then
+   p.Value = false
+   L.GrabBeam.Texture = ""
+   else
+   p.Value = true
+   L.GrabBeam.Texture = "rbxassetid://8933346550"
+   end
    end,
 })
 
@@ -603,12 +709,15 @@ local Slider = Tab:CreateSlider({
    Suffix = "Volume",
    CurrentValue = 0.3,
    Callback = function(Value)
-game.Players.PlayerAdded:Connect(function(pl)
-pl.CharacterAdded:Connect(function(c)
-local hrp = c:WaitForChild("HumanoidRootPart")
-	hrp.Scream.Volume = Value
-end)
-end)
+   local pls = game:GetService("Players")
+	   while true do
+	   for _, pl in pairs(pls:GetPlayers()) do
+		      if pl.Character then
+			  pl.Character.HumanoidRootPart.Scream.Volume = Value
+			  end
+			  end
+			  wait(0.03)
+			end
    end,
 })
 
