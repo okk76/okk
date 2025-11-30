@@ -70,6 +70,46 @@ local Slider = Tab:CreateSlider({
 })
 
 local Toggle = Tab:CreateToggle({
+   Name = "Unlock Third Person",
+   CurrentValue = false,
+   Callback = function(Value)
+   if Value == true then
+   game.Players.LocalPlayer.CameraMaxZoomDistance = 100000
+   game.Players.LocalPlayer.CameraMode = 0
+   	Rayfield:Notify({
+   Title = "Unlock Third Person",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+   else
+   game.Players.LocalPlayer.CameraMaxZoomDistance = 0.5
+   game.Players.LocalPlayer.CameraMode = 1
+	end
+
+   end,
+})
+
+local Toggle = Tab:CreateToggle({
+   Name = "InvisCam Mode",
+   CurrentValue = false,
+   Callback = function(Value)
+   if Value == true then
+   game.Players.LocalPlayer.DevCameraOcclusionMode = 1
+   	Rayfield:Notify({
+   Title = "InvisCam Mode",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+   else
+   game.Players.LocalPlayer.DevCameraOcclusionMode = 0
+	end
+
+   end,
+})
+
+local Toggle = Tab:CreateToggle({
    Name = "Noclip",
    CurrentValue = false,
    Callback = function(Value)
@@ -711,46 +751,6 @@ local Toggle = Tab:CreateButton({
    Duration = 3,
    Image = 4483362458,
 })
-
-   end,
-})
-
-local Toggle = Tab:CreateToggle({
-   Name = "Unlock Third Person",
-   CurrentValue = false,
-   Callback = function(Value)
-   if Value == true then
-   game.Players.LocalPlayer.CameraMaxZoomDistance = 100000
-   game.Players.LocalPlayer.CameraMode = 0
-   	Rayfield:Notify({
-   Title = "Unlock Third Person",
-   Content = "Done",
-   Duration = 3,
-   Image = 4483362458,
-})
-   else
-   game.Players.LocalPlayer.CameraMaxZoomDistance = 0.5
-   game.Players.LocalPlayer.CameraMode = 1
-	end
-
-   end,
-})
-
-local Toggle = Tab:CreateToggle({
-   Name = "InvisCam Mode",
-   CurrentValue = false,
-   Callback = function(Value)
-   if Value == true then
-   game.Players.LocalPlayer.DevCameraOcclusionMode = 1
-   	Rayfield:Notify({
-   Title = "InvisCam Mode",
-   Content = "Done",
-   Duration = 3,
-   Image = 4483362458,
-})
-   else
-   game.Players.LocalPlayer.DevCameraOcclusionMode = 0
-	end
 
    end,
 })
