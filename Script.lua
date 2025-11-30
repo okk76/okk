@@ -364,7 +364,7 @@ local Toggle = Tab:CreateButton({
 	f.CanQuery = false
 	f.CFrame = t.CFrame * CFrame.Angles(0, math.rad(180), 0)
 	wait(0.03)
-	f.CFrame = t.CFrame + Vector3.new(0, -1, 0)
+	f.CFrame = f.CFrame + Vector3.new(0, -1, 0)
 	f.CanTouch = true
 	f.CanQuery = true
    t.Anchored = false
