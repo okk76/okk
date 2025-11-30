@@ -331,24 +331,33 @@ local Toggle = Tab:CreateKeybind({
    end,
 })
 
+local Toggle = Tab:CreateButton({
+   Name = "Freze Object",
+   Callback = function(Value)
+   local lp = game.Players.LocalPlayer
+   lp.Character.GrabbingScript.Disabled = true
+   lp.Character.GrabbingScript.Enabled = true
+   end,
+})
+
 local Toggle = Tab:CreateKeybind({
-   Name = "Anti Kick Kunai",
+   Name = "Anti Kick Shuriken",
    CurrentKeybind = "R",
    HoldToInteract = false,
    Callback = function(Value)
    local lp = game.Players.LocalPlayer
    local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-   local f = toy.NinjaKunai.StickyPart
+   local f = toy.NinjaShuriken.StickyPart
    local t = lp.Character.HumanoidRootPart
    lp.Character.Torso.CanCollide = false
    f.Anchored = true
    t.Anchored = true
-   f.CFrame = t.CFrame + Vector3.new(0.75, 0, 0)
-   toy.NinjaKunai.Name = "AntiKick"
+   f.CFrame = t.CFrame * CFrame.Angles(math.rad(90), 0, 0)
    t.Anchored = false
    f.Anchored = false
    wait(1)
    lp.Character.Torso.CanCollide = true
+   toy.NinjaShuriken.Name = "AntiKick"
 	end,
 })
 
