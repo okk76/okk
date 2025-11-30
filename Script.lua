@@ -341,7 +341,7 @@ local Toggle = Tab:CreateButton({
    lp.Character.Torso.CanCollide = false
    f.Anchored = true
    t.Anchored = true
-   f.CFrame = t.CFrame
+   f.CFrame = t.CFrame * CFrame.Angles(math.rad(90), 0, 0)
    t.Anchored = false
    f.Anchored = false
    wait(1)
