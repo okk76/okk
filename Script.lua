@@ -11,6 +11,15 @@ local Window = Rayfield:CreateWindow({
 
 local Tab = Window:CreateTab("Player", 10747373176)
 
+local Section = Tab:CreateSection("Gui")
+
+local Button = Tab:CreateButton({
+   Name = "Reload Script",
+   Callback = function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/okk76/okk/refs/heads/main/Script.lua"))()
+   end,
+})  
+
 local Section = Tab:CreateSection("Settings")
 
 local Slider = Tab:CreateSlider({
