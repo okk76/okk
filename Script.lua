@@ -291,6 +291,65 @@ local Toggle = Tab:CreateKeybind({
    end,
 })
 
+local Toggle = Tab:CreateKeybind({
+   Name = "Anti Kick",
+   CurrentKeybind = "R",
+   HoldToInteract = false,
+   Callback = function(Value)
+   local lp = game.Players.LocalPlayer
+   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   local f = toy.NinjaKunai.StickyPart
+   local t = lp.Character.HumanoidRootPart
+   lp.Character.Torso.CanCollide = false
+   lp.Character.Torso.Anchor = true
+   f.Anchor = true
+   f.CFrame = t.CFrame + Vector3.new(0.75, 0, 0)
+   toy.NinjaKunai.Name = "AntiKick"
+   lp.Character.Torso.Anchor = false
+   f.Anchor = false
+   wait(1)
+   lp.Character.Torso.CanCollide = true
+	end,
+})
+
+local Toggle = Tab:CreateButton({
+   Name = "Anti Kick",
+   Callback = function(Value)
+   local lp = game.Players.LocalPlayer
+   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   local f = toy.NinjaShuriken.StickyPart
+   local t = lp.Character.HumanoidRootPart
+   lp.Character.Torso.CanCollide = false
+   lp.Character.Torso.Anchor = true
+   f.Anchor = true
+   f.CFrame = t.CFrame
+   lp.Character.Torso.Anchor = false
+   f.Anchor = false
+   wait(1)
+   lp.Character.Torso.CanCollide = true
+   toy.NinjaShuriken.Name = "AntiKick"
+	end,
+})
+
+local Toggle = Tab:CreateButton({
+   Name = "???",
+   Callback = function(Value)
+   local lp = game.Players.LocalPlayer
+   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   local f = toy.ToolPencil.StickyPart
+   local t = lp.Character.HumanoidRootPart
+   lp.Character.Torso.CanCollide = false
+   lp.Character.Torso.Anchor = true
+   f.Anchor = true
+   f.CFrame = t.CFrame + Vector3.new(0, -0.7, 0)
+   lp.Character.Torso.Anchor = false
+   f.Anchor = false
+   wait(1)
+   lp.Character.Torso.CanCollide = true
+   toy.ToolPencil.Name = "PENCIL!!!"
+	end,
+})
+
 local Section = Tab:CreateSection("Settings")
 
 local Toggle = Tab:CreateButton({
