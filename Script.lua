@@ -17,6 +17,7 @@ local Button = Tab:CreateButton({
    Name = "Reload Script",
    Callback = function()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/okk76/okk/refs/heads/main/Script.lua"))()
+			
    end,
 })  
 
@@ -373,7 +374,7 @@ local Toggle = Tab:CreateButton({
 	f.CanQuery = false
 	f.CFrame = t.CFrame * CFrame.Angles(0, math.rad(180), 0)
 	wait(0.03)
-	f.CFrame = f.CFrame + Vector3.new(0, -0.85, 0)
+	f.CFrame = f.CFrame + Vector3.new(0, -0.8, 0)
 	wait(0.03)
 	f.CanTouch = true
 	f.CanQuery = true
