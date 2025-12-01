@@ -530,7 +530,7 @@ local Toggle = Tab:CreateToggle({
    Name = "Anti Fire",
    CurrentValue = false,
    Callback = function(Value)
-       local T = game.workspace.Map.Hole.PosionBigHole.ExtinguishPart
+       local T = game.workspace.Map.Hole.PoisonBigHole.ExtinguishPart
        local old = T.Position
        
        if Value then
