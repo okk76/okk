@@ -531,7 +531,8 @@ local Toggle = Tab:CreateToggle({
    if Value == true then
 	game.Workspace.FallenPartsDestroyHeight = -100000
    else
-	game.Workspace.FallenPartsDestroyHelocal on = nil
+	game.Workspace.FallenPartsDestroyHelocal = 0
+		end
 	end,
 })
 
