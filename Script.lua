@@ -531,42 +531,48 @@ local Toggle = Tab:CreateToggle({
    if Value == true then
 	game.Workspace.FallenPartsDestroyHeight = -100000
    else
-	game.Workspace.FallenPartsDestroyHeight = 0
-	end
-   end,
-})
+	game.Workspace.FallenPartsDestroyHelocal on = nil
 
+local Toggle = Tab:CreateToggle({
 local on = nil
 
 local Toggle = Tab:CreateToggle({
-   Name = "Anti Fire",
-   CurrentValue = false,
-   Callback = function(Value)
-	local lp = game.Players.LocalPlayer.Character
-    local hrp = lp.HumanoidRootPart
-       local T = game.workspace.Map.FactoryIsland.PoisonContainer.ExtinguishPart
-       local old = T.Position
-       
-       if Value then
-           if on then
-               on:Disconnect()
-               on = nil
-           end
-           
-           on = game:GetService("RunService").Heartbeat:Connect(function()
-               if lp.Humanoid.Health > 0 then
-                   if hrp.FirePlayerPart.CanBurn.Value == true then
-                       T.Position = hrp.Position
-                       task.wait(0.03)
-                       T.Position = old
-                   end
-               end
-           end)
-           if on then
-               on:Disconnect()
-               on = nil
-           end
-       end
+    Name = "Anti Fire",
+    CurrentValue = false,
+    Callback = function(Value)
+        local lp = game.Players.LocalPlayer.Character
+        local hrp = lp.HumanoidRootPart
+        local T = game.workspace.Map.FactoryIsland.PoisonContainer.ExtinguishPart
+        local old = T.Position
+        
+        if Value then
+            -- Отключаем существующее соединение
+            if on then
+                on:Disconnect()
+                on = nil
+            end
+            
+            -- Создаем новое соединение
+            on = game:GetService("RunService").Heartbeat:Connect(function()
+                if lp and lp:FindFirstChild("Humanoid") and lp.Humanoid.Health > 0 then
+                    local firePart = hrp:FindFirstChild("FirePlayerPart")
+                    if firePart and firePart.CanBurn.Value == true then
+                        T.Position = hrp.Position
+                        task.wait(0.03)
+                        T.Position = old
+                    end
+                end
+            end)
+        else
+            -- При отключении тоггла
+            if on then
+                on:Disconnect()
+                on = nil
+            end
+            -- Возвращаем часть на место при выключении
+            T.Position = old
+        end
+    end
 	   		Rayfield:Notify({
    Title = "Anti Fire",
    Content = "Done",
