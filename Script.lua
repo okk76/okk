@@ -542,7 +542,9 @@ local Toggle = Tab:CreateToggle({
    Name = "Anti Fire",
    CurrentValue = false,
    Callback = function(Value)
-       local T = game.workspace.Map.Hole.PoisonBigHole.ExtinguishPart
+	local lp = game.Players.LocalPlayer.Character
+    local hrp = lp.HumanoidRootPart
+       local T = game.workspace.Map.FactoryIsland.PoisonContainer.ExtinguishPart
        local old = T.Position
        
        if Value then
@@ -552,9 +554,6 @@ local Toggle = Tab:CreateToggle({
            end
            
            on = game:GetService("RunService").Heartbeat:Connect(function()
-               local lp = game.Players.LocalPlayer.Character
-               local hrp = lp.HumanoidRootPart
-               
                if lp.Humanoid.Health > 0 then
                    if hrp.FirePlayerPart.CanBurn.Value == true then
                        T.Position = hrp.Position
