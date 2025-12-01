@@ -524,6 +524,18 @@ local Toggle = Tab:CreateToggle({
    end,
 })
 
+local Toggle = Tab:CreateToggle({
+   Name = "Anti Void",
+   CurrentValue = false,
+   Callback = function(Value)
+   if Value == true then
+	game.Workspace.FallenPartsDestroyHeight = -100000
+   else
+	game.Workspace.FallenPartsDestroyHeight = 0
+	end
+   end,
+})
+
 local on = nil
 
 local Toggle = Tab:CreateToggle({
