@@ -1046,7 +1046,7 @@ end,
 
 local Tab = Window:CreateTab("Other Scripts", 10734943448)
 
-local Section = Tab:CreateSection("Gui")
+local Section = Tab:CreateSection("Happy Mod")
 
 local Button = Tab:CreateButton({
    Name = "Reload Script",
@@ -1100,6 +1100,22 @@ local Button = Tab:CreateButton({
 
 	Rayfield:Notify({
    Title = "Dex",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Dex Mobile",
+   Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"))()
+	print("Done!")
+
+	Rayfield:Notify({
+   Title = "Dex Mobile",
    Content = "Done",
    Duration = 3,
    Image = 4483362458,
