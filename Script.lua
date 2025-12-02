@@ -368,14 +368,6 @@ local Toggle = Tab:CreateButton({
    local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
    local f = toy.NinjaKunai.StickyPart
    local t = lp.Character.HumanoidRootPart
-	local function spawnItemCf(itemName, cframe)
-    task.spawn(function()
-        local rotation = Vector3.new(0, 0, 0)
-        ReplicatedStorage.MenuToys.SpawnToyRemoteFunction:InvokeServer(itemName, cframe, rotation)
-    end)
-	end
-	spawnItemCf(Kunai, workspace.SpawnLocation.CFrame)
-	task.wait(0.5)
    lp.Character.Torso.CanCollide = false
    f.Anchored = true
    t.Anchored = true
@@ -453,7 +445,7 @@ local Button = Tab:CreateToggle({
    local e = workspace.Map.Hole.PoisonSmallHole.ExtinguishPart.CFrame
    local function CRY()
    c.FirePlayerPart.CFrame = lp.Character.HumanoidRootPart.CFrame
-   task.wait(0.3)
+   task.wait(0.5)
    c.FirePlayerPart.CFrame = CFrame.new(154.299103, 250.697739, 331.101624, 0.930420518, -3.53281782e-09, -0.366493821, 1.9336921e-09, 1, -4.73042405e-09, 0.366493821, 3.69259712e-09, 0.930420518)
    f.Disabled = true
    task.wait(0.3)
