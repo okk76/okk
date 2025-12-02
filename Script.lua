@@ -368,6 +368,13 @@ local Toggle = Tab:CreateButton({
    local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
    local f = toy.NinjaKunai.StickyPart
    local t = lp.Character.HumanoidRootPart
+	local function spawnItemCf(itemName, cframe)
+    task.spawn(function()
+        local rotation = Vector3.new(0, 0, 0)
+        ReplicatedStorage.MenuToys.SpawnToyRemoteFunction:InvokeServer(itemName, cframe, rotation)
+    end)
+	end
+	spawnItemCf(NinjaKunai, workspace.SpawnLocation.CFrame)
    lp.Character.Torso.CanCollide = false
    f.Anchored = true
    t.Anchored = true
