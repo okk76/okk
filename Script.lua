@@ -440,7 +440,7 @@ local Button = Tab:CreateButton({
 			local old = lp.HumanoidRootPart.Position
 			if lp.Humanoid.Health > 0 and lp.Humanoid.Ragdolled == true then
 				lp.HumanoidRootPart.Anchored = true
-				lp.HumanoidRootPart.CFrame = Vector3.new(10000, -98, 10000)
+				lp.HumanoidRootPart.CFrame = CFrame.new(10000, -98, 10000)
 				wait(1)
 				lp.HumanoidRootPart.CFrame = old
 				lp.HumanoidRootPart.Anchored = false
