@@ -433,6 +433,21 @@ local Toggle = Tab:CreateButton({
 
 local Section = Tab:CreateSection("Settings")
 
+local Button = Tab:CreateButton({
+   Name = "Korblox",
+   Callback = function()
+			local lp = game.Players.LocalPlayer.Character
+			local leg = lp.LeftLeg
+			local old = lp.HumanoidRootPart.Position
+			if lp.Humanoid.Health > 0 and lp.Humanoid.Ragdolled == true then
+				lp.HumanoidRootPart.Anchored = true
+				leg.CFrame = leg.Position + Vector3.new(0, -100, 0)
+				task.wait(0.5)
+				lp.HumanoidRootPart.Anchored = false
+			end
+   end,
+})  
+
 local Toggle = Tab:CreateButton({
    Name = "PLCD",
    Callback = function(Value)
