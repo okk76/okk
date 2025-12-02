@@ -413,6 +413,7 @@ local Toggle = Tab:CreateButton({
    local f = toy.ToolPencil.StickyPart
    local t = lp.Character.HumanoidRootPart
    lp.Character.Torso.CanCollide = false
+   toy.ToolPencil.SoundPart.CanQuery = false
    t.Anchored = true
    f.Anchored = true
 	f.CanTouch = false
@@ -433,6 +434,56 @@ local Toggle = Tab:CreateButton({
 
 local Section = Tab:CreateSection("Settings")
 
+local Button = Tab:CreateToggle({
+   Name = "Cry (Need Campfire)",
+   CurrentValue = false,
+   Callback = function(Value)
+       local lp = game.Players.LocalPlayer
+   local f = lp.Character.OnFireAnimationScript
+   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   local c = toy.Campfire
+   local e = workspace.Map.Hole.PoisonSmallHole.ExtinguishPart.CFrame
+   local function CRY()
+   c.FirePlayerPart.CFrame = lp.Character.HumanoidRootPart.CFrame
+   task.wait(0.3)
+   c.FirePlayerPart.CFrame = CFrame.new(154.299103, 250.697739, 331.101624, 0.930420518, -3.53281782e-09, -0.366493821, 1.9336921e-09, 1, -4.73042405e-09, 0.366493821, 3.69259712e-09, 0.930420518)
+   f.Disabled = true
+   task.wait(0.3)
+   workspace.Map.Hole.PoisonSmallHole.ExtinguishPart.CFrame = lp.Character.HumanoidRootPart.CFrame
+   task.wait(0.3)
+   workspace.Map.Hole.PoisonSmallHole.ExtinguishPart.CFrame = e
+   end
+   local function check()
+	   if c and f.Disabled == false then
+	   CRY()
+	   else
+	   f.Enabled = true
+	   workspace.Map.Hole.PoisonSmallHole.ExtinguishPart.CFrame = lp.Character.HumanoidRootPart.CFrame
+	   task.wait(0.3)
+	   workspace.Map.Hole.PoisonSmallHole.ExtinguishPart.CFrame = e
+	   lp.Character.Animate.Disabled = true
+	   lp.Character.Animate.Enabled = true 
+   end
+   end
+
+   if Value == true then
+   check()
+   else
+   f.Enabled = true
+   lp.Character.Animate.Disabled = true
+   lp.Character.Animate.Enabled = true
+   end
+
+	Rayfield:Notify({
+   Title = "Cry",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+   end,
+})  
+
 local Button = Tab:CreateButton({
    Name = "Korblox",
    Callback = function()
@@ -441,7 +492,6 @@ local Button = Tab:CreateButton({
 			if lp then
 				lp.HumanoidRootPart.Anchored = true
 				lp.HumanoidRootPart.CFrame = CFrame.new(1000, -98.5, 1000)
-				lp.HumanoidRootPart.Velocity = Vector3.new(0, 1, 0)
 				wait(1)
 				lp.HumanoidRootPart.CFrame = old
 				lp.HumanoidRootPart.Anchored = false
@@ -458,7 +508,7 @@ local Toggle = Tab:CreateButton({
         if part.Name == "PlayerCharacterLocationDetector" and part:IsA("Part") then
             part.Transparency = 0.7
 			part.BrickColor = BrickColor.new("Hot pink")
-			wait(0.01)
+			wait(0.5)
 				end
     		end
 		end
