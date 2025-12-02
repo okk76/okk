@@ -438,7 +438,7 @@ local Button = Tab:CreateButton({
    Callback = function()
 			local lp = game.Players.LocalPlayer.Character
 			local old = lp.HumanoidRootPart.Position
-			if lp.Humanoid then
+			if lp then
 				lp.HumanoidRootPart.Anchored = true
 				lp.HumanoidRootPart.CFrame = CFrame.new(1000, -98.5, 1000)
 				lp.HumanoidRootPart.Velocity = Vector3.new(0, 1, 0)
