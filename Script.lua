@@ -374,7 +374,7 @@ local Toggle = Tab:CreateButton({
         ReplicatedStorage.MenuToys.SpawnToyRemoteFunction:InvokeServer(itemName, cframe, rotation)
     end)
 	end
-	spawnItemCf(NinjaKunai, workspace.SpawnLocation.CFrame)
+	spawnItemCf(Kunai, workspace.SpawnLocation.CFrame)
 	task.wait(0.5)
    lp.Character.Torso.CanCollide = false
    f.Anchored = true
