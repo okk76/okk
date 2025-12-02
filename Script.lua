@@ -437,7 +437,7 @@ local Button = Tab:CreateButton({
    Name = "Korblox",
    Callback = function()
 			local lp = game.Players.LocalPlayer.Character
-			local leg = lp.LeftLeg
+			local leg = lp.["LeftLeg"]
 			local old = lp.HumanoidRootPart.Position
 			if lp.Humanoid.Health > 0 and lp.Humanoid.Ragdolled == true then
 				lp.HumanoidRootPart.Anchored = true
