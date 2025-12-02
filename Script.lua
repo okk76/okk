@@ -375,20 +375,21 @@ local Toggle = Tab:CreateButton({
     end)
 	end
 	spawnItemCf(NinjaKunai, workspace.SpawnLocation.CFrame)
+	task.wait(0.5)
    lp.Character.Torso.CanCollide = false
    f.Anchored = true
    t.Anchored = true
 	f.CanTouch = false
 	f.CanQuery = false
    f.CFrame = t.CFrame * CFrame.Angles(math.rad(90), math.rad(90), 0)
-	wait(0.03)
+	task.wait(0.03)
 	f.CFrame = f.CFrame + Vector3.new(0, -0.5, 0)
    toy.NinjaKunai.Name = "AntiKick"
 	f.CanTouch = true
 	f.CanQuery = true
    t.Anchored = false
    f.Anchored = false
-   wait(1)
+   task.wait(1)
    lp.Character.Torso.CanCollide = true
 	end,
 })
