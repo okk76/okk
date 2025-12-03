@@ -1,4 +1,5 @@
- local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+game.workspace.SpawnLocation.Decal.Texture = "rbxasset://textures/face.png"
+local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 
 local Window = Rayfield:CreateWindow({
    Name = "Happy Mod",
@@ -374,14 +375,14 @@ local Toggle = Tab:CreateButton({
 	f.CanTouch = false
 	f.CanQuery = false
    f.CFrame = t.CFrame * CFrame.Angles(math.rad(90), math.rad(90), 0)
-	task.wait(0.03)
+	wait(0.03)
 	f.CFrame = f.CFrame + Vector3.new(0, -0.5, 0)
    toy.NinjaKunai.Name = "AntiKick"
 	f.CanTouch = true
 	f.CanQuery = true
    t.Anchored = false
    f.Anchored = false
-   task.wait(1)
+   wait(1)
    lp.Character.Torso.CanCollide = true
 	end,
 })
@@ -442,25 +443,25 @@ local Button = Tab:CreateToggle({
    local f = lp.Character.OnFireAnimationScript
    local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
    local c = toy.Campfire
-   local e = workspace.Map.Hole.PoisonSmallHole.ExtinguishPart.CFrame
+   local e = game.workspace.Plots.Plot3.Barrier.PlotBarrier.CFrame
    local function CRY()
    c.FirePlayerPart.CFrame = lp.Character.HumanoidRootPart.CFrame
-   task.wait(0.5)
+   task.wait(0.3)
    c.FirePlayerPart.CFrame = CFrame.new(154.299103, 250.697739, 331.101624, 0.930420518, -3.53281782e-09, -0.366493821, 1.9336921e-09, 1, -4.73042405e-09, 0.366493821, 3.69259712e-09, 0.930420518)
    f.Disabled = true
    task.wait(0.3)
-   workspace.Map.Hole.PoisonSmallHole.ExtinguishPart.CFrame = lp.Character.HumanoidRootPart.CFrame
+   game.workspace.Plots.Plot3.Barrier.PlotBarrier.CFrame = lp.Character.HumanoidRootPart.CFrame
    task.wait(0.3)
-   workspace.Map.Hole.PoisonSmallHole.ExtinguishPart.CFrame = e
+   game.workspace.Plots.Plot3.Barrier.PlotBarrier.CFrame = e
    end
    local function check()
 	   if c and f.Disabled == false then
 	   CRY()
 	   else
 	   f.Enabled = true
-	   workspace.Map.Hole.PoisonSmallHole.ExtinguishPart.CFrame = lp.Character.HumanoidRootPart.CFrame
+	   game.workspace.Plots.Plot3.Barrier.PlotBarrier.CFrame = lp.Character.HumanoidRootPart.CFrame
 	   task.wait(0.3)
-	   workspace.Map.Hole.PoisonSmallHole.ExtinguishPart.CFrame = e
+	   game.workspace.Plots.Plot3.Barrier.PlotBarrier.CFrame = e
 	   lp.Character.Animate.Disabled = true
 	   lp.Character.Animate.Enabled = true 
    end
@@ -482,22 +483,7 @@ local Button = Tab:CreateToggle({
 })
 
    end,
-})  
-
-local Button = Tab:CreateButton({
-   Name = "Korblox",
-   Callback = function()
-			local lp = game.Players.LocalPlayer.Character
-			local old = lp.HumanoidRootPart.Position
-			if lp then
-				lp.HumanoidRootPart.Anchored = true
-				lp.HumanoidRootPart.CFrame = CFrame.new(1000, -98.5, 1000)
-				wait(1)
-				lp.HumanoidRootPart.CFrame = old
-				lp.HumanoidRootPart.Anchored = false
-			end
-   end,
-})  
+})
 
 local Toggle = Tab:CreateButton({
    Name = "PLCD",
@@ -591,13 +577,64 @@ local Toggle = Tab:CreateToggle({
 })
 
 local Toggle = Tab:CreateToggle({
+   Name = "Anti Fire",
+   CurrentValue = false,
+   Callback = function(Value)
+   local R = game:GetService("RunService")
+   local lp = game.Players.LocalPlayer.Character
+   local t = game.workspace.Plots.Plot3.Barrier.PlotBarrier
+   local old = t.Position
+
+   local c = nil
+
+   local function F()
+	   if lp and lp.Humanoid.Health > 0 then
+		   t.Position = lp.HumanoidRootPart.Position
+		   task.wait(0.3)
+		   t.Position = old
+		   print(1)
+	   end
+   end
+
+   if Value == true then
+   if c then
+	   c:Disconnect()
+	   c = nil
+   end
+   end
+
+   c = R.Heartbeat:Connect(function()
+
+   if lp.HumanoidRootPart.FirePlayerPart.CanBurn == true then
+	F()
+	print(2)
+
+   else
+	   if c then
+		   c:Disconnect()
+		   c = nil
+	   end
+	end
+   end)
+
+
+	Rayfield:Notify({
+   Title = "Anti Burn",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+   end,
+})
+
+local Toggle = Tab:CreateToggle({
    Name = "Anti Void",
    CurrentValue = false,
    Callback = function(Value)
    if Value == true then
 	game.Workspace.FallenPartsDestroyHeight = -100000
    else
-	game.Workspace.FallenPartsDestroyHelocal = 0
+	game.Workspace.FallenPartsDestroyHeight = 0
 		end
 	end,
 })
