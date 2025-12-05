@@ -536,10 +536,13 @@ local Button = Tab:CreateButton({
    local lp = game.Players.LocalPlayer
    local toy = game.workspace.PlotItems.Plot3
    local h = lp.Character.Torso
+   local CF = h.CFrame
+   local A = CFrame.new(0.1, 0.2, -0.5)
+   local B = CFrame.new(0.1, 0.2, 0.5)
    if toy:FindFirstChild("a") and toy:FindFirstChild("b") then
    while true do
-   toy.a.SoundPart.CFrame = h.CFrame + Vector3.new(0.1, 0.2, -0.5) + h.CFrame.LookVector
-   toy.b.SoundPart.CFrame = h.CFrame + Vector3.new(0.1, 0.2, 0.5) + h.CFrame.LookVector
+   toy.a.SoundPart.CFrame = CF:ToWorldSpace(A)
+   toy.a.SoundPart.CFrame = CF:ToWorldSpace(B)
    toy.a.SoundPart.Velocity = Vector3.new(0, 0, 0)
    toy.b.SoundPart.Velocity = Vector3.new(0, 0, 0)
    toy.a.SoundPart.Anchored = false
