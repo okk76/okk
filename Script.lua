@@ -534,33 +534,35 @@ local Button = Tab:CreateButton({
    Name = "Boobs",
    Callback = function()
    local lp = game.Players.LocalPlayer
-   local lp = game.Players.LocalPlayer
 local toy = game.workspace.PlotItems.Plot3
-local RunService = game:GetService("RunService")
+local h = lp.Character.Torso
 
-if toy:FindFirstChild("a") and toy:FindFirstChild("b") then
-
-    toy.a.SoundPart.CanCollide = false
-    toy.b.SoundPart.CanCollide = false
-    toy.a.SoundPart.CanQuery = false
-    toy.b.SoundPart.CanQuery = false
-    toy.a.SoundPart.Anchored = false
-    toy.b.SoundPart.Anchored = false
-
-    local connection
-    connection = RunService.RenderStepped:Connect(function()
-        if not lp.Character or not lp.Character:FindFirstChild("Torso") then 
-            connection:Disconnect()
-            return
-        end
-        
-        local h = lp.Character.Torso
+if toy:FindFirstChild("a") and toy:FindChild("b") then
+    while true do
+        -- Получаем CFrame торса (включая позицию и поворот)
         local torsoCF = h.CFrame
         
-        toy.a.SoundPart.CFrame = torsoCF * CFrame.new(0.1, 0.2, -0.5)
-        toy.b.SoundPart.CFrame = torsoCF * CFrame.new(0.1, 0.2, 0.5)
-    end)
-end
+        -- Преобразуем локальные смещения относительно торса
+        -- Используем :ToWorldSpace() для правильного учета поворота
+        local offsetA = CFrame.new(0.1, 0.2, -0.5)
+        local offsetB = CFrame.new(0.1, 0.2, 0.5)
+        
+        toy.a.SoundPart.CFrame = torsoCF:ToWorldSpace(offsetA)
+        toy.b.SoundPart.CFrame = torsoCF:ToWorldSpace(offsetB)
+        
+        -- Остальные настройки
+        toy.a.SoundPart.Velocity = Vector3.new(0, 0, 0)
+        toy.b.SoundPart.Velocity = Vector3.new(0, 0, 0)
+        toy.a.SoundPart.Anchored = false
+        toy.b.SoundPart.Anchored = false
+        toy.a.SoundPart.CanCollide = false
+        toy.b.SoundPart.CanCollide = false
+        toy.a.SoundPart.CanQuery = false
+        toy.b.SoundPart.CanQuery = false
+        
+        wait(0.01)
+    end
+  end
 end,
 })
 
