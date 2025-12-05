@@ -79,13 +79,19 @@ local Toggle = Tab:CreateToggle({
    game.Players.LocalPlayer.CameraMode = 0
    	Rayfield:Notify({
    Title = "Unlock Third Person",
-   Content = "Done",
+   Content = "On",
    Duration = 3,
    Image = 4483362458,
 })
    else
    game.Players.LocalPlayer.CameraMaxZoomDistance = 0.5
    game.Players.LocalPlayer.CameraMode = 1
+      	Rayfield:Notify({
+   Title = "Unlock Third Person",
+   Content = "Off",
+   Duration = 3,
+   Image = 4483362458,
+})
 	end
 
    end,
@@ -99,28 +105,18 @@ local Toggle = Tab:CreateToggle({
    game.Players.LocalPlayer.DevCameraOcclusionMode = 1
    	Rayfield:Notify({
    Title = "InvisCam Mode",
-   Content = "Done",
+   Content = "On",
    Duration = 3,
    Image = 4483362458,
 })
    else
    game.Players.LocalPlayer.DevCameraOcclusionMode = 0
-	end
-
-   end,
+	   	Rayfield:Notify({
+   Title = "InvisCam Mode",
+   Content = "Off",
+   Duration = 3,
+   Image = 4483362458,
 })
-
-local Toggle = Tab:CreateToggle({
-   Name = "Noclip",
-   CurrentValue = false,
-   Callback = function(Value)
-   local e = game.Players.LocalPlayer.Character
-   if Value == true then
-   e.Torso.CanCollide = false
-   e.Head.CanCollide = false
-   else
-   e.Torso.CanCollide = true
-   e.Head.CanCollide = true
 	end
    end,
 })
@@ -275,12 +271,6 @@ local Button = Tab:CreateKeybind({
    game.Workspace.Ladders.SpawningPlatform.Transparency = 0.5
    game.Workspace.Ladders.SpawningPlatform.CanCollide = true
    toy.CreatureBlobman.HumanoidRootPart.CFrame = CFrame.new(335, 17, 391)
-	Rayfield:Notify({
-   Title = "Kick",
-   Content = "Done",
-   Duration = 3,
-   Image = 4483362458,
-})
 
 end,
 })
@@ -299,11 +289,25 @@ local Toggle = Tab:CreateToggle({
 		d.AlignPosition.Responsiveness = 200
 		d.AlignPosition.MaxAxesForce = Vector3.new(10e+37, 10e+37, 10e+37)
 		d.AlignOrientation.Responsiveness = 200
+		d.AlignOrientation.MaxTorque = 10e+37
+   Rayfield:Notify({
+   Title = "Massless Grab",
+   Content = "On",
+   Duration = 3,
+   Image = 4483362458,
+})
 		else
 		d.AlignPosition.ForceLimitMode = 0
 		d.AlignPosition.Responsiveness = 40
 		d.AlignPosition.MaxAxesForce = Vector3.new(10000, 10000, 10000)
 		d.AlignOrientation.Responsiveness = 30
+		d.AlignOrientation.MaxTorque = 600000
+   Rayfield:Notify({
+   Title = "Massless Grab",
+   Content = "Off",
+   Duration = 3,
+   Image = 4483362458,
+})
 	end
    end,
 })
@@ -485,30 +489,126 @@ local Button = Tab:CreateToggle({
    end,
 })
 
-local Toggle = Tab:CreateButton({
-   Name = "PLCD",
-   Callback = function(Value)
-	local pi = game.workspace
-	while true do
-    for _, part in ipairs(pi:GetChildren()) do
-        if part.Name == "PlayerCharacterLocationDetector" and part:IsA("Part") then
-            part.Transparency = 0.7
-			part.BrickColor = BrickColor.new("Hot pink")
-			wait(0.5)
-				end
-    		end
-		end
-	end,
+local Button = Tab:CreateButton({
+   Name = "Break Barrier (Need Snowball)",
+   Callback = function()
+   local lp = game.Players.LocalPlayer
+   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   local b = toy.BallSnowball.Main
+   if b then
+	   b.CFrame = CFrame.new(330.336456, -10.305584, 476.507538, 0.469516784, 4.47039059e-21, -0.882923543, 4.50381006e-20, 1, 2.90133115e-20, 0.882923543, -5.33874355e-20, 0.469516784)
+	   task.wait(0.12)
+	   b.Velocity = Vector3.new(-1000, -10, 0)
+   end
+	Rayfield:Notify({
+   Title = "Break Barrier",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+   end,
 })
 
 local Button = Tab:CreateButton({
-   Name = "Disable Barrier Collisions",
+   Name = "Set Boobs",
    Callback = function()
+   local lp = game.Players.LocalPlayer
+   local toy = game.workspace.PlotItems.Plot3
+   local h = lp.Character.Torso
+   if toy:FindFirstChild("a") then
+   toy.FoodCoconut.SoundPart.CFrame = h.CFrame + Vector3.new(-0.7, 0.2, -0.5)
+   toy.FoodCoconut.SoundPart.Anchored = true
+   toy.FoodCoconut.SoundPart.CanCollide = false
+   toy.FoodCoconut.Name = "b"
+   else
+   toy.FoodCoconut.SoundPart.CFrame = h.CFrame + Vector3.new(-0.7, 0.2, 0.5)
+   toy.FoodCoconut.SoundPart.Anchored = true
+   toy.FoodCoconut.SoundPart.CanCollide = false
+   toy.FoodCoconut.Name = "a"  
+	end
+end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Boobs",
+   Callback = function()
+   local lp = game.Players.LocalPlayer
+   local toy = game.workspace.PlotItems.Plot3
+   local h = lp.Character.Torso
+   if toy:FindFirstChild("a") and toy:FindFirstChild("b") then
+   while true do
+   toy.a.SoundPart.CFrame = h.CFrame + Vector3.new(0.1, 0.2, -0.5) + h.CFrame.LookVector
+   toy.b.SoundPart.CFrame = h.CFrame + Vector3.new(0.1, 0.2, 0.5) + h.CFrame.LookVector
+   toy.a.SoundPart.Velocity = Vector3.new(0, 0, 0)
+   toy.b.SoundPart.Velocity = Vector3.new(0, 0, 0)
+   toy.a.SoundPart.Anchored = false
+   toy.b.SoundPart.Anchored = false
+   toy.a.SoundPart.CanCollide = false
+   toy.b.SoundPart.CanCollide = false
+   toy.a.SoundPart.CanQuery = false
+   toy.b.SoundPart.CanQuery = false
+	wait(0.01)
+		end
+	end
+end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Set Boombox",
+   Callback = function()
+   local lp = game.Players.LocalPlayer
+   local toy = game.workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   local h = lp.Character.Torso
+   local b = toy.Boombox.ColorPart
+   if b then
+	   while true do
+	b.CFrame = h.CFrame + Vector3.new(1.5, 0, 0) + h.CFrame.LookVector
+	b.Veclocity = Vector3.new(0, 0, 0)
+	h.CanCollide = false
+		   wait(0.001)
+	   end
+	end
+end,
+})
+
+local o = false
+
+local Toggle = Tab:CreateToggle({
+   Name = "PLCD",
+   CurrentValue = false,
+   Callback = function(Value)
+	local w = game.workspace
+	o = Value
+	if o then
+	task.spwan(function()
+	while o do
+		for _, part in ipairs(w:GetChildren()) do
+        if p.Name == "PlayerCharacterLocationDetector" then
+            p.Transparency = 0.7
+			p.BrickColor = BrickColor.new("Hot pink")
+			task.wait(0.2)
+					end
+				end
+			end
+		end)
+	end
+end,
+})
+
+local Button = Tab:CreateToggle({
+   Name = "Disable Barrier Collisions",
+   CurrentValue = false,
+   Callback = function(Value)
 	local group = game.Workspace.Plots.Plot1:FindFirstChild("Barrier")
 if group then
     for _, part in ipairs(group:GetChildren()) do
         if part.Name == "PlotBarrier" and part:IsA("Part") then
+		if Value == true then
             part.CanCollide = false
+			else
+			part.CanCollide = true
+			end
         end
     end
 end
@@ -516,7 +616,11 @@ end
 if group then
     for _, part in ipairs(group:GetChildren()) do
         if part.Name == "PlotBarrier" and part:IsA("Part") then
+            if Value == true then
             part.CanCollide = false
+			else
+			part.CanCollide = true
+			end
         end
     end
 end
@@ -524,7 +628,11 @@ end
 if group then
     for _, part in ipairs(group:GetChildren()) do
         if part.Name == "PlotBarrier" and part:IsA("Part") then
+            if Value == true then
             part.CanCollide = false
+			else
+			part.CanCollide = true
+			end
         end
     end
 end
@@ -532,7 +640,11 @@ end
 if group then
     for _, part in ipairs(group:GetChildren()) do
         if part.Name == "PlotBarrier" and part:IsA("Part") then
+            if Value == true then
             part.CanCollide = false
+			else
+			part.CanCollide = true
+			end
         end
     end
 end
@@ -540,12 +652,14 @@ end
 if group then
     for _, part in ipairs(group:GetChildren()) do
         if part.Name == "PlotBarrier" and part:IsA("Part") then
+            if Value == true then
             part.CanCollide = false
+			else
+			part.CanCollide = true
+			end
         end
     end
 end
-	print("Done!")
-
 	Rayfield:Notify({
    Title = "Disable Barrier Collisions",
    Content = "Done",
@@ -663,14 +777,19 @@ end
    end,
 })
 
-local Button = Tab:CreateButton({
+local Button = Tab:CreateToggle({
    Name = "Water Transparency",
-   Callback = function()
+   CurrentValue = false,
+   Callback = function(Value)
    	local group = game.Workspace.Map.AlwaysHereTweenedObjects.Ocean.Object:FindFirstChild("ObjectModel")
 if group then
     for _, part in ipairs(group:GetChildren()) do
         if part.Name == "Ocean" and part:IsA("Part") then
+		if Value == true then
             part.Transparency = 0.7
+			else
+			part.Transparency = 0
+			end
         end
     end
 end
