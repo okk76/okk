@@ -533,26 +533,24 @@ end,
 local Button = Tab:CreateButton({
    Name = "Boobs",
    Callback = function()
-   local lp = game.Players.LocalPlayer
+	local lp = game.Players.LocalPlayer
 local toy = game.workspace.PlotItems.Plot3
 local h = lp.Character.Torso
 
-if toy:FindFirstChild("a") and toy:FindFirstChild("b") then
-    -- Получаем исходные вращения объектов (однократно)
-    local originalRotationA = toy.a.SoundPart.CFrame - toy.a.SoundPart.CFrame.Position
-    local originalRotationB = toy.b.SoundPart.CFrame - toy.b.SoundPart.CFrame.Position
-    
+if toy:FindFirstChild("a") and toy:FindChild("b") then
     while true do
+        -- Получаем CFrame торса (включая позицию и поворот)
         local torsoCF = h.CFrame
         
-        -- Вычисляем только позиции (без вращения торса)
-        local posA = torsoCF.Position + torsoCF:VectorToWorldSpace(Vector3.new(0.1, 0.2, -0.5))
-        local posB = torsoCF.Position + torsoCF:VectorToWorldSpace(Vector3.new(0.1, 0.2, 0.5))
+        -- Преобразуем локальные смещения относительно торса
+        -- Используем :ToWorldSpace() для правильного учета поворота
+        local offsetA = CFrame.new(-0.5, 0.2, 0.1)
+        local offsetB = CFrame.new(0.5, 0.2, 0.1)
         
-        -- Применяем позицию + исходное вращение
-        toy.a.SoundPart.CFrame = CFrame.new(posA) * originalRotationA
-        toy.b.SoundPart.CFrame = CFrame.new(posB) * originalRotationB
+        toy.a.SoundPart.CFrame = torsoCF:ToWorldSpace(offsetA)
+        toy.b.SoundPart.CFrame = torsoCF:ToWorldSpace(offsetB)
         
+        -- Остальные настройки
         toy.a.SoundPart.Velocity = Vector3.new(0, 0, 0)
         toy.b.SoundPart.Velocity = Vector3.new(0, 0, 0)
         toy.a.SoundPart.Anchored = false
