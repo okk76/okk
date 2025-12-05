@@ -534,26 +534,33 @@ local Button = Tab:CreateButton({
    Name = "Boobs",
    Callback = function()
    local lp = game.Players.LocalPlayer
-   local toy = game.workspace.PlotItems.Plot3
-   local h = lp.Character.Torso
-   local CF = h.CFrame
-   local A = CFrame.new(0.1, 0.2, -0.5)
-   local B = CFrame.new(0.1, 0.2, 0.5)
-   if toy:FindFirstChild("a") and toy:FindFirstChild("b") then
-   while true do
-   toy.a.SoundPart.CFrame = CF:ToWorldSpace(A)
-   toy.a.SoundPart.CFrame = CF:ToWorldSpace(B)
-   toy.a.SoundPart.Velocity = Vector3.new(0, 0, 0)
-   toy.b.SoundPart.Velocity = Vector3.new(0, 0, 0)
-   toy.a.SoundPart.Anchored = false
-   toy.b.SoundPart.Anchored = false
-   toy.a.SoundPart.CanCollide = false
-   toy.b.SoundPart.CanCollide = false
-   toy.a.SoundPart.CanQuery = false
-   toy.b.SoundPart.CanQuery = false
-	wait(0.01)
-		end
-	end
+   local lp = game.Players.LocalPlayer
+local toy = game.workspace.PlotItems.Plot3
+local RunService = game:GetService("RunService")
+
+if toy:FindFirstChild("a") and toy:FindFirstChild("b") then
+
+    toy.a.SoundPart.CanCollide = false
+    toy.b.SoundPart.CanCollide = false
+    toy.a.SoundPart.CanQuery = false
+    toy.b.SoundPart.CanQuery = false
+    toy.a.SoundPart.Anchored = false
+    toy.b.SoundPart.Anchored = false
+
+    local connection
+    connection = RunService.RenderStepped:Connect(function()
+        if not lp.Character or not lp.Character:FindFirstChild("Torso") then 
+            connection:Disconnect()
+            return
+        end
+        
+        local h = lp.Character.Torso
+        local torsoCF = h.CFrame
+        
+        toy.a.SoundPart.CFrame = torsoCF * CFrame.new(0.1, 0.2, -0.5)
+        toy.b.SoundPart.CFrame = torsoCF * CFrame.new(0.1, 0.2, 0.5)
+    end)
+end
 end,
 })
 
