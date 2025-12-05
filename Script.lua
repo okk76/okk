@@ -540,22 +540,21 @@ local h = lp.Character.Torso
 if toy:FindFirstChild("a") and toy:FindFirstChild("b") then
     while true do
         local torsoCF = h.CFrame
-        local lookVector = torsoCF.LookVector  -- Вектор взгляда вперед
-        local rightVector = torsoCF.RightVector  -- Вектор вправо
-        local upVector = torsoCF.UpVector  -- Вектор вверх
-        
-        -- Позиция на 0.65 studs вперед от торса
+        local lookVector = torsoCF.LookVector
+        local rightVector = torsoCF.RightVector
+        local upVector = torsoCF.UpVector
         local basePosition = torsoCF.Position + lookVector * 0.65
-        
-        -- Смещаем в стороны от базовой позиции
+    
         toy.a.SoundPart.CFrame = CFrame.new(
             basePosition - rightVector * 0.5 + upVector * 0.2
         )
         toy.b.SoundPart.CFrame = CFrame.new(
             basePosition + rightVector * 0.5 + upVector * 0.2
         )
-        
-        -- Остальные настройки...
+        toy.a.SoundPart.Velocity = Vector3.new(0, 0, 0)
+	    toy.b.SoundPart.Velocity = Vector3.new(0, 0, 0)
+	    toy.a.SoundPart.Anchored = false
+		toy.b.SoundPart.Anchored = false
         wait(0.01)
     end
 end
