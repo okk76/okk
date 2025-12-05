@@ -539,30 +539,26 @@ local h = lp.Character.Torso
 
 if toy:FindFirstChild("a") and toy:FindFirstChild("b") then
     while true do
-        -- Получаем CFrame торса (включая позицию и поворот)
         local torsoCF = h.CFrame
+        local lookVector = torsoCF.LookVector  -- Вектор взгляда вперед
+        local rightVector = torsoCF.RightVector  -- Вектор вправо
+        local upVector = torsoCF.UpVector  -- Вектор вверх
         
-        -- Преобразуем локальные смещения относительно торса
-        -- Используем :ToWorldSpace() для правильного учета поворота
-        local offsetA = CFrame.new(-0.5, 0.2, 0.65)
-        local offsetB = CFrame.new(0.5, 0.2, 0.65)
+        -- Позиция на 0.65 studs вперед от торса
+        local basePosition = torsoCF.Position + lookVector * 0.65
         
-        toy.a.SoundPart.CFrame = torsoCF:ToWorldSpace(offsetA)
-        toy.b.SoundPart.CFrame = torsoCF:ToWorldSpace(offsetB)
+        -- Смещаем в стороны от базовой позиции
+        toy.a.SoundPart.CFrame = CFrame.new(
+            basePosition - rightVector * 0.5 + upVector * 0.2
+        )
+        toy.b.SoundPart.CFrame = CFrame.new(
+            basePosition + rightVector * 0.5 + upVector * 0.2
+        )
         
-        -- Остальные настройки
-        toy.a.SoundPart.Velocity = Vector3.new(0, 0, 0)
-        toy.b.SoundPart.Velocity = Vector3.new(0, 0, 0)
-        toy.a.SoundPart.Anchored = false
-        toy.b.SoundPart.Anchored = false
-        toy.a.SoundPart.CanCollide = false
-        toy.b.SoundPart.CanCollide = false
-        toy.a.SoundPart.CanQuery = false
-        toy.b.SoundPart.CanQuery = false
-        
+        -- Остальные настройки...
         wait(0.01)
     end
-  end
+end
 end,
 })
 
