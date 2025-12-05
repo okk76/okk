@@ -544,8 +544,8 @@ if toy:FindFirstChild("a") and toy:FindFirstChild("b") then
         
         -- Преобразуем локальные смещения относительно торса
         -- Используем :ToWorldSpace() для правильного учета поворота
-        local offsetA = CFrame.new(-0.5, 0.2, 0.1)
-        local offsetB = CFrame.new(0.5, 0.2, 0.1)
+        local offsetA = CFrame.new(-0.5, 0.2, 0.6)
+        local offsetB = CFrame.new(0.5, 0.2, 0.6)
         
         toy.a.SoundPart.CFrame = torsoCF:ToWorldSpace(offsetA)
         toy.b.SoundPart.CFrame = torsoCF:ToWorldSpace(offsetB)
