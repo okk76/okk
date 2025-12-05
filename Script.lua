@@ -537,7 +537,7 @@ local Button = Tab:CreateButton({
 local toy = game.workspace.PlotItems.Plot3
 local h = lp.Character.Torso
 
-if toy:FindFirstChild("a") and toy:FindChild("b") then
+if toy:FindFirstChild("a") and toy:FindFirstChild("b") then
     while true do
         -- Получаем CFrame торса (включая позицию и поворот)
         local torsoCF = h.CFrame
