@@ -557,6 +557,52 @@ end,
 })
 
 local Button = Tab:CreateButton({
+   Name = "Set ASS",
+   Callback = function()
+   local lp = game.Players.LocalPlayer
+   local toy = game.workspace.PlotItems.Plot3
+   local h = lp.Character.Torso
+   if toy:FindFirstChild("c") then
+   toy.FoodCoconut.SoundPart.CFrame = h.CFrame + Vector3.new(-0.7, 0.2, -0.5)
+   toy.FoodCoconut.SoundPart.Anchored = true
+   toy.FoodCoconut.SoundPart.CanCollide = false
+   toy.FoodCoconut.Name = "d"
+   else
+   toy.FoodCoconut.SoundPart.CFrame = h.CFrame + Vector3.new(-0.7, 0.2, 0.5)
+   toy.FoodCoconut.SoundPart.Anchored = true
+   toy.FoodCoconut.SoundPart.CanCollide = false
+   toy.FoodCoconut.Name = "c"  
+	end
+end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "ASS",
+   Callback = function()
+	local lp = game.Players.LocalPlayer
+local toy = game.workspace.PlotItems.Plot3
+local h = lp.Character.Torso
+
+if toy:FindFirstChild("c") and toy:FindFirstChild("d") then
+    while true do
+        local torsoCF = h.CFrame
+        local lookVector = torsoCF.LookVector
+        local rightVector = torsoCF.RightVector
+        local upVector = torsoCF.UpVector
+        local basePosition = torsoCF.Position + lookVector * -0.5
+        toy.c.SoundPart.CFrame = CFrame.new(basePosition - rightVector * 0.5 + upVector * -0.85)
+        toy.d.SoundPart.CFrame = CFrame.new(basePosition + rightVector * 0.5 + upVector * -0.85)
+        toy.c.SoundPart.Velocity = Vector3.new(0, 1, 0)
+	    toy.d.SoundPart.Velocity = Vector3.new(0, 1, 0)
+	    toy.c.SoundPart.Anchored = false
+		toy.d.SoundPart.Anchored = false
+        wait(0.01)
+    end
+end
+end,
+})
+
+local Button = Tab:CreateButton({
    Name = "Set SW",
    Callback = function()
    local lp = game.Players.LocalPlayer
@@ -574,7 +620,7 @@ end,
 })
 
 local Button = Tab:CreateButton({
-   Name = "SW?",
+   Name = "SW? Visual",
    Callback = function()
    local lp = game.Players.LocalPlayer
    local toy = game.workspace.PlotItems.Plot3
