@@ -544,15 +544,10 @@ if toy:FindFirstChild("a") and toy:FindFirstChild("b") then
         local rightVector = torsoCF.RightVector
         local upVector = torsoCF.UpVector
         local basePosition = torsoCF.Position + lookVector * 0.65
-    
-        toy.a.SoundPart.CFrame = CFrame.new(
-            basePosition - rightVector * 0.5 + upVector * 0.2
-        )
-        toy.b.SoundPart.CFrame = CFrame.new(
-            basePosition + rightVector * 0.5 + upVector * 0.2
-        )
-        toy.a.SoundPart.Velocity = Vector3.new(0, 0, 0)
-	    toy.b.SoundPart.Velocity = Vector3.new(0, 0, 0)
+        toy.a.SoundPart.CFrame = CFrame.new(basePosition - rightVector * 0.5 + upVector * 0.2)
+        toy.b.SoundPart.CFrame = CFrame.new(basePosition + rightVector * 0.5 + upVector * 0.2)
+        toy.a.SoundPart.Velocity = Vector3.new(0, 1, 0)
+	    toy.b.SoundPart.Velocity = Vector3.new(0, 1, 0)
 	    toy.a.SoundPart.Anchored = false
 		toy.b.SoundPart.Anchored = false
         wait(0.01)
@@ -565,17 +560,14 @@ local Button = Tab:CreateButton({
    Name = "Set Boombox",
    Callback = function()
    local lp = game.Players.LocalPlayer
-   local toy = game.workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   local toy = game.workspace.PlotItems.Plot3
    local h = lp.Character.Torso
-   local b = toy.Boombox.ColorPart
-   if b then
-	   while true do
-	b.CFrame = h.CFrame + Vector3.new(1.5, 0, 0) + h.CFrame.LookVector
-	b.Veclocity = Vector3.new(0, 0, 0)
-	h.CanCollide = false
-		   wait(0.001)
-	   end
-	end
+   if toy:FindFirstChild("Boombox") then
+    while true do
+        print(1)
+        wait(0.01)
+    end
+end
 end,
 })
 
@@ -613,8 +605,12 @@ if group then
         if part.Name == "PlotBarrier" and part:IsA("Part") then
 		if Value == true then
             part.CanCollide = false
+			part.CanQuery = false
+			game.workspace.Plots.Plot1.PlotArea.CanQuery = false
 			else
 			part.CanCollide = true
+			part.CanQuery = true
+			game.workspace.Plots.Plot1.PlotArea.CanQuery = true
 			end
         end
     end
@@ -625,8 +621,12 @@ if group then
         if part.Name == "PlotBarrier" and part:IsA("Part") then
             if Value == true then
             part.CanCollide = false
+			part.CanQuery = false
+			game.workspace.Plots.Plot2.PlotArea.CanQuery = false
 			else
 			part.CanCollide = true
+			part.CanQuery = true
+			game.workspace.Plots.Plot2.PlotArea.CanQuery = true
 			end
         end
     end
@@ -637,8 +637,12 @@ if group then
         if part.Name == "PlotBarrier" and part:IsA("Part") then
             if Value == true then
             part.CanCollide = false
+			part.CanQuery = false
+			game.workspace.Plots.Plot3.PlotArea.CanQuery = false
 			else
 			part.CanCollide = true
+			part.CanQuery = true
+			game.workspace.Plots.Plot3.PlotArea.CanQuery = true
 			end
         end
     end
@@ -649,8 +653,12 @@ if group then
         if part.Name == "PlotBarrier" and part:IsA("Part") then
             if Value == true then
             part.CanCollide = false
+			part.CanQuery = false
+			game.workspace.Plots.Plot4.PlotArea.CanQuery = false
 			else
 			part.CanCollide = true
+			part.CanQuery = true
+			game.workspace.Plots.Plot4.PlotArea.CanQuery = true
 			end
         end
     end
@@ -661,8 +669,12 @@ if group then
         if part.Name == "PlotBarrier" and part:IsA("Part") then
             if Value == true then
             part.CanCollide = false
+			part.CanQuery = false
+			game.workspace.Plots.Plot5.PlotArea.CanQuery = false
 			else
 			part.CanCollide = true
+			part.CanQuery = true
+			game.workspace.Plots.Plot5.PlotArea.CanQuery = true
 			end
         end
     end
