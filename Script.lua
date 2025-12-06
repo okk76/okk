@@ -544,8 +544,8 @@ if toy:FindFirstChild("a") and toy:FindFirstChild("b") then
         local rightVector = torsoCF.RightVector
         local upVector = torsoCF.UpVector
         local basePosition = torsoCF.Position + lookVector * 0.65
-        toy.a.SoundPart.CFrame = CFrame.new(basePosition - rightVector * 0.5 + upVector * 0.2)
-        toy.b.SoundPart.CFrame = CFrame.new(basePosition + rightVector * 0.5 + upVector * 0.2)
+        toy.a.SoundPart.CFrame = CFrame.new(basePosition - rightVector * 0.5 + upVector * 0.25)
+        toy.b.SoundPart.CFrame = CFrame.new(basePosition + rightVector * 0.5 + upVector * 0.25)
         toy.a.SoundPart.Velocity = Vector3.new(0, 1, 0)
 	    toy.b.SoundPart.Velocity = Vector3.new(0, 1, 0)
 	    toy.a.SoundPart.Anchored = false
@@ -553,6 +553,77 @@ if toy:FindFirstChild("a") and toy:FindFirstChild("b") then
         wait(0.01)
     end
 end
+end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Set SW",
+   Callback = function()
+   local lp = game.Players.LocalPlayer
+   local toy = game.workspace.PlotItems.Plot3
+   local h = lp.Character.Torso
+   local s = game.workspace.PlotItems.Plot3.FireworkSparkler
+   if toy:FindFirstChild("z") then
+   s.Stick.CFrame = h.CFrame
+   s.Name = "x"
+   else
+   s.Stick.CFrame = h.CFrame
+   s.Name = "z"
+	end
+end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "SW?",
+   Callback = function()
+   local lp = game.Players.LocalPlayer
+   local toy = game.workspace.PlotItems.Plot3
+   local h = lp.Character.Torso
+   local z = toy.z
+   local x = toy.x
+   local function Z()
+	   z.Stick.CFrame = h.CFrame + Vector3.new(37.5, 25, 25)
+	   task.wait(0.01)
+	   z.Stick.CFrame = h.CFrame + Vector3.new(12.5, 25, 25)
+	   task.wait(0.01)
+	   z.Stick.CFrame = h.CFrame + Vector3.new(12.5, 25, -25)
+	   task.wait(0.01)
+	   z.Stick.CFrame = h.CFrame + Vector3.new(-12.5, 25, -25)
+	   task.wait(0.01)
+	   z.Stick.CFrame = h.CFrame + Vector3.new(12.5, 25, -25)
+	   task.wait(0.01)
+	   z.Stick.CFrame = h.CFrame + Vector3.new(12.5, 25, 25)
+	   task.wait(0.01)
+	   z.Stick.CFrame = h.CFrame + Vector3.new(37.5, 25, 25)
+   end
+   local function X()
+	   x.Stick.CFrame = h.CFrame + Vector3.new(-12.5, 25, 0)
+	   task.wait(0.01)
+	   x.Stick.CFrame = h.CFrame + Vector3.new(-12.5, 25, 0)
+	   task.wait(0.01)
+	   x.Stick.CFrame = h.CFrame + Vector3.new(37.5, 25, 0)
+	   task.wait(0.01)
+	   x.Stick.CFrame = h.CFrame + Vector3.new(37.5, 25, -25)
+	   task.wait(0.01)
+	   x.Stick.CFrame = h.CFrame + Vector3.new(37.5, 25, 0)
+	   task.wait(0.01)
+	   x.Stick.CFrame = h.CFrame + Vector3.new(-12.5, 25, 0)
+	   task.wait(0.01)
+	   x.Stick.CFrame = h.CFrame + Vector3.new(-12.5, 25, 25)
+   end
+   if toy:FindFirstChild("z") and toy:FindFirstChild("x") then
+	   while true do
+	   Z()
+	   X()
+	   toy.x.Stick.CanCollide = false
+	   toy.z.Stick.CanCollide = false
+	   toy.x.Base.CanCollide = false
+	   toy.z.Base.CanCollide = false
+	   toy.z.Stick.Velocity = Vector3.new(0, 0, 0)
+	   toy.x.Stick.Velocity = Vector3.new(0, 0, 0)
+		task.wait(0.01)  
+		end 
+	end
 end,
 })
 
