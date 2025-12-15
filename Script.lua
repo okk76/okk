@@ -1,6 +1,27 @@
 game.workspace.SpawnLocation.Decal.Texture = "rbxasset://textures/face.png"
 local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 
+local P = game:GetService("Players")
+local function Joined(pl)
+   Rayfield:Notify({
+   Title = pl.DisplayName .. "_Joined",
+   Content = pl.Name,
+   Duration = 3,
+   Image = 10747373176,
+   })
+end
+P.PlayerAdded:Connect(Joined)
+
+local function Leave(pl)
+   Rayfield:Notify({
+   Title = pl.DisplayName .. "_Leave",
+   Content = pl.Name,
+   Duration = 3,
+   Image = 10747373176,
+   })
+end
+P.PlayerRemoving:Connect(Leave)
+
 local Window = Rayfield:CreateWindow({
    Name = "Happy Mod",
    LoadingTitle = "Happy Mod",
@@ -544,12 +565,19 @@ if toy:FindFirstChild("a") and toy:FindFirstChild("b") then
         local rightVector = torsoCF.RightVector
         local upVector = torsoCF.UpVector
         local basePosition = torsoCF.Position + lookVector * 0.65
-        toy.a.SoundPart.CFrame = CFrame.new(basePosition - rightVector * 0.5 + upVector * 0.25)
-        toy.b.SoundPart.CFrame = CFrame.new(basePosition + rightVector * 0.5 + upVector * 0.25)
-        toy.a.SoundPart.Velocity = Vector3.new(0, 1, 0)
-	    toy.b.SoundPart.Velocity = Vector3.new(0, 1, 0)
-	    toy.a.SoundPart.Anchored = false
-		toy.b.SoundPart.Anchored = false
+        local invertedOrientation = CFrame.Angles(math.rad(180), 0, 0)
+        
+        local posA = basePosition - rightVector * 0.5 + upVector * 0.2
+        toy.a.SoundPart.CFrame = CFrame.new(posA) * invertedOrientation
+        
+        local posB = basePosition + rightVector * 0.5 + upVector * 0.2
+        toy.b.SoundPart.CFrame = CFrame.new(posB) * invertedOrientation
+        
+        toy.a.SoundPart.Velocity = Vector3.new(0, 0, 0)
+        toy.b.SoundPart.Velocity = Vector3.new(0, 0, 0)
+        toy.a.SoundPart.Anchored = false
+        toy.b.SoundPart.Anchored = false
+        
         wait(0.01)
     end
 end
@@ -590,8 +618,14 @@ if toy:FindFirstChild("c") and toy:FindFirstChild("d") then
         local rightVector = torsoCF.RightVector
         local upVector = torsoCF.UpVector
         local basePosition = torsoCF.Position + lookVector * -0.5
-        toy.c.SoundPart.CFrame = CFrame.new(basePosition - rightVector * 0.5 + upVector * -0.85)
-        toy.d.SoundPart.CFrame = CFrame.new(basePosition + rightVector * 0.5 + upVector * -0.85)
+		local invertedOrientation = CFrame.Angles(math.rad(180), 0, 0)
+
+		local posC = basePosition - rightVector * 0.5 + upVector * -0.85
+        toy.c.SoundPart.CFrame = CFrame.new(posC) * invertedOrientation
+
+		local posD = basePosition - rightVector * -0.5 + upVector * -0.85
+        toy.d.SoundPart.CFrame = CFrame.new(posD) * invertedOrientation
+
         toy.c.SoundPart.Velocity = Vector3.new(0, 1, 0)
 	    toy.d.SoundPart.Velocity = Vector3.new(0, 1, 0)
 	    toy.c.SoundPart.Anchored = false
