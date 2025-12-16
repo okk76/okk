@@ -1,14 +1,9 @@
 local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 
+local SelectedPlayer = nil
 local P = game:GetService("Players")
+local LocalPlayer = P.LocalPlayer
 local function Joined(pl)
-local es = Instance.new("Sound")
-es.SoundId = "rbxassetid://19344667"
-es.Parent = workspace
-es.Volume = 0.25
-es:Play()
-task.wait(3)
-	es:Destroy()
 
    Rayfield:Notify({
    Title = pl.DisplayName .. "_Joined",
@@ -16,25 +11,37 @@ task.wait(3)
    Duration = 3,
    Image = 10747373176,
    })
+
+local es = Instance.new("Sound")
+es.SoundId = "rbxassetid://3270235822"
+es.Parent = workspace
+es.Volume = 0.25
+es:Play()
+task.wait(3)
+	es:Destroy()
+
 end
+
 P.PlayerAdded:Connect(Joined)
 
 local function Leave(pl)
-local es = Instance.new("Sound")
-ex.SoundId = "rbxassetid://19344667"
-ex.Parent = workspace
-ex.Volume = 0.25
-ex:Play()
-task.wait(3)
-	ex:Destroy()
-
    Rayfield:Notify({
    Title = pl.DisplayName .. "_Leave",
    Content = pl.Name,
    Duration = 3,
    Image = 10747373176,
    })
+
+local ex = Instance.new("Sound")
+ex.SoundId = "rbxassetid://111124523"
+ex.Parent = workspace
+ex.Volume = 0.1
+ex:Play()
+task.wait(3)
+	ex:Destroy()
+
 end
+
 P.PlayerRemoving:Connect(Leave)
 
 local Window = Rayfield:CreateWindow({
@@ -188,6 +195,57 @@ game.Players.LocalPlayer.Character.Humanoid.Health = 0
 
    end,
 })  
+
+local function GetPlayerList()
+    local list = {}
+    for _, player in pairs(P:GetPlayers()) do
+    table.insert(list, player.Name)
+    end
+    return list
+end
+
+local PlayerDropdown = Tab:CreateDropdown({
+    Name = "TP To",
+    Options = GetPlayerList(),
+    CurrentOption = {},
+    MultipleOptions = false,
+    Callback = function(Option)
+        SelectedPlayer = Option[1]
+    end,
+})
+
+P.PlayerAdded:Connect(function()
+    PlayerDropdown:Refresh(GetPlayerList())
+end)
+
+P.PlayerRemoving:Connect(function()
+    PlayerDropdown:Refresh(GetPlayerList())
+end)
+
+Tab:CreateButton({
+    Name = "TP To Player",
+    Callback = function()
+        if SelectedPlayer then
+            local target = P:FindFirstChild(SelectedPlayer)
+            if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+                LocalPlayer.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame * CFrame.new(3, 1, 0)
+					LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+            else
+                Rayfield:Notify({
+                    Title = "Error",
+                    Content = "Character is nil",
+                    Duration = 3
+                })
+            end
+        else
+            Rayfield:Notify({
+                Title = "Ошибка",
+                Content = "Player is nil",
+                Duration = 3
+            })
+        end
+    end
+})
 
 local Button = Tab:CreateButton({
    Name = "ESP (loadstring)",
@@ -548,6 +606,34 @@ local Button = Tab:CreateButton({
    end,
 })
 
+local function GetPlayerList()
+    local list = {}
+    for _, player in pairs(P:GetPlayers()) do
+            table.insert(list, player.Name)
+    end
+    return list
+end
+
+-- Dropdown
+local PlayerDropdown = Tab:CreateDropdown({
+    Name = "Set Boobs and ASS to",
+    Options = GetPlayerList(),
+    CurrentOption = {},
+    MultipleOptions = false,
+    Callback = function(Option)
+        Selected = Option[1]
+    end,
+})
+
+P.PlayerAdded:Connect(function()
+    PlayerDropdown:Refresh(GetPlayerList())
+end)
+
+P.PlayerRemoving:Connect(function()
+    PlayerDropdown:Refresh(GetPlayerList())
+end)
+
+
 local Button = Tab:CreateButton({
    Name = "Set Boobs",
    Callback = function()
@@ -573,11 +659,11 @@ local Button = Tab:CreateButton({
    Callback = function()
 	local lp = game.Players.LocalPlayer
 local toy = game.workspace.PlotItems.Plot3
-local h = lp.Character.Torso
+local h = P:FindFirstChild(Selected)
 
 if toy:FindFirstChild("a") and toy:FindFirstChild("b") then
     while true do
-        local torsoCF = h.CFrame
+        local torsoCF = h.Character.Torso.CFrame
         local lookVector = torsoCF.LookVector
         local rightVector = torsoCF.RightVector
         local upVector = torsoCF.UpVector
@@ -626,11 +712,11 @@ local Button = Tab:CreateButton({
    Callback = function()
 	local lp = game.Players.LocalPlayer
 local toy = game.workspace.PlotItems.Plot3
-local h = lp.Character.Torso
+local h = P:FindFirstChild(Selected)
 
 if toy:FindFirstChild("c") and toy:FindFirstChild("d") then
     while true do
-        local torsoCF = h.CFrame
+        local torsoCF = h.Character.Torso.CFrame
         local lookVector = torsoCF.LookVector
         local rightVector = torsoCF.RightVector
         local upVector = torsoCF.UpVector
@@ -1686,11 +1772,12 @@ local Button = Tab:CreateButton({
 
 end,
 })
-game.workspace.SpawnLocation.Decal.Texture = "rbxasset://textures/face.png"
+
 local ez = Instance.new("Sound")
-ez.SoundId = "rbxassetid://3270235822"
+ez.SoundId = "rbxassetid://17148249625"
 ez.Parent = workspace
 ez.Volume = 0.25
 ez:Play()
 task.wait(3)
 	ez:Destroy()
+game.workspace.SpawnLocation.Decal.Texture = "rbxasset://textures/face.png"
