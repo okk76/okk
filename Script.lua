@@ -1,8 +1,15 @@
-game.workspace.SpawnLocation.Decal.Texture = "rbxasset://textures/face.png"
 local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 
 local P = game:GetService("Players")
 local function Joined(pl)
+local es = Instance.new("Sound")
+es.SoundId = "rbxassetid://19344667"
+es.Parent = workspace
+es.Volume = 0.25
+es:Play()
+task.wait(3)
+	es:Destroy()
+
    Rayfield:Notify({
    Title = pl.DisplayName .. "_Joined",
    Content = pl.Name,
@@ -13,6 +20,14 @@ end
 P.PlayerAdded:Connect(Joined)
 
 local function Leave(pl)
+local es = Instance.new("Sound")
+ex.SoundId = "rbxassetid://19344667"
+ex.Parent = workspace
+ex.Volume = 0.25
+ex:Play()
+task.wait(3)
+	ex:Destroy()
+
    Rayfield:Notify({
    Title = pl.DisplayName .. "_Leave",
    Content = pl.Name,
@@ -96,6 +111,7 @@ local Toggle = Tab:CreateToggle({
    CurrentValue = false,
    Callback = function(Value)
    if Value == true then
+   game.Players.LocalPlayer.DevEnableMouseLock = true
    game.Players.LocalPlayer.CameraMaxZoomDistance = 100000
    game.Players.LocalPlayer.CameraMode = 0
    	Rayfield:Notify({
@@ -105,6 +121,7 @@ local Toggle = Tab:CreateToggle({
    Image = 4483362458,
 })
    else
+   game.Players.LocalPlayer.DevEnableMouseLock = false
    game.Players.LocalPlayer.CameraMaxZoomDistance = 0.5
    game.Players.LocalPlayer.CameraMode = 1
       	Rayfield:Notify({
@@ -1669,3 +1686,11 @@ local Button = Tab:CreateButton({
 
 end,
 })
+game.workspace.SpawnLocation.Decal.Texture = "rbxasset://textures/face.png"
+local ez = Instance.new("Sound")
+ez.SoundId = "rbxassetid://3270235822"
+ez.Parent = workspace
+ez.Volume = 0.25
+ez:Play()
+task.wait(3)
+	ez:Destroy()
