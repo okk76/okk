@@ -50,7 +50,7 @@ local Window = Rayfield:CreateWindow({
    LoadingSubtitle = "100% Free",
    Theme = "Amethyst",
    ToggleUIKeybind = "X",
-   Icon = 10734943448,
+   Icon = 10723396107,
 })
 
 local Tab = Window:CreateTab("Player", 10747373176)
@@ -263,6 +263,530 @@ local Button = Tab:CreateButton({
 end,
 })
 
+local Tab = Window:CreateTab("GrabLine", 10723404472)
+
+local Section = Tab:CreateSection("GrabLine")
+
+local Toggle = Tab:CreateToggle({
+   Name = "Massless Grab",
+   CurrentValue = false,
+   Callback = function(Value)
+   local d = game.ReplicatedFirst.GrabParts.DragPart
+	if Value == true then
+		d.AlignPosition.ForceLimitMode = 1
+		d.AlignPosition.Responsiveness = 200
+		d.AlignPosition.MaxAxesForce = Vector3.new(10e+37, 10e+37, 10e+37)
+		d.AlignOrientation.Responsiveness = 200
+		d.AlignOrientation.MaxTorque = 10e+37
+   Rayfield:Notify({
+   Title = "Massless Grab",
+   Content = "On",
+   Duration = 3,
+   Image = 4483362458,
+})
+		else
+		d.AlignPosition.ForceLimitMode = 0
+		d.AlignPosition.Responsiveness = 40
+		d.AlignPosition.MaxAxesForce = Vector3.new(10000, 10000, 10000)
+		d.AlignOrientation.Responsiveness = 30
+		d.AlignOrientation.MaxTorque = 600000
+   Rayfield:Notify({
+   Title = "Massless Grab",
+   Content = "Off",
+   Duration = 3,
+   Image = 4483362458,
+})
+	end
+   end,
+})
+
+local Toggle = Tab:CreateToggle({
+   Name = "Move To Spawn Grab",
+   CurrentValue = false,
+   Callback = function(Value)
+   local d = game.ReplicatedFirst.GrabParts.DragPart
+	if Value == true then
+		d.AlignPosition.Mode = 0
+		else
+		d.AlignPosition.Mode = 1
+	end
+   end,
+})
+
+local Toggle = Tab:CreateKeybind({
+   Name = "Freze Object",
+   CurrentKeybind = "Z",
+   HoldToInteract = false,
+   Callback = function(Value)
+   local lp = game.Players.LocalPlayer
+   lp.Character.GrabbingScript.Disabled = true
+   lp.Character.GrabbingScript.Enabled = true
+   end,
+})
+
+local Toggle = Tab:CreateButton({
+   Name = "Freze Object",
+   Callback = function(Value)
+   local lp = game.Players.LocalPlayer
+   lp.Character.GrabbingScript.Disabled = true
+   lp.Character.GrabbingScript.Enabled = true
+   end,
+})
+
+local Section = Tab:CreateSection("Settings")
+
+local Toggle = Tab:CreateToggle({
+   Name = "Revert Default Line Skin",
+   CurrentValue = false,
+   Callback = function(Value)
+   local p = game.Players.LocalPlayer.FartherReach
+   if Value == true then
+   p.Value = false
+
+   Rayfield:Notify({
+   Title = "Revert Default Line Skin",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+   else
+   p.Value = true
+	end
+   end,
+})
+
+local Toggle = Tab:CreateButton({
+   Name = "Get Gamepass Line Skin",
+   Callback = function()
+   local p = game.Players.LocalPlayer.FartherReach
+   if not p then
+   local x = Instance.new("BoolValue")
+   x.Name = "FartherReach"
+   x.Parent = game.Players.LocalPlayer
+   x.Value = true
+   end
+
+   Rayfield:Notify({
+   Title = "Get Gamepass Line Skin",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+   end,
+})
+
+local Slider = Tab:CreateSlider({
+   Name = "Line Width0",
+   Range = {0, 10},
+   Increment = 0.01,
+   Suffix = " ",
+   CurrentValue = 0.375,
+   Callback = function(Value)
+   local L = game.ReplicatedFirst.GrabParts.BeamPart
+   L.GrabBeam.Width0 = Value
+end,
+})
+
+local Slider = Tab:CreateSlider({
+   Name = "Line Width1",
+   Range = {0, 10},
+   Increment = 0.01,
+   Suffix = " ",
+   CurrentValue = 0.375,
+   Callback = function(Value)
+   local L = game.ReplicatedFirst.GrabParts.BeamPart
+   L.GrabBeam.Width1 = Value
+end,
+})
+
+local Toggle = Tab:CreateButton({
+   Name = "Revert Line Width",
+   Callback = function(Value)
+   local L = game.ReplicatedFirst.GrabParts.BeamPart
+   L.GrabBeam.Width0 = 0.375
+   L.GrabBeam.Width1 = 0.375
+   end,
+})
+
+local Slider = Tab:CreateSlider({
+   Name = "Line Texture Length",
+   Range = {0, 100},
+   Increment = 0.1,
+   Suffix = " ",
+   CurrentValue = 5,
+   Callback = function(Value)
+   local L = game.ReplicatedFirst.GrabParts.BeamPart
+   L.GrabBeam.TextureLength = Value
+end,
+})
+
+local Slider = Tab:CreateSlider({
+   Name = "Line Texture Speed",
+   Range = {0, 10},
+   Increment = 0.1,
+   Suffix = " ",
+   CurrentValue = 6,
+   Callback = function(Value)
+   local L = game.ReplicatedFirst.GrabParts.BeamPart
+   L.GrabBeam.TextureSpeed = Value
+end,
+})
+
+local Toggle = Tab:CreateToggle({
+   Name = "Remove Line Texture",
+   CurrentValue = false,
+   Callback = function(Value)
+   local L = game.ReplicatedFirst.GrabParts.BeamPart
+   local p = game.Players.LocalPlayer.FartherReach
+   if Value == true then
+   p.Value = false
+   L.GrabBeam.Texture = ""
+   else
+   p.Value = true
+   L.GrabBeam.Texture = "rbxassetid://8933346550"
+   end
+   end,
+})
+
+local Toggle = Tab:CreateButton({
+   Name = "Shuffle Line Sounds",
+   Callback = function(Value)
+	local newgrab = game.ReplicatedFirst.GrabParts.GrabPart.AttachSound
+	local oldgrab = game.ReplicatedFirst.GrabParts.GrabPart.AttachSound1
+	local newhold = game.ReplicatedFirst.GrabParts.GrabPart.BeamSound
+	local oldhold = game.ReplicatedFirst.GrabParts.GrabPart.BeamSound1
+	newgrab.Name = "AttachSound1"
+    oldgrab.Name = "AttachSound"
+	newhold.Name = "BeamSound1"
+    oldhold.Name = "BeamSound"
+	print("Done!")
+
+		Rayfield:Notify({
+   Title = "Shuffle Line Sounds",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+   end,
+})
+
+local Slider = Tab:CreateSlider({
+   Name = "Line Sounds",
+   Range = {0, 1},
+   Increment = 0.01,
+   Suffix = "Volume",
+   CurrentValue = 0.05,
+   Callback = function(Value)
+   	local newgrab = game.ReplicatedFirst.GrabParts.GrabPart.AttachSound
+	local oldgrab = game.ReplicatedFirst.GrabParts.GrabPart.AttachSound1
+	local newhold = game.ReplicatedFirst.GrabParts.GrabPart.BeamSound
+	local oldhold = game.ReplicatedFirst.GrabParts.GrabPart.BeamSound1
+	newgrab.Volume = Value
+    oldgrab.Volume = VAlue
+	newhold.Volume = Value
+    oldhold.Volume = Value
+   end,
+})
+
+local Tab = Window:CreateTab("Defense", 10734951847)
+
+local Section = Tab:CreateSection("Settings")
+
+local Toggle = Tab:CreateKeybind({
+   Name = "Anti Kick Shuriken",
+   CurrentKeybind = "R",
+   HoldToInteract = false,
+   Callback = function(Value)
+   local lp = game.Players.LocalPlayer
+   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   local f = toy.NinjaShuriken.StickyPart
+   local t = lp.Character.HumanoidRootPart
+   lp.Character.Torso.CanCollide = false
+   f.Anchored = true
+   t.Anchored = true
+   f.CFrame = t.CFrame * CFrame.Angles(math.rad(90), 0, 0)
+   t.Anchored = false
+   f.Anchored = false
+   wait(1)
+   lp.Character.Torso.CanCollide = true
+   toy.NinjaShuriken.Name = "AntiKick"
+	end,
+})
+
+local Toggle = Tab:CreateButton({
+   Name = "Anti Kick Kunai",
+   Callback = function(Value)
+   local lp = game.Players.LocalPlayer
+   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   local f = toy.NinjaKunai.StickyPart
+   local t = lp.Character.HumanoidRootPart
+   lp.Character.Torso.CanCollide = false
+   f.Anchored = true
+   t.Anchored = true
+	f.CanTouch = false
+	f.CanQuery = false
+   f.CFrame = t.CFrame * CFrame.Angles(math.rad(90), math.rad(90), 0)
+	wait(0.03)
+	f.CFrame = f.CFrame + Vector3.new(0, -0.5, 0)
+   toy.NinjaKunai.Name = "AntiKick"
+	f.CanTouch = true
+	f.CanQuery = true
+   t.Anchored = false
+   f.Anchored = false
+   wait(1)
+   lp.Character.Torso.CanCollide = true
+	end,
+})
+
+local Toggle = Tab:CreateButton({
+   Name = "Anti Kick Shuriken",
+   Callback = function(Value)
+   local lp = game.Players.LocalPlayer
+   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   local f = toy.NinjaShuriken.StickyPart
+   local t = lp.Character.HumanoidRootPart
+   lp.Character.Torso.CanCollide = false
+   f.Anchored = true
+   t.Anchored = true
+   f.CFrame = t.CFrame * CFrame.Angles(math.rad(90), 0, 0)
+   t.Anchored = false
+   f.Anchored = false
+   wait(1)
+   lp.Character.Torso.CanCollide = true
+   toy.NinjaShuriken.Name = "AntiKick"
+	end,
+})
+
+local Button = Tab:CreateToggle({
+   Name = "Disable Barrier Collisions",
+   CurrentValue = false,
+   Callback = function(Value)
+	local group = game.Workspace.Plots.Plot1:FindFirstChild("Barrier")
+if group then
+    for _, part in ipairs(group:GetChildren()) do
+        if part.Name == "PlotBarrier" and part:IsA("Part") then
+		if Value == true then
+            part.CanCollide = false
+			part.CanQuery = false
+			game.workspace.Plots.Plot1.PlotArea.CanQuery = false
+			else
+			part.CanCollide = true
+			part.CanQuery = true
+			game.workspace.Plots.Plot1.PlotArea.CanQuery = true
+			end
+        end
+    end
+end
+	local group = game.Workspace.Plots.Plot2:FindFirstChild("Barrier")
+if group then
+    for _, part in ipairs(group:GetChildren()) do
+        if part.Name == "PlotBarrier" and part:IsA("Part") then
+            if Value == true then
+            part.CanCollide = false
+			part.CanQuery = false
+			game.workspace.Plots.Plot2.PlotArea.CanQuery = false
+			else
+			part.CanCollide = true
+			part.CanQuery = true
+			game.workspace.Plots.Plot2.PlotArea.CanQuery = true
+			end
+        end
+    end
+end
+	local group = game.Workspace.Plots.Plot3:FindFirstChild("Barrier")
+if group then
+    for _, part in ipairs(group:GetChildren()) do
+        if part.Name == "PlotBarrier" and part:IsA("Part") then
+            if Value == true then
+            part.CanCollide = false
+			part.CanQuery = false
+			game.workspace.Plots.Plot3.PlotArea.CanQuery = false
+			else
+			part.CanCollide = true
+			part.CanQuery = true
+			game.workspace.Plots.Plot3.PlotArea.CanQuery = true
+			end
+        end
+    end
+end
+	local group = game.Workspace.Plots.Plot4:FindFirstChild("Barrier")
+if group then
+    for _, part in ipairs(group:GetChildren()) do
+        if part.Name == "PlotBarrier" and part:IsA("Part") then
+            if Value == true then
+            part.CanCollide = false
+			part.CanQuery = false
+			game.workspace.Plots.Plot4.PlotArea.CanQuery = false
+			else
+			part.CanCollide = true
+			part.CanQuery = true
+			game.workspace.Plots.Plot4.PlotArea.CanQuery = true
+			end
+        end
+    end
+end
+	local group = game.Workspace.Plots.Plot5:FindFirstChild("Barrier")
+if group then
+    for _, part in ipairs(group:GetChildren()) do
+        if part.Name == "PlotBarrier" and part:IsA("Part") then
+            if Value == true then
+            part.CanCollide = false
+			part.CanQuery = false
+			game.workspace.Plots.Plot5.PlotArea.CanQuery = false
+			else
+			part.CanCollide = true
+			part.CanQuery = true
+			game.workspace.Plots.Plot5.PlotArea.CanQuery = true
+			end
+        end
+    end
+end
+	Rayfield:Notify({
+   Title = "Disable Barrier Collisions",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+   end,
+})
+
+local Toggle = Tab:CreateToggle({
+   Name = "Disable Blur",
+   CurrentValue = false,
+   Callback = function(Value)
+   local B = game.workspace.Camera.Blur
+   if Value == true then
+   B.Enabled = false
+   else
+   B.Enabled = true
+	end
+
+	Rayfield:Notify({
+   Title = "Disable Blur",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+   end,
+})
+
+local Toggle = Tab:CreateToggle({
+   Name = "Anti Fire",
+   CurrentValue = false,
+   Callback = function(Value)
+   local R = game:GetService("RunService")
+   local lp = game.Players.LocalPlayer.Character
+   local t = game.workspace.Plots.Plot3.Barrier.PlotBarrier
+   local old = t.Position
+
+   local c = nil
+
+   local function F()
+	   if lp and lp.Humanoid.Health > 0 then
+		   t.Position = lp.HumanoidRootPart.Position
+		   task.wait(0.3)
+		   t.Position = old
+		   print(1)
+	   end
+   end
+
+   if Value == true then
+   if c then
+	   c:Disconnect()
+	   c = nil
+   end
+   end
+
+   c = R.Heartbeat:Connect(function()
+
+   if lp.HumanoidRootPart.FirePlayerPart.CanBurn == true then
+	F()
+	print(2)
+
+   else
+	   if c then
+		   c:Disconnect()
+		   c = nil
+	   end
+	end
+   end)
+
+
+	Rayfield:Notify({
+   Title = "Anti Fire",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+   end,
+})
+
+local Toggle = Tab:CreateToggle({
+   Name = "Anti Void",
+   CurrentValue = false,
+   Callback = function(Value)
+   if Value == true then
+	game.Workspace.FallenPartsDestroyHeight = -10e+37
+   else
+	game.Workspace.FallenPartsDestroyHeight = 0
+		end
+	end,
+})
+
+local Toggle = Tab:CreateToggle({
+   Name = "WaterWalk",
+   CurrentValue = false,
+   Callback = function(Value)
+   	local group = game.Workspace.Map.AlwaysHereTweenedObjects.Ocean.Object:FindFirstChild("ObjectModel")
+if group then
+    for _, part in ipairs(group:GetChildren()) do
+        if part.Name == "Ocean" and part:IsA("Part") then
+            part.CanCollide = Value
+        end
+    end
+end
+	print("Done!")
+
+		Rayfield:Notify({
+   Title = "WaterWalk",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+   end,
+})
+
+local Button = Tab:CreateToggle({
+   Name = "Water Transparency",
+   CurrentValue = false,
+   Callback = function(Value)
+   	local group = game.Workspace.Map.AlwaysHereTweenedObjects.Ocean.Object:FindFirstChild("ObjectModel")
+if group then
+    for _, part in ipairs(group:GetChildren()) do
+        if part.Name == "Ocean" and part:IsA("Part") then
+		if Value == true then
+            part.Transparency = 0.7
+			else
+			part.Transparency = 0
+			end
+        end
+    end
+end
+	print("Done!")
+
+	Rayfield:Notify({
+   Title = "Water Transparency",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
+
 local Tab = Window:CreateTab("Blobman", 10709782230)
 
 local Section = Tab:CreateSection("Settings")
@@ -371,140 +895,9 @@ local Button = Tab:CreateKeybind({
 end,
 })
 
-local Tab = Window:CreateTab("FTAP", 4483362458)
+local Tab = Window:CreateTab("Other", 10734964441)
 
-local Section = Tab:CreateSection("GrabLine")
-
-local Toggle = Tab:CreateToggle({
-   Name = "Massless Grab",
-   CurrentValue = false,
-   Callback = function(Value)
-   local d = game.ReplicatedFirst.GrabParts.DragPart
-	if Value == true then
-		d.AlignPosition.ForceLimitMode = 1
-		d.AlignPosition.Responsiveness = 200
-		d.AlignPosition.MaxAxesForce = Vector3.new(10e+37, 10e+37, 10e+37)
-		d.AlignOrientation.Responsiveness = 200
-		d.AlignOrientation.MaxTorque = 10e+37
-   Rayfield:Notify({
-   Title = "Massless Grab",
-   Content = "On",
-   Duration = 3,
-   Image = 4483362458,
-})
-		else
-		d.AlignPosition.ForceLimitMode = 0
-		d.AlignPosition.Responsiveness = 40
-		d.AlignPosition.MaxAxesForce = Vector3.new(10000, 10000, 10000)
-		d.AlignOrientation.Responsiveness = 30
-		d.AlignOrientation.MaxTorque = 600000
-   Rayfield:Notify({
-   Title = "Massless Grab",
-   Content = "Off",
-   Duration = 3,
-   Image = 4483362458,
-})
-	end
-   end,
-})
-
-local Toggle = Tab:CreateToggle({
-   Name = "Move To Spawn Grab",
-   CurrentValue = false,
-   Callback = function(Value)
-   local d = game.ReplicatedFirst.GrabParts.DragPart
-	if Value == true then
-		d.AlignPosition.Mode = 0
-		else
-		d.AlignPosition.Mode = 1
-	end
-   end,
-})
-
-local Toggle = Tab:CreateKeybind({
-   Name = "Freze Object",
-   CurrentKeybind = "Z",
-   HoldToInteract = false,
-   Callback = function(Value)
-   local lp = game.Players.LocalPlayer
-   lp.Character.GrabbingScript.Disabled = true
-   lp.Character.GrabbingScript.Enabled = true
-   end,
-})
-
-local Toggle = Tab:CreateButton({
-   Name = "Freze Object",
-   Callback = function(Value)
-   local lp = game.Players.LocalPlayer
-   lp.Character.GrabbingScript.Disabled = true
-   lp.Character.GrabbingScript.Enabled = true
-   end,
-})
-
-local Toggle = Tab:CreateKeybind({
-   Name = "Anti Kick Shuriken",
-   CurrentKeybind = "R",
-   HoldToInteract = false,
-   Callback = function(Value)
-   local lp = game.Players.LocalPlayer
-   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-   local f = toy.NinjaShuriken.StickyPart
-   local t = lp.Character.HumanoidRootPart
-   lp.Character.Torso.CanCollide = false
-   f.Anchored = true
-   t.Anchored = true
-   f.CFrame = t.CFrame * CFrame.Angles(math.rad(90), 0, 0)
-   t.Anchored = false
-   f.Anchored = false
-   wait(1)
-   lp.Character.Torso.CanCollide = true
-   toy.NinjaShuriken.Name = "AntiKick"
-	end,
-})
-
-local Toggle = Tab:CreateButton({
-   Name = "Anti Kick Kunai",
-   Callback = function(Value)
-   local lp = game.Players.LocalPlayer
-   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-   local f = toy.NinjaKunai.StickyPart
-   local t = lp.Character.HumanoidRootPart
-   lp.Character.Torso.CanCollide = false
-   f.Anchored = true
-   t.Anchored = true
-	f.CanTouch = false
-	f.CanQuery = false
-   f.CFrame = t.CFrame * CFrame.Angles(math.rad(90), math.rad(90), 0)
-	wait(0.03)
-	f.CFrame = f.CFrame + Vector3.new(0, -0.5, 0)
-   toy.NinjaKunai.Name = "AntiKick"
-	f.CanTouch = true
-	f.CanQuery = true
-   t.Anchored = false
-   f.Anchored = false
-   wait(1)
-   lp.Character.Torso.CanCollide = true
-	end,
-})
-
-local Toggle = Tab:CreateButton({
-   Name = "Anti Kick Shuriken",
-   Callback = function(Value)
-   local lp = game.Players.LocalPlayer
-   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-   local f = toy.NinjaShuriken.StickyPart
-   local t = lp.Character.HumanoidRootPart
-   lp.Character.Torso.CanCollide = false
-   f.Anchored = true
-   t.Anchored = true
-   f.CFrame = t.CFrame * CFrame.Angles(math.rad(90), 0, 0)
-   t.Anchored = false
-   f.Anchored = false
-   wait(1)
-   lp.Character.Torso.CanCollide = true
-   toy.NinjaShuriken.Name = "AntiKick"
-	end,
-})
+local Section = Tab:CreateSection("Settings")
 
 local Toggle = Tab:CreateButton({
    Name = "???",
@@ -532,8 +925,6 @@ local Toggle = Tab:CreateButton({
    toy.ToolPencil.Name = "PENCIL!!!"
 	end,
 })
-
-local Section = Tab:CreateSection("Settings")
 
 local Button = Tab:CreateToggle({
    Name = "Cry (Need Campfire)",
@@ -739,21 +1130,6 @@ end
 end,
 })
 
-local Button = Tab:CreateButton({
-   Name = "Set Boombox",
-   Callback = function()
-   local lp = game.Players.LocalPlayer
-   local toy = game.workspace.PlotItems.Plot3
-   local h = lp.Character.Torso
-   if toy:FindFirstChild("Boombox") then
-    while true do
-        print(1)
-        wait(0.01)
-    end
-end
-end,
-})
-
 local o = false
 
 local Toggle = Tab:CreateToggle({
@@ -774,235 +1150,6 @@ local Toggle = Tab:CreateToggle({
 end,
 })
 
-local Button = Tab:CreateToggle({
-   Name = "Disable Barrier Collisions",
-   CurrentValue = false,
-   Callback = function(Value)
-	local group = game.Workspace.Plots.Plot1:FindFirstChild("Barrier")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "PlotBarrier" and part:IsA("Part") then
-		if Value == true then
-            part.CanCollide = false
-			part.CanQuery = false
-			game.workspace.Plots.Plot1.PlotArea.CanQuery = false
-			else
-			part.CanCollide = true
-			part.CanQuery = true
-			game.workspace.Plots.Plot1.PlotArea.CanQuery = true
-			end
-        end
-    end
-end
-	local group = game.Workspace.Plots.Plot2:FindFirstChild("Barrier")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "PlotBarrier" and part:IsA("Part") then
-            if Value == true then
-            part.CanCollide = false
-			part.CanQuery = false
-			game.workspace.Plots.Plot2.PlotArea.CanQuery = false
-			else
-			part.CanCollide = true
-			part.CanQuery = true
-			game.workspace.Plots.Plot2.PlotArea.CanQuery = true
-			end
-        end
-    end
-end
-	local group = game.Workspace.Plots.Plot3:FindFirstChild("Barrier")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "PlotBarrier" and part:IsA("Part") then
-            if Value == true then
-            part.CanCollide = false
-			part.CanQuery = false
-			game.workspace.Plots.Plot3.PlotArea.CanQuery = false
-			else
-			part.CanCollide = true
-			part.CanQuery = true
-			game.workspace.Plots.Plot3.PlotArea.CanQuery = true
-			end
-        end
-    end
-end
-	local group = game.Workspace.Plots.Plot4:FindFirstChild("Barrier")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "PlotBarrier" and part:IsA("Part") then
-            if Value == true then
-            part.CanCollide = false
-			part.CanQuery = false
-			game.workspace.Plots.Plot4.PlotArea.CanQuery = false
-			else
-			part.CanCollide = true
-			part.CanQuery = true
-			game.workspace.Plots.Plot4.PlotArea.CanQuery = true
-			end
-        end
-    end
-end
-	local group = game.Workspace.Plots.Plot5:FindFirstChild("Barrier")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "PlotBarrier" and part:IsA("Part") then
-            if Value == true then
-            part.CanCollide = false
-			part.CanQuery = false
-			game.workspace.Plots.Plot5.PlotArea.CanQuery = false
-			else
-			part.CanCollide = true
-			part.CanQuery = true
-			game.workspace.Plots.Plot5.PlotArea.CanQuery = true
-			end
-        end
-    end
-end
-	Rayfield:Notify({
-   Title = "Disable Barrier Collisions",
-   Content = "Done",
-   Duration = 3,
-   Image = 4483362458,
-})
-
-   end,
-})
-
-local Toggle = Tab:CreateToggle({
-   Name = "Disable Blur",
-   CurrentValue = false,
-   Callback = function(Value)
-   local B = game.workspace.Camera.Blur
-   if Value == true then
-   B.Enabled = false
-   else
-   B.Enabled = true
-	end
-
-	Rayfield:Notify({
-   Title = "Disable Blur",
-   Content = "Done",
-   Duration = 3,
-   Image = 4483362458,
-})
-   end,
-})
-
-local Toggle = Tab:CreateToggle({
-   Name = "Anti Fire",
-   CurrentValue = false,
-   Callback = function(Value)
-   local R = game:GetService("RunService")
-   local lp = game.Players.LocalPlayer.Character
-   local t = game.workspace.Plots.Plot3.Barrier.PlotBarrier
-   local old = t.Position
-
-   local c = nil
-
-   local function F()
-	   if lp and lp.Humanoid.Health > 0 then
-		   t.Position = lp.HumanoidRootPart.Position
-		   task.wait(0.3)
-		   t.Position = old
-		   print(1)
-	   end
-   end
-
-   if Value == true then
-   if c then
-	   c:Disconnect()
-	   c = nil
-   end
-   end
-
-   c = R.Heartbeat:Connect(function()
-
-   if lp.HumanoidRootPart.FirePlayerPart.CanBurn == true then
-	F()
-	print(2)
-
-   else
-	   if c then
-		   c:Disconnect()
-		   c = nil
-	   end
-	end
-   end)
-
-
-	Rayfield:Notify({
-   Title = "Anti Burn",
-   Content = "Done",
-   Duration = 3,
-   Image = 4483362458,
-})
-   end,
-})
-
-local Toggle = Tab:CreateToggle({
-   Name = "Anti Void",
-   CurrentValue = false,
-   Callback = function(Value)
-   if Value == true then
-	game.Workspace.FallenPartsDestroyHeight = -10e+37
-   else
-	game.Workspace.FallenPartsDestroyHeight = 0
-		end
-	end,
-})
-
-local Toggle = Tab:CreateToggle({
-   Name = "WaterWalk",
-   CurrentValue = false,
-   Callback = function(Value)
-   	local group = game.Workspace.Map.AlwaysHereTweenedObjects.Ocean.Object:FindFirstChild("ObjectModel")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "Ocean" and part:IsA("Part") then
-            part.CanCollide = Value
-        end
-    end
-end
-	print("Done!")
-
-		Rayfield:Notify({
-   Title = "WaterWalk",
-   Content = "Done",
-   Duration = 3,
-   Image = 4483362458,
-})
-
-   end,
-})
-
-local Button = Tab:CreateToggle({
-   Name = "Water Transparency",
-   CurrentValue = false,
-   Callback = function(Value)
-   	local group = game.Workspace.Map.AlwaysHereTweenedObjects.Ocean.Object:FindFirstChild("ObjectModel")
-if group then
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "Ocean" and part:IsA("Part") then
-		if Value == true then
-            part.Transparency = 0.7
-			else
-			part.Transparency = 0
-			end
-        end
-    end
-end
-	print("Done!")
-
-	Rayfield:Notify({
-   Title = "Water Transparency",
-   Content = "Done",
-   Duration = 3,
-   Image = 4483362458,
-})
-
-end,
-})
-
 local Button = Tab:CreateButton({
    Name = "Remove Clouds",
    Callback = function()
@@ -1019,162 +1166,8 @@ local Button = Tab:CreateButton({
 end,
 })
 
-local Toggle = Tab:CreateToggle({
-   Name = "Revert Default Line Skin",
-   CurrentValue = false,
-   Callback = function(Value)
-   local p = game.Players.LocalPlayer.FartherReach
-   if Value == true then
-   p.Value = false
-
-   Rayfield:Notify({
-   Title = "Revert Default Line Skin",
-   Content = "Done",
-   Duration = 3,
-   Image = 4483362458,
-})
-   else
-   p.Value = true
-	end
-   end,
-})
-
-local Toggle = Tab:CreateButton({
-   Name = "Get Gamepass Line Skin",
-   Callback = function()
-   local p = game.Players.LocalPlayer.FartherReach
-   if not p then
-   local x = Instance.new("BoolValue")
-   x.Name = "FartherReach"
-   x.Parent = game.Players.LocalPlayer
-   x.Value = true
-   end
-
-   Rayfield:Notify({
-   Title = "Get Gamepass Line Skin",
-   Content = "Done",
-   Duration = 3,
-   Image = 4483362458,
-})
-   end,
-})
-
 local Slider = Tab:CreateSlider({
-   Name = "Line Width0",
-   Range = {0, 10},
-   Increment = 0.01,
-   Suffix = " ",
-   CurrentValue = 0.375,
-   Callback = function(Value)
-   local L = game.ReplicatedFirst.GrabParts.BeamPart
-   L.GrabBeam.Width0 = Value
-end,
-})
-
-local Slider = Tab:CreateSlider({
-   Name = "Line Width1",
-   Range = {0, 10},
-   Increment = 0.01,
-   Suffix = " ",
-   CurrentValue = 0.375,
-   Callback = function(Value)
-   local L = game.ReplicatedFirst.GrabParts.BeamPart
-   L.GrabBeam.Width1 = Value
-end,
-})
-
-local Toggle = Tab:CreateButton({
-   Name = "Revert Line Width",
-   Callback = function(Value)
-   local L = game.ReplicatedFirst.GrabParts.BeamPart
-   L.GrabBeam.Width0 = 0.375
-   L.GrabBeam.Width1 = 0.375
-   end,
-})
-
-local Slider = Tab:CreateSlider({
-   Name = "Line Texture Length",
-   Range = {0, 100},
-   Increment = 0.1,
-   Suffix = " ",
-   CurrentValue = 5,
-   Callback = function(Value)
-   local L = game.ReplicatedFirst.GrabParts.BeamPart
-   L.GrabBeam.TextureLength = Value
-end,
-})
-
-local Slider = Tab:CreateSlider({
-   Name = "Line Texture Speed",
-   Range = {0, 10},
-   Increment = 0.1,
-   Suffix = " ",
-   CurrentValue = 6,
-   Callback = function(Value)
-   local L = game.ReplicatedFirst.GrabParts.BeamPart
-   L.GrabBeam.TextureSpeed = Value
-end,
-})
-
-local Toggle = Tab:CreateToggle({
-   Name = "Remove Line Texture",
-   CurrentValue = false,
-   Callback = function(Value)
-   local L = game.ReplicatedFirst.GrabParts.BeamPart
-   local p = game.Players.LocalPlayer.FartherReach
-   if Value == true then
-   p.Value = false
-   L.GrabBeam.Texture = ""
-   else
-   p.Value = true
-   L.GrabBeam.Texture = "rbxassetid://8933346550"
-   end
-   end,
-})
-
-local Toggle = Tab:CreateButton({
-   Name = "Shuffle Line Sounds",
-   Callback = function(Value)
-	local newgrab = game.ReplicatedFirst.GrabParts.GrabPart.AttachSound
-	local oldgrab = game.ReplicatedFirst.GrabParts.GrabPart.AttachSound1
-	local newhold = game.ReplicatedFirst.GrabParts.GrabPart.BeamSound
-	local oldhold = game.ReplicatedFirst.GrabParts.GrabPart.BeamSound1
-	newgrab.Name = "AttachSound1"
-    oldgrab.Name = "AttachSound"
-	newhold.Name = "BeamSound1"
-    oldhold.Name = "BeamSound"
-	print("Done!")
-
-		Rayfield:Notify({
-   Title = "Shuffle Line Sounds",
-   Content = "Done",
-   Duration = 3,
-   Image = 4483362458,
-})
-
-   end,
-})
-
-local Slider = Tab:CreateSlider({
-   Name = "Line Sounds",
-   Range = {0, 1},
-   Increment = 0.01,
-   Suffix = "Volume",
-   CurrentValue = 0.05,
-   Callback = function(Value)
-   	local newgrab = game.ReplicatedFirst.GrabParts.GrabPart.AttachSound
-	local oldgrab = game.ReplicatedFirst.GrabParts.GrabPart.AttachSound1
-	local newhold = game.ReplicatedFirst.GrabParts.GrabPart.BeamSound
-	local oldhold = game.ReplicatedFirst.GrabParts.GrabPart.BeamSound1
-	newgrab.Volume = Value
-    oldgrab.Volume = VAlue
-	newhold.Volume = Value
-    oldhold.Volume = Value
-   end,
-})
-
-local Slider = Tab:CreateSlider({
-   Name = "Map Sounds",
+   Name = "Map Noises",
    Range = {0, 1},
    Increment = 0.01,
    Suffix = "Volume",
@@ -1194,7 +1187,7 @@ local Slider = Tab:CreateSlider({
 })
 
 local Slider = Tab:CreateSlider({
-   Name = "Scream Sounds",
+   Name = "Screams",
    Range = {0, 1},
    Increment = 0.01,
    Suffix = "Volume",
@@ -1504,22 +1497,6 @@ end,
 })
 
 local Section = Tab:CreateSection("FTAP Scripts")
-
-local Button = Tab:CreateButton({
-   Name = "Posral",
-   Callback = function()
-   loadstring(game:HttpGet('https://raw.githubusercontent.com/Brovaky/Friendly/refs/heads/main/Friendly'))()
-	print("Done!")
-
-	Rayfield:Notify({
-   Title = "Posral",
-   Content = "Done",
-   Duration = 3,
-   Image = 4483362458,
-})
-
-end,
-})
 
 local Button = Tab:CreateButton({
    Name = "TheChosenOne",
