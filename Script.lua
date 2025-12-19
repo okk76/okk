@@ -653,6 +653,18 @@ end
 })
 
 local Toggle = Tab:CreateToggle({
+   Name = "Anti Lag",
+   CurrentValue = false,
+   Callback = function(Value)
+   if Value == true then
+	game.Players.LocalPlayer.PlayerScripts.CharacterBeamAndMove.Disabled = true
+   else
+	game.Players.LocalPlayer.PlayerScripts.CharacterBeamAndMove.Enabled = true
+		end
+	end,
+})
+
+local Toggle = Tab:CreateToggle({
    Name = "Disable Blur",
    CurrentValue = false,
    Callback = function(Value)
