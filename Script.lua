@@ -3,6 +3,16 @@ local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 local SelectedPlayer = nil
 local P = game:GetService("Players")
 local LocalPlayer = P.LocalPlayer
+
+local function spawnItem(itemName, position, orientation)
+    task.spawn(function()
+		local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        local cframe = CFrame.new(position)
+        local rotation = Vector3.new(0, 90, 0)
+        ReplicatedStorage.MenuToys.SpawnToyRemoteFunction:InvokeServer(itemName, cframe, rotation)
+    end)
+end
+
 local function Joined(pl)
 
    Rayfield:Notify({
@@ -56,6 +66,13 @@ local Window = Rayfield:CreateWindow({
 local Tab = Window:CreateTab("Player", 10747373176)
 
 local Section = Tab:CreateSection("Settings")
+
+local Button = Tab:CreateButton({
+   Name = "Spawn Test",
+   Callback = function()
+   spawnItem("OvenDarkGray", Vector3.new(0, 10, 0))
+   end,
+})
 
 local Slider = Tab:CreateSlider({
    Name = "WalkSpeed",
@@ -114,8 +131,6 @@ local Slider = Tab:CreateSlider({
 })
 
    local acs = false
-   game.Players.LocalPlayer.Character.TypingKeyboardMyWorld.Handle:Destroy()
-
 
 local Toggle = Tab:CreateToggle({
    Name = "Unlock Third Person",
@@ -318,6 +333,47 @@ end,
 local Tab = Window:CreateTab("GrabLine", 10723404472)
 
 local Section = Tab:CreateSection("GrabLine")
+
+local fire = false
+
+local Toggle = Tab:CreateToggle({
+    Name = "Fire Grab",
+    CurrentValue = false,
+    Callback = function(Value)
+        fire = Value
+        local lp = P.LocalPlayer
+        local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+
+		spawnItem("Campfire", Vector3.new(-72.9304581, -5.96906614, -265.543732))
+		task.wait(2)
+
+        local function T()
+            while fire do
+                local grab = game.Workspace:FindFirstChild("GrabParts")
+				local c = toy.Campfire
+                if grab then
+                    c.Main.CFrame = grab.GrabPart.CFrame
+                else
+                    c.Main.CFrame = CFrame.new(-72.9304581, -5.96906614, -265.543732)
+                end
+                task.wait(0.03)
+            end
+        end
+
+        local grab = game.Workspace:FindFirstChild("GrabParts")
+        if grab then
+            task.spawn(function()
+                T()
+            end)
+        else
+            c.Main.CFrame = CFrame.new(-72.9304581, -5.96906614, -265.543732)
+            task.spawn(function()
+                T()
+
+            end)
+        end
+    end,
+})
 
 local Toggle = Tab:CreateToggle({
    Name = "Massless Grab",
@@ -709,9 +765,9 @@ local Toggle = Tab:CreateToggle({
    CurrentValue = false,
    Callback = function(Value)
    if Value == true then
-	game.Players.LocalPlayer.PlayerScripts.CharacterBeamAndMove.Disabled = true
+	game:GetService("Players").LocalPlayer.PlayerScripts.CharacterBeamAndMove.Disabled = true
    else
-	game.Players.LocalPlayer.PlayerScripts.CharacterBeamAndMove.Enabled = true
+	game:GetService("Players").LocalPlayer.PlayerScripts.CharacterBeamAndMove.Enabled = true
 		end
 	end,
 })
@@ -1041,16 +1097,11 @@ local Button = Tab:CreateToggle({
 })
 
 local Button = Tab:CreateButton({
-   Name = "Break Barrier (Need Snowball)",
+   Name = "Break Barrier",
    Callback = function()
    local lp = game.Players.LocalPlayer
    local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-   local b = toy.BallSnowball.Main
-   if b then
-	   b.CFrame = CFrame.new(330.336456, -10.305584, 476.507538, 0.469516784, 4.47039059e-21, -0.882923543, 4.50381006e-20, 1, 2.90133115e-20, 0.882923543, -5.33874355e-20, 0.469516784)
-	   task.wait(0.12)
-	   b.Velocity = Vector3.new(-1000, -10, 0)
-   end
+   spawnItem("BallSnowball", Vector3.new(292.8232116699219, -10.366744041442871, 489.835693359375))
 	Rayfield:Notify({
    Title = "Break Barrier",
    Content = "Done",
@@ -1191,26 +1242,6 @@ if toy:FindFirstChild("c") and toy:FindFirstChild("d") then
         wait(0.01)
     end
 end
-end,
-})
-
-local o = false
-
-local Toggle = Tab:CreateToggle({
-   Name = "PLCD",
-   CurrentValue = false,
-   Callback = function(Value)
-	local w = game.workspace
-	o = w.SpawnLocation
-	while o do
-		for _, p in ipairs(w:GetChildren()) do
-        if p.Name == "PlayerCharacterLocationDetector" then
-            p.Transparency = 0.7
-			p.BrickColor = BrickColor.new("Hot pink")
-			task.wait(0.5)
-			end
-		end
-	end
 end,
 })
 
