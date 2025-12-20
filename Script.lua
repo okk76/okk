@@ -113,10 +113,36 @@ local Slider = Tab:CreateSlider({
    end,
 })
 
+   local acs = false
+   game.Players.LocalPlayer.Character.TypingKeyboardMyWorld.Handle:Destroy()
+
+
 local Toggle = Tab:CreateToggle({
    Name = "Unlock Third Person",
    CurrentValue = false,
    Callback = function(Value)
+        acs = Value
+		local group = game.Players.LocalPlayer.Character
+
+        if Value then
+            task.spawn(function()
+                while acs do
+    for _, part in ipairs(group:GetChildren()) do
+        if part:IsA("Accessory") then
+            part.Handle.Transparency = 0
+			group.Torso.Transparency = 0
+			group.Head.Transparency = 0
+			group["Left Leg"].Transparency = 0
+			group["Left Arm"].Transparency = 0
+			group["Right Leg"].Transparency = 0
+			group["Right Arm"].Transparency = 0
+    end
+end
+    task.wait(0.03)
+			end
+        end)
+	end
+
    if Value == true then
    game.Players.LocalPlayer.DevEnableMouseLock = true
    game.Players.LocalPlayer.CameraMaxZoomDistance = 100000
@@ -127,6 +153,7 @@ local Toggle = Tab:CreateToggle({
    Duration = 3,
    Image = 4483362458,
 })
+
    else
    game.Players.LocalPlayer.DevEnableMouseLock = false
    game.Players.LocalPlayer.CameraMaxZoomDistance = 0.5
@@ -164,6 +191,31 @@ local Toggle = Tab:CreateToggle({
 })
 	end
    end,
+})
+
+local PLCD = false
+
+local Toggle = Tab:CreateToggle({
+    Name = "PLCD",
+    CurrentValue = false,
+    Callback = function(Value)
+        PLCD = Value
+		local group = game.Workspace
+        if Value then
+            task.spawn(function()
+                while PLCD do
+
+    for _, part in ipairs(group:GetChildren()) do
+        if part.Name == "PlayerCharacterLocationDetector" and part:IsA("Part") then
+            part.Transparency = 0.6
+			part.BrickColor = BrickColor.new("Hot pink")
+    end
+end
+                    task.wait(0.03)
+                end
+            end)
+        end
+    end,
 })
 
 local Button = Tab:CreateButton({
@@ -657,9 +709,9 @@ local Toggle = Tab:CreateToggle({
    CurrentValue = false,
    Callback = function(Value)
    if Value == true then
-	game:GetService("Players").LocalPlayer.PlayerScripts.CharacterAndBeamMove.Disabled = true
+	game.Players.LocalPlayer.PlayerScripts.CharacterBeamAndMove.Disabled = true
    else
-	game:GetService("Players").LocalPlayer.PlayerScripts.CharacterAndBeamMove.Enabled = true
+	game.Players.LocalPlayer.PlayerScripts.CharacterBeamAndMove.Enabled = true
 		end
 	end,
 })
@@ -995,11 +1047,9 @@ local Button = Tab:CreateButton({
    local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
    local b = toy.BallSnowball.Main
    if b then
-       b.Velocity = Vector3.new(0, 30, 0)
-	   task.wait(0.3)   
-	   b.CFrame = CFrame.new(320.336456, 0.305584, 450.507538, 0.469516784, 4.47039059e-21, -0.882923543, 4.50381006e-20, 1, 2.90133115e-20, 0.882923543, -5.33874355e-20, 0.469516784)
-	   task.wait(0.08)
-	   b.Velocity = Vector3.new(-100, -1000, 0)
+	   b.CFrame = CFrame.new(330.336456, -10.305584, 476.507538, 0.469516784, 4.47039059e-21, -0.882923543, 4.50381006e-20, 1, 2.90133115e-20, 0.882923543, -5.33874355e-20, 0.469516784)
+	   task.wait(0.12)
+	   b.Velocity = Vector3.new(-1000, -10, 0)
    end
 	Rayfield:Notify({
    Title = "Break Barrier",
