@@ -657,9 +657,9 @@ local Toggle = Tab:CreateToggle({
    CurrentValue = false,
    Callback = function(Value)
    if Value == true then
-	game.Players.LocalPlayer.PlayerScripts.CharacterBeamAndMove.Disabled = true
+	game:GetService("Players").LocalPlayer.PlayerScripts.CharacterAndBeamMove.Disabled = true
    else
-	game.Players.LocalPlayer.PlayerScripts.CharacterBeamAndMove.Enabled = true
+	game:GetService("Players").LocalPlayer.PlayerScripts.CharacterAndBeamMove.Enabled = true
 		end
 	end,
 })
@@ -995,9 +995,11 @@ local Button = Tab:CreateButton({
    local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
    local b = toy.BallSnowball.Main
    if b then
-	   b.CFrame = CFrame.new(330.336456, -10.305584, 476.507538, 0.469516784, 4.47039059e-21, -0.882923543, 4.50381006e-20, 1, 2.90133115e-20, 0.882923543, -5.33874355e-20, 0.469516784)
-	   task.wait(0.12)
-	   b.Velocity = Vector3.new(-1000, -10, 0)
+       b.Velocity = Vector3.new(0, 30, 0)
+	   task.wait(0.3)   
+	   b.CFrame = CFrame.new(320.336456, 0.305584, 450.507538, 0.469516784, 4.47039059e-21, -0.882923543, 4.50381006e-20, 1, 2.90133115e-20, 0.882923543, -5.33874355e-20, 0.469516784)
+	   task.wait(0.08)
+	   b.Velocity = Vector3.new(-100, -1000, 0)
    end
 	Rayfield:Notify({
    Title = "Break Barrier",
