@@ -601,6 +601,38 @@ local Tab = Window:CreateTab("Defense", 10734951847)
 
 local Section = Tab:CreateSection("Settings")
 
+local LoopTP = false
+
+Tab:CreateToggle({
+    Name = "Loop TP",
+    CurrentValue = false,
+    Callback = function(Value)
+	local lp = P.LocalPlayer.Character
+        LoopTP = Value
+
+        if Value then
+            task.spawn(function()
+                while LoopTP do
+                    lp.HumanoidRootPart.CFrame = CFrame.new(569.652527, 13.6484346, -394.444519, -0.953733981, -3.01659959e-08, -0.300651759, -5.31917044e-09, 1, -8.34617495e-08, 0.300651759, -7.80010865e-08, -0.953733981)
+                    task.wait(0.025)
+					lp.HumanoidRootPart.CFrame = CFrame.new(79.1195755, 303.694733, 365.037109, 0.300712913, 9.96221416e-08, -0.953714728, -1.43715875e-08, 1, 9.99255008e-08, 0.953714728, -1.63424936e-08, 0.300712913)
+                    task.wait(0.025)
+					lp.HumanoidRootPart.CFrame = CFrame.new(42.507618, -6.35040426, -631.584534, -0.976292491, -4.06780316e-08, -0.2164554, -1.58035363e-08, 1, -1.16648309e-07, 0.2164554, -1.10462111e-07, -0.976292491)
+                    task.wait(0.025)
+					lp.HumanoidRootPart.CFrame = CFrame.new(-556.111572, -7.35040474, 651.426941, -0.766063511, -1.1517696e-07, 0.642764866, -4.87707155e-08, 1, 1.21063692e-07, -0.642764866, 6.13943811e-08, -0.766063511)
+                    task.wait(0.025)
+					lp.HumanoidRootPart.CFrame = CFrame.new(-406.163055, -6.35040474, -518.774292, -0.963627636, 2.03066879e-08, -0.267248422, -1.42729943e-08, 1, 1.27448985e-07, 0.267248422, 1.26627796e-07, -0.963627636)
+                    task.wait(0.025)
+					lp.HumanoidRootPart.CFrame = CFrame.new(602.923462, 26.6475773, 133.185562, 0.325559855, 5.51754091e-08, 0.945521414, 2.13931295e-09, 1, -5.90910822e-08, -0.945521414, 2.12604512e-08, 0.325559855)
+                    task.wait(0.025)
+					lp.HumanoidRootPart.CFrame = CFrame.new(-555.959473, -6.35040426, 651.610535, -0.731328487, -7.58439569e-08, 0.682025373, -6.26779766e-08, 1, 4.39950867e-08, -0.682025373, -1.05731077e-08, -0.731328487)
+                    task.wait(0.025)
+                end
+            end)
+        end
+    end,
+})
+
 local Toggle = Tab:CreateKeybind({
    Name = "Anti Kick Shuriken",
    CurrentKeybind = "R",
