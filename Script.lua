@@ -3,6 +3,9 @@ local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 local SelectedPlayer = nil
 local P = game:GetService("Players")
 local LocalPlayer = P.LocalPlayer
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local GrabEvents = ReplicatedStorage:WaitForChild("GrabEvents")
+local SetNetworkOwner = GrabEvents:WaitForChild("SetNetworkOwner")
 
 local function spawnItem(itemName, position, orientation)
     task.spawn(function()
@@ -70,7 +73,7 @@ local Section = Tab:CreateSection("Settings")
 local Button = Tab:CreateButton({
    Name = "Spawn Test",
    Callback = function()
-   spawnItem("OvenDarkGray", Vector3.new(0, 10, 0))
+   spawnItem("AnvilGray", Vector3.new(0, 10, 0))
    end,
 })
 
@@ -334,47 +337,6 @@ local Tab = Window:CreateTab("GrabLine", 10723404472)
 
 local Section = Tab:CreateSection("GrabLine")
 
-local fire = false
-
-local Toggle = Tab:CreateToggle({
-    Name = "Fire Grab",
-    CurrentValue = false,
-    Callback = function(Value)
-        fire = Value
-        local lp = P.LocalPlayer
-        local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-
-		spawnItem("Campfire", Vector3.new(-72.9304581, -5.96906614, -265.543732))
-		task.wait(2)
-
-        local function T()
-            while fire do
-                local grab = game.Workspace:FindFirstChild("GrabParts")
-				local c = toy.Campfire
-                if grab then
-                    c.Main.CFrame = grab.GrabPart.CFrame
-                else
-                    c.Main.CFrame = CFrame.new(-72.9304581, -5.96906614, -265.543732)
-                end
-                task.wait(0.03)
-            end
-        end
-
-        local grab = game.Workspace:FindFirstChild("GrabParts")
-        if grab then
-            task.spawn(function()
-                T()
-            end)
-        else
-            c.Main.CFrame = CFrame.new(-72.9304581, -5.96906614, -265.543732)
-            task.spawn(function()
-                T()
-
-            end)
-        end
-    end,
-})
-
 local Toggle = Tab:CreateToggle({
    Name = "Massless Grab",
    CurrentValue = false,
@@ -423,7 +385,7 @@ local Toggle = Tab:CreateToggle({
 
 local Toggle = Tab:CreateKeybind({
    Name = "Freze Object",
-   CurrentKeybind = "Z",
+   CurrentKeybind = "K",
    HoldToInteract = false,
    Callback = function(Value)
    local lp = game.Players.LocalPlayer
@@ -634,67 +596,22 @@ Tab:CreateToggle({
 })
 
 local Toggle = Tab:CreateKeybind({
-   Name = "Anti Kick Shuriken",
+   Name = "Anti Kick Kunai",
    CurrentKeybind = "R",
    HoldToInteract = false,
    Callback = function(Value)
    local lp = game.Players.LocalPlayer
+   local t = lp.Character["Left Leg"]
    local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-   local f = toy.NinjaShuriken.StickyPart
-   local t = lp.Character.HumanoidRootPart
-   lp.Character.Torso.CanCollide = false
-   f.Anchored = true
-   t.Anchored = true
-   f.CFrame = t.CFrame * CFrame.Angles(math.rad(90), 0, 0)
-   t.Anchored = false
-   f.Anchored = false
-   wait(1)
-   lp.Character.Torso.CanCollide = true
-   toy.NinjaShuriken.Name = "AntiKick"
-	end,
-})
-
-local Toggle = Tab:CreateButton({
-   Name = "Anti Kick Kunai",
-   Callback = function(Value)
-   local lp = game.Players.LocalPlayer
-   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   spawnItem("NinjaKunai", t.Position)
+   task.wait(0.5)
+   local g = toy.NinjaKunai.SoundPart
    local f = toy.NinjaKunai.StickyPart
-   local t = lp.Character.HumanoidRootPart
-   lp.Character.Torso.CanCollide = false
-   f.Anchored = true
-   t.Anchored = true
-	f.CanTouch = false
-	f.CanQuery = false
-   f.CFrame = t.CFrame * CFrame.Angles(math.rad(90), math.rad(90), 0)
-	wait(0.03)
-	f.CFrame = f.CFrame + Vector3.new(0, -0.5, 0)
+   SetNetworkOwner:FireServer(g, t.CFrame)
+   task.wait(0.1)
+   f.CFrame = t.CFrame * CFrame.Angles(0, 0, math.rad(90))
+   task.wait(0.03)
    toy.NinjaKunai.Name = "AntiKick"
-	f.CanTouch = true
-	f.CanQuery = true
-   t.Anchored = false
-   f.Anchored = false
-   wait(1)
-   lp.Character.Torso.CanCollide = true
-	end,
-})
-
-local Toggle = Tab:CreateButton({
-   Name = "Anti Kick Shuriken",
-   Callback = function(Value)
-   local lp = game.Players.LocalPlayer
-   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-   local f = toy.NinjaShuriken.StickyPart
-   local t = lp.Character.HumanoidRootPart
-   lp.Character.Torso.CanCollide = false
-   f.Anchored = true
-   t.Anchored = true
-   f.CFrame = t.CFrame * CFrame.Angles(math.rad(90), 0, 0)
-   t.Anchored = false
-   f.Anchored = false
-   wait(1)
-   lp.Character.Torso.CanCollide = true
-   toy.NinjaShuriken.Name = "AntiKick"
 	end,
 })
 
@@ -1133,7 +1050,15 @@ local Button = Tab:CreateButton({
    Callback = function()
    local lp = game.Players.LocalPlayer
    local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-   spawnItem("BallSnowball", Vector3.new(292.8232116699219, -10.366744041442871, 489.835693359375))
+   spawnItem("BallSnowball", lp.Character.HumanoidRootPart.Position)
+   task.wait(0.5)
+   SetNetworkOwner:FireServer(toy.BallSnowball.SoundPart)
+   task.wait(1)
+   toy.BallSnowball.SoundPart.Velocity = Vector3.new(0, 75, 0)
+   task.wait(0.5)
+   toy.BallSnowball.SoundPart.CFrame = CFrame.new(323.047089, -8.2944584, 451.713562, -0.0667327344, -0.000783929776, -0.997770488, 0.00268186163, 0.999995947, -0.000965072541, 0.99776727, -0.00274026813, -0.0667303503)
+   task.wait(0.5)
+   toy.BallSnowball.SoundPart.Velocity = Vector3.new(1000, -1000, 1000)
 	Rayfield:Notify({
    Title = "Break Barrier",
    Content = "Done",
