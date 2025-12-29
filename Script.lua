@@ -615,7 +615,7 @@ local Toggle = Tab:CreateKeybind({
 	end,
 })
 
-local Toggle = Tab:CreateKeybind({
+local Toggle = Tab:CreateButton({
    Name = "Anti Kick Kunai",
    Callback = function(Value)
    local lp = game.Players.LocalPlayer
