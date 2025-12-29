@@ -608,10 +608,12 @@ local Toggle = Tab:CreateKeybind({
    local g = toy.NinjaKunai.SoundPart
    local f = toy.NinjaKunai.StickyPart
    SetNetworkOwner:FireServer(g, t.CFrame)
+   lp.Character.Torso.CanCollide = false
    task.wait(0.1)
    f.CFrame = t.CFrame * CFrame.Angles(0, 0, math.rad(90))
    task.wait(0.03)
    toy.NinjaKunai.Name = "AntiKick"
+   lp.Character.Torso.CanCollide = true
 	end,
 })
 
@@ -626,10 +628,12 @@ local Toggle = Tab:CreateButton({
    local g = toy.NinjaKunai.SoundPart
    local f = toy.NinjaKunai.StickyPart
    SetNetworkOwner:FireServer(g, t.CFrame)
+   lp.Character.Torso.CanCollide = false
    task.wait(0.1)
    f.CFrame = t.CFrame * CFrame.Angles(0, 0, math.rad(90))
    task.wait(0.03)
    toy.NinjaKunai.Name = "AntiKick"
+   lp.Character.Torso.CanCollide = true
 	end,
 })
 
