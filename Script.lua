@@ -1077,10 +1077,8 @@ local Button = Tab:CreateButton({
    SetNetworkOwner:FireServer(toy.BallSnowball.SoundPart)
    task.wait(1)
    toy.BallSnowball.SoundPart.Velocity = Vector3.new(0, 50, 0)
-   task.wait(0.5)
-   toy.BallSnowball.SoundPart.CFrame = CFrame.new(323.047089, -9.2944584, 451.713562, -0.0667327344, -0.000783929776, -0.997770488, 0.00268186163, 0.999995947, -0.000965072541, 0.99776727, -0.00274026813, -0.0667303503)
-   task.wait(0.5)
-   toy.BallSnowball.SoundPart.Velocity = Vector3.new(0, -1000, 0)
+   task.wait(0.25)
+   toy.BallSnowball.SoundPart.CFrame = CFrame.new(300.047089, -9.2944584, 450.713562, -0.0667327344, -0.000783929776, -0.997770488, 0.00268186163, 0.999995947, -0.000965072541, 0.99776727, -0.00274026813, -0.0667303503)
 	Rayfield:Notify({
    Title = "Break Barrier",
    Content = "Done",
