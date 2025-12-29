@@ -6,6 +6,7 @@ local LocalPlayer = P.LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GrabEvents = ReplicatedStorage:WaitForChild("GrabEvents")
 local SetNetworkOwner = GrabEvents:WaitForChild("SetNetworkOwner")
+local toysFolder = workspace:FindFirstChild(LocalPlayer.Name.."SpawnedInToys")
 
 local function spawnItem(itemName, position, orientation)
     task.spawn(function()
@@ -15,6 +16,19 @@ local function spawnItem(itemName, position, orientation)
         ReplicatedStorage.MenuToys.SpawnToyRemoteFunction:InvokeServer(itemName, cframe, rotation)
     end)
 end
+
+local function holdItem(itemName)
+    task.spawn(function()
+		local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        ReplicatedStorage.HoldEvents.Hold:InvokeServer(itemName)
+    end)
+end
+
+local function DestroyT(toy)
+    local toy = toy or toysFolder:FindFirstChildWhichIsA("Model")
+    ReplicatedStorage.MenuToys.DestroyToy:FireServer(toy)
+end
+
 
 local function Joined(pl)
 
@@ -71,9 +85,32 @@ local Tab = Window:CreateTab("Player", 10747373176)
 local Section = Tab:CreateSection("Settings")
 
 local Button = Tab:CreateButton({
+   Name = "Food Test",
+   Callback = function()
+   local lp = game.Players.LocalPlayer
+   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   toy.FoodCoconut.HoldPart.HoldItemRemoteFunction:InvokeServer()
+   end,
+})
+
+local Button = Tab:CreateButton({
    Name = "Spawn Test",
    Callback = function()
-   spawnItem("AnvilGray", Vector3.new(0, 10, 0))
+   local lp = game.Players.LocalPlayer
+   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   spawnItem("BallSnowball", lp.Character.HumanoidRootPart.Position)
+   task.wait(0.5)
+   SetNetworkOwner:FireServer(toy.BallSnowball.Main)
+   task.wait(1)
+   --spawnItem("OvenMicrowaveWhite", lp.Character.HumanoidRootPart.Position)
+   --task.wait(0.5)
+   --SetNetworkOwner:FireServer(toy.OvenMicrowaveWhite.Button)
+   --task.wait(1)
+   toy.BallSnowball.Ball80.Velocity = Vector3.new(0, 500, 0)
+   task.wait(0.5)
+   --toy.OvenMicrowaveWhite.FirePlayerPart.CFrame = CFrame.new(300.047089, -9.2944584, 450.713562, -0.0667327344, -0.000783929776, -0.997770488, 0.00268186163, 0.999995947, -0.000965072541, 0.99776727, -0.00274026813, -0.0667303503)
+   toy.BallSnowball.Main.CFrame = CFrame.new(300.047089, -9.2944584, 450.713562, -0.0667327344, -0.000783929776, -0.997770488, 0.00268186163, 0.999995947, -0.000965072541, 0.99776727, -0.00274026813, -0.0667303503)
+   toy.BallSnowball.Main.Velocity = Vector3.new(1000, -100, 1000)
    end,
 })
 
@@ -735,12 +772,10 @@ local Toggle = Tab:CreateToggle({
    Name = "Anti Lag",
    CurrentValue = false,
    Callback = function(Value)
-   if Value == true then
-	game:GetService("Players").LocalPlayer.PlayerScripts.CharacterBeamAndMove.Disabled = true
-   else
-	game:GetService("Players").LocalPlayer.PlayerScripts.CharacterBeamAndMove.Enabled = true
-		end
-	end,
+      local p = game:GetService("Players")
+      local lp = p.LocalPlayer
+      lp.PlayerScripts.CharacterAndBeamMove.Disabled = not Value
+    end,
 })
 
 local Toggle = Tab:CreateToggle({
@@ -878,6 +913,247 @@ end
 end,
 })
 
+local Tab = Window:CreateTab("Target", 10734964441)
+
+local Section = Tab:CreateSection("Target")
+
+local function GetPlayerList()
+    local list = {}
+    for _, player in pairs(P:GetPlayers()) do
+            table.insert(list, player.Name)
+    end
+    return list
+end
+
+local PlayerDropdown = Tab:CreateDropdown({
+    Name = "Set Target",
+    Options = GetPlayerList(),
+    CurrentOption = {},
+    MultipleOptions = false,
+    Callback = function(Option)
+        Selected = Option[1]
+    end,
+})
+
+P.PlayerAdded:Connect(function()
+    PlayerDropdown:Refresh(GetPlayerList())
+end)
+
+P.PlayerRemoving:Connect(function()
+    PlayerDropdown:Refresh(GetPlayerList())
+end)
+
+local LoopTP = false
+
+Tab:CreateToggle({
+    Name = "Loop Banana",
+    CurrentValue = false,
+    Callback = function(Value)
+	local lp = P.LocalPlayer.Character
+	local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+	local tar = P:FindFirstChild(Selected)
+        LoopBanana = Value
+
+        if Value then
+            task.spawn(function()
+                while LoopBanana do
+				if toy.FoodBanana then
+				toy.FoodBanana.Main.CFrame = tar.Character["Left Leg"].CFrame
+				task.wait(0.125)
+				toy.FoodBanana.Main.CFrame = CFrame.new(537.325378, 62.6786575, -217.988876, -0.829166114, -2.66711231e-05, 0.55900228, 0.000436577422, 0.999999642, 0.000695285795, -0.559002101, 0.0008205552, -0.829165816)
+				task.wait(0.05)
+					end
+                end
+            end)
+        end
+    end,
+})
+
+Tab:CreateToggle({
+    Name = "Loop Snowball",
+    CurrentValue = false,
+    Callback = function(Value)
+	local lp = P.LocalPlayer.Character
+	local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+	local tar = P:FindFirstChild(Selected)
+        LoopSnowball = Value
+
+        if Value then
+            task.spawn(function()
+                while LoopSnowball do
+				task.wait(0.3)
+				spawnItem("BallSnowball", lp.HumanoidRootPart.Position)
+   				task.wait(0.3)
+				SetNetworkOwner:FireServer(toy.BallSnowball.SoundPart, toy.BallSnowball.SoundPart.CFrame)
+				toy.BallSnowball.SoundPart.CFrame = CFrame.new(0, 1000, 0)
+				task.wait(0.5)
+				toy.BallSnowball.SoundPart.CFrame = tar.Character.HumanoidRootPart.RagdollTouchedHitbox.CFrame
+				task.wait(1)
+				DestroyT(toysFolder:FindFirstChild("BallSnowball"))
+                end
+            end)
+        end
+    end,
+})
+
+Tab:CreateToggle({
+    Name = "Loop Bomb",
+    CurrentValue = false,
+    Callback = function(Value)
+	local lp = P.LocalPlayer.Character
+	local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+	local tar = P:FindFirstChild(Selected)
+        LoopBomb = Value
+
+        if Value then
+            task.spawn(function()
+                while LoopBomb do
+				task.wait(0.1)
+				spawnItem("BombMissile", lp.HumanoidRootPart.Position)
+   				task.wait(0.3)
+   				SetNetworkOwner:FireServer(toy.BombMissile.Button)
+				toy.BombMissile.Button.CFrame = CFrame.new(0, 10000, 0)
+				task.wait(0.1)
+				toy.BombMissile.OrientingPart.CFrame = tar.Character.HumanoidRootPart.CFrame
+				task.wait(0.3)
+				DestroyT(toysFolder:FindFirstChild("BombMissile"))
+                end
+            end)
+        end
+    end,
+})
+
+Tab:CreateToggle({
+    Name = "Loop NIGGER",
+    CurrentValue = false,
+    Callback = function(Value)
+	local lp = P.LocalPlayer.Character
+	local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+	local tar = P:FindFirstChild(Selected)
+        LoopOven = Value
+
+        if Value then
+            task.spawn(function()
+                while LoopOven do
+				if toy.OvenDarkGray then
+				task.wait(1)
+				toy.OvenDarkGray.PaintPlayerPart.CFrame = tar.Character.HumanoidRootPart.CFrame
+				toy.OvenDarkGray.GlassWindow.CFrame = tar.Character.HumanoidRootPart.CFrame
+				task.wait(0.1)
+				toy.OvenDarkGray.PaintPlayerPart.CFrame = CFrame.new(537.325378, 62.6786575, -217.988876, -0.829166114, -2.66711231e-05, 0.55900228, 0.000436577422, 0.999999642, 0.000695285795, -0.559002101, 0.0008205552, -0.829165816)
+				toy.OvenDarkGray.GlassWindow.CFrame = CFrame.new(537.325378, 62.6786575, -217.988876, -0.829166114, -2.66711231e-05, 0.55900228, 0.000436577422, 0.999999642, 0.000695285795, -0.559002101, 0.0008205552, -0.829165816)
+					end
+                end
+            end)
+        end
+    end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Set Boobs",
+   Callback = function()
+   local lp = game.Players.LocalPlayer
+   local toy = game.workspace.PlotItems.Plot3
+   local h = lp.Character.Torso
+   if toy:FindFirstChild("a") then
+   toy.FoodCoconut.SoundPart.CFrame = h.CFrame + Vector3.new(-0.7, 0.2, -0.5)
+   toy.FoodCoconut.SoundPart.Anchored = true
+   toy.FoodCoconut.SoundPart.CanCollide = false
+   toy.FoodCoconut.Name = "b"
+   else
+   toy.FoodCoconut.SoundPart.CFrame = h.CFrame + Vector3.new(-0.7, 0.2, 0.5)
+   toy.FoodCoconut.SoundPart.Anchored = true
+   toy.FoodCoconut.SoundPart.CanCollide = false
+   toy.FoodCoconut.Name = "a"  
+	end
+end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Set ASS",
+   Callback = function()
+   local lp = game.Players.LocalPlayer
+   local toy = game.workspace.PlotItems.Plot3
+   local h = lp.Character.Torso
+   if toy:FindFirstChild("c") then
+   toy.FoodCoconut.SoundPart.CFrame = h.CFrame + Vector3.new(-0.7, 0.2, -0.5)
+   toy.FoodCoconut.SoundPart.Anchored = true
+   toy.FoodCoconut.SoundPart.CanCollide = false
+   toy.FoodCoconut.Name = "d"
+   else
+   toy.FoodCoconut.SoundPart.CFrame = h.CFrame + Vector3.new(-0.7, 0.2, 0.5)
+   toy.FoodCoconut.SoundPart.Anchored = true
+   toy.FoodCoconut.SoundPart.CanCollide = false
+   toy.FoodCoconut.Name = "c"  
+	end
+end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Boobs",
+   Callback = function()
+	local lp = game.Players.LocalPlayer
+local toy = game.workspace.PlotItems.Plot3
+local h = P:FindFirstChild(Selected)
+
+if toy:FindFirstChild("a") and toy:FindFirstChild("b") then
+    while true do
+        local torsoCF = h.Character.Torso.CFrame
+        local lookVector = torsoCF.LookVector
+        local rightVector = torsoCF.RightVector
+        local upVector = torsoCF.UpVector
+        local basePosition = torsoCF.Position + lookVector * 0.65
+        local invertedOrientation = CFrame.Angles(math.rad(180), 0, 0)
+        
+        local posA = basePosition - rightVector * 0.5 + upVector * 0.2
+        toy.a.SoundPart.CFrame = CFrame.new(posA) * invertedOrientation
+        
+        local posB = basePosition + rightVector * 0.5 + upVector * 0.2
+        toy.b.SoundPart.CFrame = CFrame.new(posB) * invertedOrientation
+        
+        toy.a.SoundPart.Velocity = Vector3.new(0, 0.1, 0)
+        toy.b.SoundPart.Velocity = Vector3.new(0, 0.1, 0)
+        toy.a.SoundPart.Anchored = false
+        toy.b.SoundPart.Anchored = false
+        
+        wait(0.01)
+    end
+end
+end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "ASS",
+   Callback = function()
+	local lp = game.Players.LocalPlayer
+local toy = game.workspace.PlotItems.Plot3
+local h = P:FindFirstChild(Selected)
+
+if toy:FindFirstChild("c") and toy:FindFirstChild("d") then
+    while true do
+        local torsoCF = h.Character.Torso.CFrame
+        local lookVector = torsoCF.LookVector
+        local rightVector = torsoCF.RightVector
+        local upVector = torsoCF.UpVector
+        local basePosition = torsoCF.Position + lookVector * -0.5
+		local invertedOrientation = CFrame.Angles(math.rad(180), 0, 0)
+
+		local posC = basePosition - rightVector * 0.5 + upVector * -0.85
+        toy.c.SoundPart.CFrame = CFrame.new(posC) * invertedOrientation
+
+		local posD = basePosition - rightVector * -0.5 + upVector * -0.85
+        toy.d.SoundPart.CFrame = CFrame.new(posD) * invertedOrientation
+
+        toy.c.SoundPart.Velocity = Vector3.new(0, 0.1, 0)
+	    toy.d.SoundPart.Velocity = Vector3.new(0, 0.1, 0)
+	    toy.c.SoundPart.Anchored = false
+		toy.d.SoundPart.Anchored = false
+        wait(0.01)
+    end
+end
+end,
+})
+
 local Tab = Window:CreateTab("Blobman", 10709782230)
 
 local Section = Tab:CreateSection("Settings")
@@ -995,8 +1271,12 @@ local Toggle = Tab:CreateButton({
    Callback = function(Value)
    local lp = game.Players.LocalPlayer
    local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-   local f = toy.ToolPencil.StickyPart
    local t = lp.Character.HumanoidRootPart
+   spawnItem("Pencil", t)
+   task.wait(0.5)
+   SetNetworkOwner:FireServer(toy.ToolPencil.SoundPart)
+   task.wait(1)
+   local f = toy.ToolPencil.StickyPart
    lp.Character.Torso.CanCollide = false
    toy.ToolPencil.SoundPart.CanQuery = false
    t.Anchored = true
@@ -1087,139 +1367,6 @@ local Button = Tab:CreateButton({
 })
 
    end,
-})
-
-local function GetPlayerList()
-    local list = {}
-    for _, player in pairs(P:GetPlayers()) do
-            table.insert(list, player.Name)
-    end
-    return list
-end
-
--- Dropdown
-local PlayerDropdown = Tab:CreateDropdown({
-    Name = "Set Boobs and ASS to",
-    Options = GetPlayerList(),
-    CurrentOption = {},
-    MultipleOptions = false,
-    Callback = function(Option)
-        Selected = Option[1]
-    end,
-})
-
-P.PlayerAdded:Connect(function()
-    PlayerDropdown:Refresh(GetPlayerList())
-end)
-
-P.PlayerRemoving:Connect(function()
-    PlayerDropdown:Refresh(GetPlayerList())
-end)
-
-
-local Button = Tab:CreateButton({
-   Name = "Set Boobs",
-   Callback = function()
-   local lp = game.Players.LocalPlayer
-   local toy = game.workspace.PlotItems.Plot3
-   local h = lp.Character.Torso
-   if toy:FindFirstChild("a") then
-   toy.FoodCoconut.SoundPart.CFrame = h.CFrame + Vector3.new(-0.7, 0.2, -0.5)
-   toy.FoodCoconut.SoundPart.Anchored = true
-   toy.FoodCoconut.SoundPart.CanCollide = false
-   toy.FoodCoconut.Name = "b"
-   else
-   toy.FoodCoconut.SoundPart.CFrame = h.CFrame + Vector3.new(-0.7, 0.2, 0.5)
-   toy.FoodCoconut.SoundPart.Anchored = true
-   toy.FoodCoconut.SoundPart.CanCollide = false
-   toy.FoodCoconut.Name = "a"  
-	end
-end,
-})
-
-local Button = Tab:CreateButton({
-   Name = "Boobs",
-   Callback = function()
-	local lp = game.Players.LocalPlayer
-local toy = game.workspace.PlotItems.Plot3
-local h = P:FindFirstChild(Selected)
-
-if toy:FindFirstChild("a") and toy:FindFirstChild("b") then
-    while true do
-        local torsoCF = h.Character.Torso.CFrame
-        local lookVector = torsoCF.LookVector
-        local rightVector = torsoCF.RightVector
-        local upVector = torsoCF.UpVector
-        local basePosition = torsoCF.Position + lookVector * 0.65
-        local invertedOrientation = CFrame.Angles(math.rad(180), 0, 0)
-        
-        local posA = basePosition - rightVector * 0.5 + upVector * 0.2
-        toy.a.SoundPart.CFrame = CFrame.new(posA) * invertedOrientation
-        
-        local posB = basePosition + rightVector * 0.5 + upVector * 0.2
-        toy.b.SoundPart.CFrame = CFrame.new(posB) * invertedOrientation
-        
-        toy.a.SoundPart.Velocity = Vector3.new(0, 0.1, 0)
-        toy.b.SoundPart.Velocity = Vector3.new(0, 0.1, 0)
-        toy.a.SoundPart.Anchored = false
-        toy.b.SoundPart.Anchored = false
-        
-        wait(0.01)
-    end
-end
-end,
-})
-
-local Button = Tab:CreateButton({
-   Name = "Set ASS",
-   Callback = function()
-   local lp = game.Players.LocalPlayer
-   local toy = game.workspace.PlotItems.Plot3
-   local h = lp.Character.Torso
-   if toy:FindFirstChild("c") then
-   toy.FoodCoconut.SoundPart.CFrame = h.CFrame + Vector3.new(-0.7, 0.2, -0.5)
-   toy.FoodCoconut.SoundPart.Anchored = true
-   toy.FoodCoconut.SoundPart.CanCollide = false
-   toy.FoodCoconut.Name = "d"
-   else
-   toy.FoodCoconut.SoundPart.CFrame = h.CFrame + Vector3.new(-0.7, 0.2, 0.5)
-   toy.FoodCoconut.SoundPart.Anchored = true
-   toy.FoodCoconut.SoundPart.CanCollide = false
-   toy.FoodCoconut.Name = "c"  
-	end
-end,
-})
-
-local Button = Tab:CreateButton({
-   Name = "ASS",
-   Callback = function()
-	local lp = game.Players.LocalPlayer
-local toy = game.workspace.PlotItems.Plot3
-local h = P:FindFirstChild(Selected)
-
-if toy:FindFirstChild("c") and toy:FindFirstChild("d") then
-    while true do
-        local torsoCF = h.Character.Torso.CFrame
-        local lookVector = torsoCF.LookVector
-        local rightVector = torsoCF.RightVector
-        local upVector = torsoCF.UpVector
-        local basePosition = torsoCF.Position + lookVector * -0.5
-		local invertedOrientation = CFrame.Angles(math.rad(180), 0, 0)
-
-		local posC = basePosition - rightVector * 0.5 + upVector * -0.85
-        toy.c.SoundPart.CFrame = CFrame.new(posC) * invertedOrientation
-
-		local posD = basePosition - rightVector * -0.5 + upVector * -0.85
-        toy.d.SoundPart.CFrame = CFrame.new(posD) * invertedOrientation
-
-        toy.c.SoundPart.Velocity = Vector3.new(0, 0.1, 0)
-	    toy.d.SoundPart.Velocity = Vector3.new(0, 0.1, 0)
-	    toy.c.SoundPart.Anchored = false
-		toy.d.SoundPart.Anchored = false
-        wait(0.01)
-    end
-end
-end,
 })
 
 local Button = Tab:CreateButton({
