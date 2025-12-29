@@ -615,6 +615,24 @@ local Toggle = Tab:CreateKeybind({
 	end,
 })
 
+local Toggle = Tab:CreateKeybind({
+   Name = "Anti Kick Kunai",
+   Callback = function(Value)
+   local lp = game.Players.LocalPlayer
+   local t = lp.Character["Left Leg"]
+   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   spawnItem("NinjaKunai", t.Position)
+   task.wait(0.5)
+   local g = toy.NinjaKunai.SoundPart
+   local f = toy.NinjaKunai.StickyPart
+   SetNetworkOwner:FireServer(g, t.CFrame)
+   task.wait(0.1)
+   f.CFrame = t.CFrame * CFrame.Angles(0, 0, math.rad(90))
+   task.wait(0.03)
+   toy.NinjaKunai.Name = "AntiKick"
+	end,
+})
+
 local Button = Tab:CreateToggle({
    Name = "Disable Barrier Collisions",
    CurrentValue = false,
