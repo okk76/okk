@@ -4,6 +4,9 @@ local SelectedPlayer = nil
 local P = game:GetService("Players")
 local LocalPlayer = P.LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local CharacterEvents = ReplicatedStorage:WaitForChild("CharacterEvents")
+local Struggle = CharacterEvents:WaitForChild("Struggle")
 local GrabEvents = ReplicatedStorage:WaitForChild("GrabEvents")
 local SetNetworkOwner = GrabEvents:WaitForChild("SetNetworkOwner")
 local toysFolder = workspace:FindFirstChild(LocalPlayer.Name.."SpawnedInToys")
@@ -83,6 +86,45 @@ local Window = Rayfield:CreateWindow({
 local Tab = Window:CreateTab("Player", 10747373176)
 
 local Section = Tab:CreateSection("Settings")
+
+local Toggle = Tab:CreateToggle({
+    Name = "Anti Grab",
+    CurrentValue = false,
+    Callback = function(enabled)
+        if enabled then
+            autoStruggleCoroutine = RunService.Heartbeat:Connect(function()
+                local character = LocalPlayer.Character
+                if character and character:FindFirstChild("Head") then
+                    local head = character.Head
+                    local partOwner = head:FindFirstChild("PartOwner")
+                    if partOwner then
+                        Struggle:FireServer()
+                        ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
+                        for _, part in pairs(character:GetChildren()) do
+                            if part:IsA("BasePart") then
+                                part.Anchored = true
+                            end
+                        end
+                        while LocalPlayer.IsHeld.Value do
+                            wait()
+                        end
+                        for _, part in pairs(character:GetChildren()) do
+                            if part:IsA("BasePart") then
+                                part.Anchored = false
+                            end
+                        end
+                    end
+                end
+            end)
+        else
+            if autoStruggleCoroutine then
+                autoStruggleCoroutine:Disconnect()
+                autoStruggleCoroutine = nil
+            end
+        end
+    end
+})
+
 
 local Slider = Tab:CreateSlider({
    Name = "WalkSpeed",
@@ -613,6 +655,13 @@ local Toggle = Tab:CreateKeybind({
    spawnItem("NinjaKunai", t.Position)
    task.wait(0.3)
    lp.Character.HumanoidRootPart.CFrame = toy.NinjaKunai.StickyPart.CFrame * CFrame.new(3, 5, 3)
+   local e = Instance.new("Highlight")
+   --e.Name = "ESPHighlight"
+   --e.FillColor = Color3.fromRGB(255, 0, 0)
+   --e.OutlineColor = Color3.fromRGB(255, 255, 255)
+   --e.FillTransparency = 0.6
+   --e.OutlineTransparency = 0
+   --e.Parent = "NinjaKunai"
    task.wait(0.1)
    local f = toy.NinjaKunai.StickyPart
    SetNetworkOwner:FireServer(f, f.CFrame)
@@ -1275,7 +1324,7 @@ local Button = Tab:CreateKeybind({
 end,
 })
 
-local Tab = Window:CreateTab("Other", 10734964441)
+local Tab = Window:CreateTab("Other", 4483362458)
 
 local Section = Tab:CreateSection("Settings")
 
