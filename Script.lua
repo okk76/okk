@@ -84,36 +84,6 @@ local Tab = Window:CreateTab("Player", 10747373176)
 
 local Section = Tab:CreateSection("Settings")
 
-local Button = Tab:CreateButton({
-   Name = "Food Test",
-   Callback = function()
-   local lp = game.Players.LocalPlayer
-   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-   toy.FoodCoconut.HoldPart.HoldItemRemoteFunction:InvokeServer()
-   end,
-})
-
-local Button = Tab:CreateButton({
-   Name = "Spawn Test",
-   Callback = function()
-   local lp = game.Players.LocalPlayer
-   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-   spawnItem("BallSnowball", lp.Character.HumanoidRootPart.Position)
-   task.wait(0.5)
-   SetNetworkOwner:FireServer(toy.BallSnowball.Main)
-   task.wait(1)
-   --spawnItem("OvenMicrowaveWhite", lp.Character.HumanoidRootPart.Position)
-   --task.wait(0.5)
-   --SetNetworkOwner:FireServer(toy.OvenMicrowaveWhite.Button)
-   --task.wait(1)
-   toy.BallSnowball.Ball80.Velocity = Vector3.new(0, 500, 0)
-   task.wait(0.5)
-   --toy.OvenMicrowaveWhite.FirePlayerPart.CFrame = CFrame.new(300.047089, -9.2944584, 450.713562, -0.0667327344, -0.000783929776, -0.997770488, 0.00268186163, 0.999995947, -0.000965072541, 0.99776727, -0.00274026813, -0.0667303503)
-   toy.BallSnowball.Main.CFrame = CFrame.new(300.047089, -9.2944584, 450.713562, -0.0667327344, -0.000783929776, -0.997770488, 0.00268186163, 0.999995947, -0.000965072541, 0.99776727, -0.00274026813, -0.0667303503)
-   toy.BallSnowball.Main.Velocity = Vector3.new(1000, -100, 1000)
-   end,
-})
-
 local Slider = Tab:CreateSlider({
    Name = "WalkSpeed",
    Range = {0, 500},
@@ -641,12 +611,12 @@ local Toggle = Tab:CreateKeybind({
    local t = lp.Character["Left Leg"]
    local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
    spawnItem("NinjaKunai", t.Position)
-   task.wait(0.5)
-   local g = toy.NinjaKunai.SoundPart
-   local f = toy.NinjaKunai.StickyPart
-   SetNetworkOwner:FireServer(g, t.CFrame)
-   lp.Character.Torso.CanCollide = false
+   task.wait(0.3)
+   lp.Character.HumanoidRootPart.CFrame = toy.NinjaKunai.StickyPart.CFrame * CFrame.new(3, 5, 3)
    task.wait(0.1)
+   local f = toy.NinjaKunai.StickyPart
+   SetNetworkOwner:FireServer(f, f.CFrame)
+   lp.Character.Torso.CanCollide = false
    f.CFrame = t.CFrame * CFrame.Angles(0, 0, math.rad(90))
    task.wait(0.03)
    toy.NinjaKunai.Name = "AntiKick"
@@ -661,10 +631,11 @@ local Toggle = Tab:CreateButton({
    local t = lp.Character["Left Leg"]
    local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
    spawnItem("NinjaKunai", t.Position)
+   task.wait(0.3)
+   lp.Character.HumanoidRootPart.CFrame = toy.NinjaKunai.StickyPart.CFrame * CFrame.new(0, 5, 0)
    task.wait(0.5)
-   local g = toy.NinjaKunai.SoundPart
    local f = toy.NinjaKunai.StickyPart
-   SetNetworkOwner:FireServer(g, t.CFrame)
+   SetNetworkOwner:FireServer(f, lp.Character.HumanoidRootPart.CFrame)
    lp.Character.Torso.CanCollide = false
    task.wait(0.1)
    f.CFrame = t.CFrame * CFrame.Angles(0, 0, math.rad(90))
@@ -672,6 +643,25 @@ local Toggle = Tab:CreateButton({
    toy.NinjaKunai.Name = "AntiKick"
    lp.Character.Torso.CanCollide = true
 	end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Break Barrier",
+   Callback = function()
+   local lp = game.Players.LocalPlayer
+   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   spawnItem("BallSnowball", lp.Character.HumanoidRootPart.Position)
+   task.wait(0.3)
+   lp.Character.HumanoidRootPart.CFrame = toy.BallSnowball.SoundPart.CFrame * CFrame.new(3, 1, 3)
+   task.wait(0.5)
+   SetNetworkOwner:FireServer(toy.BallSnowball.SoundPart, toy.BallSnowball.SoundPart.CFrame)
+   --task.wait(0.3)
+   --toy.BallSnowball.SoundPart.Velocity = Vector3.new(0, 50, 0)
+   task.wait(0.3)
+   toy.BallSnowball.SoundPart.CFrame = CFrame.new(323.090332, -5.35040426, 453.156372, 0.438423634, -1.12835792e-07, -0.898768425, 2.95022073e-09, 1, -1.24105767e-07, 0.898768425, 5.17593364e-08, 0.438423634)
+   task.wait(0.1)
+   toy.BallSnowball.SoundPart.Velocity = Vector3.new(0, -100, 0)
+   end,
 })
 
 local Button = Tab:CreateToggle({
@@ -1362,28 +1352,6 @@ local Button = Tab:CreateToggle({
 
 	Rayfield:Notify({
    Title = "Cry",
-   Content = "Done",
-   Duration = 3,
-   Image = 4483362458,
-})
-
-   end,
-})
-
-local Button = Tab:CreateButton({
-   Name = "Break Barrier",
-   Callback = function()
-   local lp = game.Players.LocalPlayer
-   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-   spawnItem("BallSnowball", lp.Character.HumanoidRootPart.Position)
-   task.wait(0.5)
-   SetNetworkOwner:FireServer(toy.BallSnowball.SoundPart)
-   task.wait(1)
-   toy.BallSnowball.SoundPart.Velocity = Vector3.new(0, 50, 0)
-   task.wait(0.25)
-   toy.BallSnowball.SoundPart.CFrame = CFrame.new(300.047089, -9.2944584, 450.713562, -0.0667327344, -0.000783929776, -0.997770488, 0.00268186163, 0.999995947, -0.000965072541, 0.99776727, -0.00274026813, -0.0667303503)
-	Rayfield:Notify({
-   Title = "Break Barrier",
    Content = "Done",
    Duration = 3,
    Image = 4483362458,
