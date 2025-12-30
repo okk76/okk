@@ -952,6 +952,7 @@ Tab:CreateToggle({
 	local lp = P.LocalPlayer.Character
 	local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
 	local tar = P:FindFirstChild(Selected)
+	local oldpos = lp.HumanoidRootPart.CFrame
         LoopBanana = Value
 
         if Value then
@@ -976,19 +977,23 @@ Tab:CreateToggle({
 	local lp = P.LocalPlayer.Character
 	local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
 	local tar = P:FindFirstChild(Selected)
+	local oldpos = lp.HumanoidRootPart.CFrame
         LoopSnowball = Value
 
         if Value then
             task.spawn(function()
                 while LoopSnowball do
-				task.wait(0.3)
 				spawnItem("BallSnowball", lp.HumanoidRootPart.Position)
-   				task.wait(0.3)
+   				task.wait(0.5)
+				lp.HumanoidRootPart.CFrame = toy.BallSnowball.SoundPart.CFrame * CFrame.new(5, 1, 5)
+				task.wait(0.2)
 				SetNetworkOwner:FireServer(toy.BallSnowball.SoundPart, toy.BallSnowball.SoundPart.CFrame)
+				task.wait(0.3)
 				toy.BallSnowball.SoundPart.CFrame = CFrame.new(0, 1000, 0)
-				task.wait(0.5)
+				lp.HumanoidRootPart.CFrame = oldpos
+				task.wait(0.3)
 				toy.BallSnowball.SoundPart.CFrame = tar.Character.HumanoidRootPart.RagdollTouchedHitbox.CFrame
-				task.wait(1)
+				task.wait(0.75)
 				DestroyT(toysFolder:FindFirstChild("BallSnowball"))
                 end
             end)
@@ -1003,20 +1008,24 @@ Tab:CreateToggle({
 	local lp = P.LocalPlayer.Character
 	local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
 	local tar = P:FindFirstChild(Selected)
+	local oldpos = lp.HumanoidRootPart.CFrame
         LoopBomb = Value
 
         if Value then
             task.spawn(function()
                 while LoopBomb do
-				task.wait(0.1)
 				spawnItem("BombMissile", lp.HumanoidRootPart.Position)
-   				task.wait(0.3)
-   				SetNetworkOwner:FireServer(toy.BombMissile.Button)
+   				task.wait(0.5)
+				lp.HumanoidRootPart.CFrame = toy.BombMissile.Button.CFrame * CFrame.new(5, 1, 5)
+				task.wait(0.2)
+   				SetNetworkOwner:FireServer(toy.BombMissile.Button, toy.BombMissile.Button.CFrame)
+				task.wait(0.3)
 				toy.BombMissile.Button.CFrame = CFrame.new(0, 10000, 0)
+				lp.HumanoidRootPart.CFrame = oldpos
 				task.wait(0.1)
 				toy.BombMissile.OrientingPart.CFrame = tar.Character.HumanoidRootPart.CFrame
 				task.wait(0.3)
-				DestroyT(toysFolder:FindFirstChild("BombMissile"))
+				--DestroyT(toysFolder:FindFirstChild("BombMissile"))
                 end
             end)
         end
@@ -1030,21 +1039,35 @@ Tab:CreateToggle({
 	local lp = P.LocalPlayer.Character
 	local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
 	local tar = P:FindFirstChild(Selected)
+	local oldpos = lp.HumanoidRootPart.CFrame
         LoopOven = Value
+		local function NN()
+		while LoopOven do
+			task.wait(0.75)
+			toy.NIGGER.PaintPlayerPart.CFrame = tar.Character.HumanoidRootPart.CFrame
+			toy.NIGGER.GlassWindow.CFrame = tar.Character.HumanoidRootPart.CFrame
+			task.wait(0.75)
+			toy.NIGGER.PaintPlayerPart.CFrame = CFrame.new(537.325378, 62.6786575, -217.988876, -0.829166114, -2.66711231e-05, 0.55900228, 0.000436577422, 0.999999642, 0.000695285795, -0.559002101, 0.0008205552, -0.829165816)
+			toy.NIGGER.GlassWindow.CFrame = CFrame.new(537.325378, 62.6786575, -217.988876, -0.829166114, -2.66711231e-05, 0.55900228, 0.000436577422, 0.999999642, 0.000695285795, -0.559002101, 0.0008205552, -0.829165816)
+		end
+	end
 
-        if Value then
-            task.spawn(function()
-                while LoopOven do
-				if toy.OvenDarkGray then
+        if Value == true then
+				spawnItem("OvenDarkGray", lp.HumanoidRootPart.Position)
+				task.wait(0.5)
+				lp.HumanoidRootPart.CFrame = toy.OvenDarkGray.PaintPlayerPart.CFrame * CFrame.new(3, 3, 3)
+   				task.wait(1)
+   				SetNetworkOwner:FireServer(toy.OvenDarkGray.ButtonOven, toy.OvenDarkGray.ButtonOven.CFrame)
+				SetNetworkOwner:FireServer(toy.OvenDarkGray.PaintPlayerPart, toy.OvenDarkGray.PaintPlayerPart.CFrame)
+				SetNetworkOwner:FireServer(toy.OvenDarkGray.GlassWindow, toy.OvenDarkGray.GlassWindow.CFrame)
+				SetNetworkOwner:FireServer(toy.OvenDarkGray.Main, toy.OvenDarkGray.Main.CFrame)
 				task.wait(1)
-				toy.OvenDarkGray.PaintPlayerPart.CFrame = tar.Character.HumanoidRootPart.CFrame
-				toy.OvenDarkGray.GlassWindow.CFrame = tar.Character.HumanoidRootPart.CFrame
-				task.wait(0.1)
-				toy.OvenDarkGray.PaintPlayerPart.CFrame = CFrame.new(537.325378, 62.6786575, -217.988876, -0.829166114, -2.66711231e-05, 0.55900228, 0.000436577422, 0.999999642, 0.000695285795, -0.559002101, 0.0008205552, -0.829165816)
-				toy.OvenDarkGray.GlassWindow.CFrame = CFrame.new(537.325378, 62.6786575, -217.988876, -0.829166114, -2.66711231e-05, 0.55900228, 0.000436577422, 0.999999642, 0.000695285795, -0.559002101, 0.0008205552, -0.829165816)
-					end
-                end
-            end)
+				toy.OvenDarkGray.Name = "NIGGER"
+				task.spawn(function()
+				NN()
+				end)
+				else
+				DestroyT(toysFolder:FindFirstChild("NIGGER"))
         end
     end,
 })
