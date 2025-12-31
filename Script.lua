@@ -13,7 +13,6 @@ local toysFolder = workspace:FindFirstChild(LocalPlayer.Name.."SpawnedInToys")
 
 local function spawnItem(itemName, position, orientation)
     task.spawn(function()
-		local ReplicatedStorage = game:GetService("ReplicatedStorage")
         local cframe = CFrame.new(position)
         local rotation = Vector3.new(0, 90, 0)
         ReplicatedStorage.MenuToys.SpawnToyRemoteFunction:InvokeServer(itemName, cframe, rotation)
@@ -22,7 +21,6 @@ end
 
 local function holdItem(itemName)
     task.spawn(function()
-		local ReplicatedStorage = game:GetService("ReplicatedStorage")
         ReplicatedStorage.HoldEvents.Hold:InvokeServer(itemName)
     end)
 end
@@ -655,7 +653,7 @@ local Toggle = Tab:CreateKeybind({
    spawnItem("NinjaKunai", t.Position)
    task.wait(0.3)
    lp.Character.HumanoidRootPart.CFrame = toy.NinjaKunai.StickyPart.CFrame * CFrame.new(3, 5, 3)
-   local e = Instance.new("Highlight")
+   --local e = Instance.new("Highlight")
    --e.Name = "ESPHighlight"
    --e.FillColor = Color3.fromRGB(255, 0, 0)
    --e.OutlineColor = Color3.fromRGB(255, 255, 255)
@@ -1023,9 +1021,9 @@ Tab:CreateToggle({
             task.spawn(function()
                 while LoopSnowball do
 				spawnItem("BallSnowball", lp.HumanoidRootPart.Position)
-   				task.wait(0.5)
+   				task.wait(0.3)
 				lp.HumanoidRootPart.CFrame = toy.BallSnowball.SoundPart.CFrame * CFrame.new(5, 1, 5)
-				task.wait(0.2)
+				task.wait(0.1)
 				SetNetworkOwner:FireServer(toy.BallSnowball.SoundPart, toy.BallSnowball.SoundPart.CFrame)
 				task.wait(0.3)
 				toy.BallSnowball.SoundPart.CFrame = CFrame.new(0, 1000, 0)
@@ -1033,7 +1031,11 @@ Tab:CreateToggle({
 				task.wait(0.3)
 				toy.BallSnowball.SoundPart.CFrame = tar.Character.HumanoidRootPart.RagdollTouchedHitbox.CFrame
 				task.wait(0.75)
+				if toysFolder:FindFirstChild("BallSnowball") then
 				DestroyT(toysFolder:FindFirstChild("BallSnowball"))
+				else
+				print(1)
+					end
                 end
             end)
         end
@@ -1054,9 +1056,9 @@ Tab:CreateToggle({
             task.spawn(function()
                 while LoopBomb do
 				spawnItem("BombMissile", lp.HumanoidRootPart.Position)
-   				task.wait(0.5)
+   				task.wait(0.3)
 				lp.HumanoidRootPart.CFrame = toy.BombMissile.Button.CFrame * CFrame.new(5, 1, 5)
-				task.wait(0.2)
+				task.wait(0.1)
    				SetNetworkOwner:FireServer(toy.BombMissile.Button, toy.BombMissile.Button.CFrame)
 				task.wait(0.3)
 				toy.BombMissile.Button.CFrame = CFrame.new(0, 10000, 0)
@@ -1064,7 +1066,11 @@ Tab:CreateToggle({
 				task.wait(0.1)
 				toy.BombMissile.OrientingPart.CFrame = tar.Character.HumanoidRootPart.CFrame
 				task.wait(0.3)
-				--DestroyT(toysFolder:FindFirstChild("BombMissile"))
+				if toysFolder:FindFirstChild("BombMissile") then
+				DestroyT(toysFolder:FindFirstChild("BombMissile"))
+				else
+				print(1)
+					end
                 end
             end)
         end
