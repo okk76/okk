@@ -85,6 +85,13 @@ local Tab = Window:CreateTab("Player", 10747373176)
 
 local Section = Tab:CreateSection("Settings")
 
+local Button = Tab:CreateButton({
+   Name = "Spawntest",
+   Callback = function()
+spawnItem("SprayCanWD", LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0, -3, 15))
+   end,
+}) 
+
 local Toggle = Tab:CreateToggle({
     Name = "Anti Grab",
     CurrentValue = false,
@@ -650,9 +657,8 @@ local Toggle = Tab:CreateKeybind({
    local lp = game.Players.LocalPlayer
    local t = lp.Character["Left Leg"]
    local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-   spawnItem("NinjaKunai", t.Position)
+   spawnItem("NinjaKunai", t.Position + Vector3.new(0, -3, 15))
    task.wait(0.3)
-   lp.Character.HumanoidRootPart.CFrame = toy.NinjaKunai.StickyPart.CFrame * CFrame.new(3, 5, 3)
    --local e = Instance.new("Highlight")
    --e.Name = "ESPHighlight"
    --e.FillColor = Color3.fromRGB(255, 0, 0)
@@ -660,7 +666,6 @@ local Toggle = Tab:CreateKeybind({
    --e.FillTransparency = 0.6
    --e.OutlineTransparency = 0
    --e.Parent = "NinjaKunai"
-   task.wait(0.1)
    local f = toy.NinjaKunai.StickyPart
    SetNetworkOwner:FireServer(f, f.CFrame)
    lp.Character.Torso.CanCollide = false
@@ -677,14 +682,18 @@ local Toggle = Tab:CreateButton({
    local lp = game.Players.LocalPlayer
    local t = lp.Character["Left Leg"]
    local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-   spawnItem("NinjaKunai", t.Position)
+   spawnItem("NinjaKunai", t.Position + Vector3.new(0, -3, 15))
    task.wait(0.3)
-   lp.Character.HumanoidRootPart.CFrame = toy.NinjaKunai.StickyPart.CFrame * CFrame.new(0, 5, 0)
-   task.wait(0.5)
+   --local e = Instance.new("Highlight")
+   --e.Name = "ESPHighlight"
+   --e.FillColor = Color3.fromRGB(255, 0, 0)
+   --e.OutlineColor = Color3.fromRGB(255, 255, 255)
+   --e.FillTransparency = 0.6
+   --e.OutlineTransparency = 0
+   --e.Parent = "NinjaKunai"
    local f = toy.NinjaKunai.StickyPart
-   SetNetworkOwner:FireServer(f, lp.Character.HumanoidRootPart.CFrame)
+   SetNetworkOwner:FireServer(f, f.CFrame)
    lp.Character.Torso.CanCollide = false
-   task.wait(0.1)
    f.CFrame = t.CFrame * CFrame.Angles(0, 0, math.rad(90))
    task.wait(0.03)
    toy.NinjaKunai.Name = "AntiKick"
@@ -697,10 +706,8 @@ local Button = Tab:CreateButton({
    Callback = function()
    local lp = game.Players.LocalPlayer
    local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-   spawnItem("BallSnowball", lp.Character.HumanoidRootPart.Position)
+   spawnItem("BallSnowball", lp.Character.HumanoidRootPart.Position + Vector3.new(0, -3, 15))
    task.wait(0.3)
-   lp.Character.HumanoidRootPart.CFrame = toy.BallSnowball.SoundPart.CFrame * CFrame.new(3, 1, 3)
-   task.wait(0.5)
    SetNetworkOwner:FireServer(toy.BallSnowball.SoundPart, toy.BallSnowball.SoundPart.CFrame)
    --task.wait(0.3)
    --toy.BallSnowball.SoundPart.Velocity = Vector3.new(0, 50, 0)
@@ -1020,10 +1027,8 @@ Tab:CreateToggle({
         if Value then
             task.spawn(function()
                 while LoopSnowball do
-				spawnItem("BallSnowball", lp.HumanoidRootPart.Position)
-   				task.wait(0.3)
-				lp.HumanoidRootPart.CFrame = toy.BallSnowball.SoundPart.CFrame * CFrame.new(5, 1, 5)
-				task.wait(0.1)
+				spawnItem("BallSnowball", lp.HumanoidRootPart.Position + Vector3.new(0, -3, 15))
+   				task.wait(0.5)
 				SetNetworkOwner:FireServer(toy.BallSnowball.SoundPart, toy.BallSnowball.SoundPart.CFrame)
 				task.wait(0.3)
 				toy.BallSnowball.SoundPart.CFrame = CFrame.new(0, 1000, 0)
@@ -1055,10 +1060,8 @@ Tab:CreateToggle({
         if Value then
             task.spawn(function()
                 while LoopBomb do
-				spawnItem("BombMissile", lp.HumanoidRootPart.Position)
-   				task.wait(0.3)
-				lp.HumanoidRootPart.CFrame = toy.BombMissile.Button.CFrame * CFrame.new(5, 1, 5)
-				task.wait(0.1)
+				spawnItem("BombMissile", lp.HumanoidRootPart.Position + Vector3.new(0, -3, 15))
+   				task.wait(0.5)
    				SetNetworkOwner:FireServer(toy.BombMissile.Button, toy.BombMissile.Button.CFrame)
 				task.wait(0.3)
 				toy.BombMissile.Button.CFrame = CFrame.new(0, 10000, 0)
@@ -1098,15 +1101,10 @@ Tab:CreateToggle({
 	end
 
         if Value == true then
-				spawnItem("OvenDarkGray", lp.HumanoidRootPart.Position)
-				task.wait(0.5)
-				lp.HumanoidRootPart.CFrame = toy.OvenDarkGray.PaintPlayerPart.CFrame * CFrame.new(3, 3, 3)
-   				task.wait(1)
+				spawnItem("OvenDarkGray", lp.HumanoidRootPart.Position + Vector3.new(0, -3, 15))
+   				task.wait(0.5)
    				SetNetworkOwner:FireServer(toy.OvenDarkGray.ButtonOven, toy.OvenDarkGray.ButtonOven.CFrame)
-				SetNetworkOwner:FireServer(toy.OvenDarkGray.PaintPlayerPart, toy.OvenDarkGray.PaintPlayerPart.CFrame)
-				SetNetworkOwner:FireServer(toy.OvenDarkGray.GlassWindow, toy.OvenDarkGray.GlassWindow.CFrame)
-				SetNetworkOwner:FireServer(toy.OvenDarkGray.Main, toy.OvenDarkGray.Main.CFrame)
-				task.wait(1)
+				task.wait(0.3)
 				toy.OvenDarkGray.Name = "NIGGER"
 				task.spawn(function()
 				NN()
@@ -1114,6 +1112,38 @@ Tab:CreateToggle({
 				else
 				DestroyT(toysFolder:FindFirstChild("NIGGER"))
         end
+    end,
+})
+
+Tab:CreateToggle({
+    Name = "Loop WD",
+    CurrentValue = false,
+    Callback = function(Value)
+	local lp = P.LocalPlayer.Character
+	local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+	local tar = P:FindFirstChild(Selected)
+	local oldpos = lp.HumanoidRootPart.CFrame
+    LoopWD = Value
+	local function WD()
+		if Value then
+                while LoopWD do
+				toy.SprayCanWD.Straw.CFrame = tar.Character.HumanoidRootPart.RagdollTouchedHitbox.CFrame
+				task.wait(0.3)
+				toy.SprayCanWD.Straw.CFrame = CFrame.new(537.325378, 62.6786575, -217.988876, -0.829166114, -2.66711231e-05, 0.55900228, 0.000436577422, 0.999999642, 0.000695285795, -0.559002101, 0.0008205552, -0.829165816)
+				task.wait(0.3)
+				end		
+			end
+		end
+
+		if toy:FindFirstChild("SprayCanWD") then
+		WD()
+		else
+		spawnItem("SprayCanWD", lp.HumanoidRootPart.Position + Vector3.new(0, -3, 15))
+   		task.wait(0.5)
+		SetNetworkOwner:FireServer(toy.SprayCanWD.Straw, toy.SprayCanWD.Straw.CFrame)
+		task.wait(0.5)
+		WD()
+		end
     end,
 })
 
@@ -1313,7 +1343,7 @@ local Toggle = Tab:CreateToggle({
 
 local Button = Tab:CreateKeybind({
    Name = "Kick",
-   CurrentKeybind = "Q",
+   CurrentKeybind = "G",
    HoldToInteract = false,
    Callback = function(Keybind)
    local lp = game.Players.LocalPlayer
