@@ -931,6 +931,11 @@ P.PlayerRemoving:Connect(function()
     PlayerDropdown:Refresh(GetPlayerList())
 end)
 
+	--local LL = tar.Character["Left Leg"]
+	--local LA = tar.Character["Left Arm"]
+	--local RL = tar.Character["Right Leg"]
+	--local RA = tar.Character["Right Arm"]
+
 Tab:CreateButton({
     Name = "TP To Target",
     Callback = function()
@@ -957,15 +962,11 @@ Tab:CreateButton({
 })
 
 Tab:CreateToggle({
-    Name = "Loop Grab (Use Nearby)",
+    Name = "Loop Grab",
 	CurrentValue = false,
     Callback = function(Value)
 	local lp = P.LocalPlayer.Character
 	local tar = P:FindFirstChild(Selected)
-	local LL = tar.Character["Left Leg"]
-	local LA = tar.Character["Left Arm"]
-	local RL = tar.Character["Right Leg"]
-	local RA = tar.Character["Right Arm"]
 	if Value then
 	lp.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame
 	task.wait(0.25)
@@ -973,7 +974,7 @@ Tab:CreateToggle({
     SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	tar.Character.HumanoidRootPart.CFrame = lp.HumanoidRootPart.CFrame * CFrame.new(0, 20, 0)
 	end)
-	lp.HumanoidRootPart.Anchored = true
+	--lp.HumanoidRootPart.Anchored = true
 	local bodyPosition = Instance.new("BodyPosition")
     bodyPosition.MaxForce = Vector3.new(40000, 40000, 40000)
     bodyPosition.Position = lp.Head.Position + Vector3.new(0, 20, 0)
@@ -982,7 +983,7 @@ Tab:CreateToggle({
 	if grab then
 		grab:Disconnect()
 		grab = nil
-		lp.HumanoidRootPart.Anchored = false
+		--lp.HumanoidRootPart.Anchored = false
 		tar.Character.HumanoidRootPart.BodyPosition:Destroy()
 	  end
 	  end
@@ -1021,6 +1022,19 @@ Tab:CreateToggle({
 	end
 	end
     end,
+})
+
+Tab:CreateButton({
+    Name = "Kill",
+	CurrentValue = false,
+    Callback = function(Value)
+	local lp = P.LocalPlayer.Character
+	local tar = P:FindFirstChild(Selected)
+	lp.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame
+	task.wait(0.25)
+    SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	tar.Character.Humanoid.Health = 0
+  end,
 })
 
 local LoopTP = false
