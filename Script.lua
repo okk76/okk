@@ -966,27 +966,27 @@ Tab:CreateToggle({
 	local LA = tar.Character["Left Arm"]
 	local RL = tar.Character["Right Leg"]
 	local RA = tar.Character["Right Arm"]
-	LoopGrab = Value
-
-        if Value then
-            task.spawn(function()
-	while LoopGrab do
+	if Value then
+	lp.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame
+	task.wait(0.25)
+	grab = RunService.Heartbeat:Connect(function()
     SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	tar.Character.HumanoidRootPart.CFrame = lp.HumanoidRootPart.CFrame * CFrame.new(0, 20, 0)
-	task.wait(0.0001)
-	end
 	end)
-	end
-	if LoopGrab == true then
 	lp.HumanoidRootPart.Anchored = true
-	else
-	lp.HumanoidRootPart.Anchored = false
-	end
 	local bodyPosition = Instance.new("BodyPosition")
     bodyPosition.MaxForce = Vector3.new(40000, 40000, 40000)
     bodyPosition.Position = lp.Head.Position + Vector3.new(0, 20, 0)
     bodyPosition.Parent = tar.Character.HumanoidRootPart
-    end,
+	else
+	if grab then
+		grab:Disconnect()
+		grab = nil
+		lp.HumanoidRootPart.Anchored = false
+		tar.Character.HumanoidRootPart.BodyPosition:Destroy()
+	  end
+	  end
+  end,
 })
 
 Tab:CreateToggle({
@@ -995,38 +995,30 @@ Tab:CreateToggle({
     Callback = function(Value)
 	local lp = P.LocalPlayer.Character
 	local tar = P:FindFirstChild(Selected)
-	local function Ragh()
-	while LoopRagdoll do
+	if Value then
+	spawnItem("PalletLightBrown", lp.HumanoidRootPart.Position + Vector3.new(0, -3, 15))
+   	toysFolder:WaitForChild("PalletLightBrown")
+	task.wait(0.03)
+	SetNetworkOwner:FireServer(toysFolder.PalletLightBrown.SoundPart, toysFolder.PalletLightBrown.SoundPart.CFrame)
+	ragdoll = RunService.Heartbeat:Connect(function()
 	if tar.Character.Humanoid.Ragdolled.Value == false then
 	toysFolder.PalletLightBrown.SoundPart.CanCollide = false
-	toysFolder.PalletLightBrown.SoundPart.CFrame = tar.Character.Head.CFrame
 	task.wait(0.001)
 	toysFolder.PalletLightBrown.SoundPart.Velocity = Vector3.new(0, 100, 0)
+	task.wait(0.001)
+	toysFolder.PalletLightBrown.SoundPart.CFrame = tar.Character.HumanoidRootPart.CFrame
 	task.wait(0.001)
 	toysFolder.PalletLightBrown.SoundPart.CFrame = CFrame.new(537.325378, 62.6786575, -217.988876, -0.829166114, -2.66711231e-05, 0.55900228, 0.000436577422, 0.999999642, 0.000695285795, -0.559002101, 0.0008205552, -0.829165816)
 	task.wait(0.001)
 	toysFolder.PalletLightBrown.SoundPart.Velocity = Vector3.new(0, 0, 0)
-	task.wait(0.001)
-	else
-	task.wait(0.001)
-	end
-	end
-	end
-
-	LoopRagdoll = Value
-
-    if Value then
-    task.spawn(function()
-	if toysFolder:FindFirstChild("PalletLightBrown") then
-	Ragh()
-	else
-	spawnItem("PalletLightBrown", lp.HumanoidRootPart.Position + Vector3.new(0, -3, 15))
-   	toy:WaitForChild("PalletLightBrown")
-	SetNetworkOwner:FireServer(toy.PalletLightBrown.SoundPart, toy.PalletLightBrown.SoundPart.CFrame)
-	toysFolder.PalletLightBrown.SoundPart.CFrame = CFrame.new(537.325378, 62.6786575, -217.988876, -0.829166114, -2.66711231e-05, 0.55900228, 0.000436577422, 0.999999642, 0.000695285795, -0.559002101, 0.0008205552, -0.829165816)
-	Ragh()
 	end
 	end)
+	else
+	if ragdoll then
+		ragdoll:Disconnect()
+		ragdoll = nil
+		DestroyT(toysFolder:FindFirstChild("PalletLightBrown"))
+	end
 	end
     end,
 })
