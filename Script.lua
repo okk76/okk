@@ -277,58 +277,7 @@ game.Players.LocalPlayer.Character.Humanoid.Health = 0
 })
 
    end,
-})  
-
-local function GetPlayerList()
-    local list = {}
-    for _, player in pairs(P:GetPlayers()) do
-    table.insert(list, player.Name)
-    end
-    return list
-end
-
-local PlayerDropdown = Tab:CreateDropdown({
-    Name = "TP To",
-    Options = GetPlayerList(),
-    CurrentOption = {},
-    MultipleOptions = false,
-    Callback = function(Option)
-        SelectedPlayer = Option[1]
-    end,
-})
-
-P.PlayerAdded:Connect(function()
-    PlayerDropdown:Refresh(GetPlayerList())
-end)
-
-P.PlayerRemoving:Connect(function()
-    PlayerDropdown:Refresh(GetPlayerList())
-end)
-
-Tab:CreateButton({
-    Name = "TP To Player",
-    Callback = function()
-        if SelectedPlayer then
-            local target = P:FindFirstChild(SelectedPlayer)
-            if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
-                LocalPlayer.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame * CFrame.new(3, 1, 0)
-					LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
-            else
-                Rayfield:Notify({
-                    Title = "Error",
-                    Content = "Character is nil",
-                    Duration = 3
-                })
-            end
-        else
-            Rayfield:Notify({
-                Title = "Ошибка",
-                Content = "Player is nil",
-                Duration = 3
-            })
-        end
-    end
-})
+}) 
 
 local Button = Tab:CreateButton({
    Name = "ESP (loadstring)",
@@ -982,6 +931,106 @@ P.PlayerRemoving:Connect(function()
     PlayerDropdown:Refresh(GetPlayerList())
 end)
 
+Tab:CreateButton({
+    Name = "TP To Target",
+    Callback = function()
+        if Selected then
+            local target = P:FindFirstChild(Selected)
+            if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+                LocalPlayer.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame * CFrame.new(3, 1, 0)
+					LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+            else
+                Rayfield:Notify({
+                    Title = "Error",
+                    Content = "Character is nil",
+                    Duration = 3
+                })
+            end
+        else
+            Rayfield:Notify({
+                Title = "Error",
+                Content = "Player is nil",
+                Duration = 3
+            })
+        end
+    end
+})
+
+Tab:CreateToggle({
+    Name = "Loop Grab (Use Nearby)",
+	CurrentValue = false,
+    Callback = function(Value)
+	local lp = P.LocalPlayer.Character
+	local tar = P:FindFirstChild(Selected)
+	local LL = tar.Character["Left Leg"]
+	local LA = tar.Character["Left Arm"]
+	local RL = tar.Character["Right Leg"]
+	local RA = tar.Character["Right Arm"]
+	LoopGrab = Value
+
+        if Value then
+            task.spawn(function()
+	while LoopGrab do
+    SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	tar.Character.HumanoidRootPart.CFrame = lp.HumanoidRootPart.CFrame * CFrame.new(0, 20, 0)
+	task.wait(0.0001)
+	end
+	end)
+	end
+	if LoopGrab == true then
+	lp.HumanoidRootPart.Anchored = true
+	else
+	lp.HumanoidRootPart.Anchored = false
+	end
+	local bodyPosition = Instance.new("BodyPosition")
+    bodyPosition.MaxForce = Vector3.new(40000, 40000, 40000)
+    bodyPosition.Position = lp.Head.Position + Vector3.new(0, 20, 0)
+    bodyPosition.Parent = tar.Character.HumanoidRootPart
+    end,
+})
+
+Tab:CreateToggle({
+    Name = "Loop Ragdoll",
+	CurrentValue = false,
+    Callback = function(Value)
+	local lp = P.LocalPlayer.Character
+	local tar = P:FindFirstChild(Selected)
+	local function Ragh()
+	while LoopRagdoll do
+	if tar.Character.Humanoid.Ragdolled.Value == false then
+	toysFolder.PalletLightBrown.SoundPart.CanCollide = false
+	toysFolder.PalletLightBrown.SoundPart.CFrame = tar.Character.Head.CFrame
+	task.wait(0.001)
+	toysFolder.PalletLightBrown.SoundPart.Velocity = Vector3.new(0, 100, 0)
+	task.wait(0.001)
+	toysFolder.PalletLightBrown.SoundPart.CFrame = CFrame.new(537.325378, 62.6786575, -217.988876, -0.829166114, -2.66711231e-05, 0.55900228, 0.000436577422, 0.999999642, 0.000695285795, -0.559002101, 0.0008205552, -0.829165816)
+	task.wait(0.001)
+	toysFolder.PalletLightBrown.SoundPart.Velocity = Vector3.new(0, 0, 0)
+	task.wait(0.001)
+	else
+	task.wait(0.001)
+	end
+	end
+	end
+
+	LoopRagdoll = Value
+
+    if Value then
+    task.spawn(function()
+	if toysFolder:FindFirstChild("PalletLightBrown") then
+	Ragh()
+	else
+	spawnItem("PalletLightBrown", lp.HumanoidRootPart.Position + Vector3.new(0, -3, 15))
+   	toy:WaitForChild("PalletLightBrown")
+	SetNetworkOwner:FireServer(toy.PalletLightBrown.SoundPart, toy.PalletLightBrown.SoundPart.CFrame)
+	toysFolder.PalletLightBrown.SoundPart.CFrame = CFrame.new(537.325378, 62.6786575, -217.988876, -0.829166114, -2.66711231e-05, 0.55900228, 0.000436577422, 0.999999642, 0.000695285795, -0.559002101, 0.0008205552, -0.829165816)
+	Ragh()
+	end
+	end)
+	end
+    end,
+})
+
 local LoopTP = false
 
 Tab:CreateToggle({
@@ -1029,7 +1078,7 @@ Tab:CreateToggle({
 				toy.BallSnowball.SoundPart.CFrame = CFrame.new(0, 1000, 0)
 				task.wait(0.3)
 				toy.BallSnowball.SoundPart.CFrame = tar.Character.HumanoidRootPart.RagdollTouchedHitbox.CFrame
-				task.wait(1)
+				task.wait(0.5)
 				if toysFolder:FindFirstChild("BallSnowball") then
 				DestroyT(toysFolder:FindFirstChild("BallSnowball"))
 				else
