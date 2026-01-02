@@ -10,6 +10,27 @@ local Struggle = CharacterEvents:WaitForChild("Struggle")
 local GrabEvents = ReplicatedStorage:WaitForChild("GrabEvents")
 local SetNetworkOwner = GrabEvents:WaitForChild("SetNetworkOwner")
 local toysFolder = workspace:FindFirstChild(LocalPlayer.Name.."SpawnedInToys")
+local group = game.workspace
+local spaw = game.workspace.SpawnLocation
+local hue = 0
+
+RunService.Heartbeat:Connect(function()
+    for _, part in ipairs(group:GetChildren()) do
+        if part.Name == "PlayerCharacterLocationDetector" and part:IsA("Part") then
+            part.Transparency = 0.8
+			part.Material = Enum.Material.Neon
+ 			hue = (hue + 0.00005) % 1
+ 			part.Color = Color3.fromHSV(hue, 1, 1)
+		end
+	end
+end)
+
+spaw.Position = Vector3.new(spaw.Position, -10.85, spaw.Position)
+spaw.Decal.Transparency = 0.8
+RunService.Heartbeat:Connect(function()
+spaw.Orientation = spaw.Orientation + Vector3.new(0, math.rad(10) * 0.1, 0)
+task.wait(0.1)
+end)
 
 local function spawnItem(itemName, position, orientation)
     task.spawn(function()
@@ -88,48 +109,9 @@ local Section = Tab:CreateSection("Settings")
 local Button = Tab:CreateButton({
    Name = "Spawntest",
    Callback = function()
-spawnItem("SprayCanWD", LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0, -3, 15))
+spawnItem("SprayCanWD", LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0, -2, 15))
    end,
 }) 
-
-local Toggle = Tab:CreateToggle({
-    Name = "Anti Grab",
-    CurrentValue = false,
-    Callback = function(enabled)
-        if enabled then
-            autoStruggleCoroutine = RunService.Heartbeat:Connect(function()
-                local character = LocalPlayer.Character
-                if character and character:FindFirstChild("Head") then
-                    local head = character.Head
-                    local partOwner = head:FindFirstChild("PartOwner")
-                    if partOwner then
-                        Struggle:FireServer()
-                        ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
-                        for _, part in pairs(character:GetChildren()) do
-                            if part:IsA("BasePart") then
-                                part.Anchored = true
-                            end
-                        end
-                        while LocalPlayer.IsHeld.Value do
-                            wait()
-                        end
-                        for _, part in pairs(character:GetChildren()) do
-                            if part:IsA("BasePart") then
-                                part.Anchored = false
-                            end
-                        end
-                    end
-                end
-            end)
-        else
-            if autoStruggleCoroutine then
-                autoStruggleCoroutine:Disconnect()
-                autoStruggleCoroutine = nil
-            end
-        end
-    end
-})
-
 
 local Slider = Tab:CreateSlider({
    Name = "WalkSpeed",
@@ -265,30 +247,7 @@ local Toggle = Tab:CreateToggle({
    end,
 })
 
-local PLCD = false
-
-local Toggle = Tab:CreateToggle({
-    Name = "PLCD",
-    CurrentValue = false,
-    Callback = function(Value)
-        PLCD = Value
-		local group = game.Workspace
-        if Value then
-            task.spawn(function()
-                while PLCD do
-
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "PlayerCharacterLocationDetector" and part:IsA("Part") then
-            part.Transparency = 0.6
-			part.BrickColor = BrickColor.new("Hot pink")
-    end
-end
-                    task.wait(0.03)
-                end
-            end)
-        end
-    end,
-})
+		
 
 local Button = Tab:CreateButton({
    Name = "Sit",
@@ -617,6 +576,44 @@ local Tab = Window:CreateTab("Defense", 10734951847)
 
 local Section = Tab:CreateSection("Settings")
 
+local Toggle = Tab:CreateToggle({
+    Name = "Anti Grab",
+    CurrentValue = false,
+    Callback = function(enabled)
+        if enabled then
+            autoStruggleCoroutine = RunService.Heartbeat:Connect(function()
+                local character = LocalPlayer.Character
+                if character and character:FindFirstChild("Head") then
+                    local head = character.Head
+                    local partOwner = head:FindFirstChild("PartOwner")
+                    if partOwner then
+                        Struggle:FireServer()
+                        ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
+                        for _, part in pairs(character:GetChildren()) do
+                            if part:IsA("BasePart") then
+                                part.Anchored = true
+                            end
+                        end
+                        while LocalPlayer.IsHeld.Value do
+                            wait()
+                        end
+                        for _, part in pairs(character:GetChildren()) do
+                            if part:IsA("BasePart") then
+                                part.Anchored = false
+                            end
+                        end
+                    end
+                end
+            end)
+        else
+            if autoStruggleCoroutine then
+                autoStruggleCoroutine:Disconnect()
+                autoStruggleCoroutine = nil
+            end
+        end
+    end
+})
+
 local LoopTP = false
 
 Tab:CreateToggle({
@@ -657,8 +654,8 @@ local Toggle = Tab:CreateKeybind({
    local lp = game.Players.LocalPlayer
    local t = lp.Character["Left Leg"]
    local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-   spawnItem("NinjaKunai", t.Position + Vector3.new(0, -3, 15))
-   task.wait(0.3)
+   spawnItem("NinjaKunai", t.Position + Vector3.new(0, -2, 15))
+   toy:WaitForChild("NinjaKunai")
    --local e = Instance.new("Highlight")
    --e.Name = "ESPHighlight"
    --e.FillColor = Color3.fromRGB(255, 0, 0)
@@ -682,8 +679,8 @@ local Toggle = Tab:CreateButton({
    local lp = game.Players.LocalPlayer
    local t = lp.Character["Left Leg"]
    local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-   spawnItem("NinjaKunai", t.Position + Vector3.new(0, -3, 15))
-   task.wait(0.3)
+   spawnItem("NinjaKunai", t.Position + Vector3.new(0, -2, 15))
+   toy:WaitForChild("NinjaKunai")
    --local e = Instance.new("Highlight")
    --e.Name = "ESPHighlight"
    --e.FillColor = Color3.fromRGB(255, 0, 0)
@@ -706,11 +703,9 @@ local Button = Tab:CreateButton({
    Callback = function()
    local lp = game.Players.LocalPlayer
    local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-   spawnItem("BallSnowball", lp.Character.HumanoidRootPart.Position + Vector3.new(0, -3, 15))
-   task.wait(0.3)
+   spawnItem("BallSnowball", lp.Character.HumanoidRootPart.Position + Vector3.new(0, -2, 15))
+   toy:WaitForChild("BallSnowball")
    SetNetworkOwner:FireServer(toy.BallSnowball.SoundPart, toy.BallSnowball.SoundPart.CFrame)
-   --task.wait(0.3)
-   --toy.BallSnowball.SoundPart.Velocity = Vector3.new(0, 50, 0)
    task.wait(0.3)
    toy.BallSnowball.SoundPart.CFrame = CFrame.new(323.090332, -5.35040426, 453.156372, 0.438423634, -1.12835792e-07, -0.898768425, 2.95022073e-09, 1, -1.24105767e-07, 0.898768425, 5.17593364e-08, 0.438423634)
    task.wait(0.1)
@@ -1028,14 +1023,13 @@ Tab:CreateToggle({
             task.spawn(function()
                 while LoopSnowball do
 				spawnItem("BallSnowball", lp.HumanoidRootPart.Position + Vector3.new(0, -3, 15))
-   				task.wait(0.5)
+   				toy:WaitForChild("BallSnowball")
 				SetNetworkOwner:FireServer(toy.BallSnowball.SoundPart, toy.BallSnowball.SoundPart.CFrame)
 				task.wait(0.3)
 				toy.BallSnowball.SoundPart.CFrame = CFrame.new(0, 1000, 0)
-				lp.HumanoidRootPart.CFrame = oldpos
 				task.wait(0.3)
 				toy.BallSnowball.SoundPart.CFrame = tar.Character.HumanoidRootPart.RagdollTouchedHitbox.CFrame
-				task.wait(0.75)
+				task.wait(1)
 				if toysFolder:FindFirstChild("BallSnowball") then
 				DestroyT(toysFolder:FindFirstChild("BallSnowball"))
 				else
@@ -1061,11 +1055,10 @@ Tab:CreateToggle({
             task.spawn(function()
                 while LoopBomb do
 				spawnItem("BombMissile", lp.HumanoidRootPart.Position + Vector3.new(0, -3, 15))
-   				task.wait(0.5)
+   				toy:WaitForChild("BombMissile")
    				SetNetworkOwner:FireServer(toy.BombMissile.Button, toy.BombMissile.Button.CFrame)
 				task.wait(0.3)
 				toy.BombMissile.Button.CFrame = CFrame.new(0, 10000, 0)
-				lp.HumanoidRootPart.CFrame = oldpos
 				task.wait(0.1)
 				toy.BombMissile.OrientingPart.CFrame = tar.Character.HumanoidRootPart.CFrame
 				task.wait(0.3)
@@ -1091,10 +1084,10 @@ Tab:CreateToggle({
         LoopOven = Value
 		local function NN()
 		while LoopOven do
-			task.wait(0.75)
+			task.wait(0.25)
 			toy.NIGGER.PaintPlayerPart.CFrame = tar.Character.HumanoidRootPart.CFrame
 			toy.NIGGER.GlassWindow.CFrame = tar.Character.HumanoidRootPart.CFrame
-			task.wait(0.75)
+			task.wait(0.25)
 			toy.NIGGER.PaintPlayerPart.CFrame = CFrame.new(537.325378, 62.6786575, -217.988876, -0.829166114, -2.66711231e-05, 0.55900228, 0.000436577422, 0.999999642, 0.000695285795, -0.559002101, 0.0008205552, -0.829165816)
 			toy.NIGGER.GlassWindow.CFrame = CFrame.new(537.325378, 62.6786575, -217.988876, -0.829166114, -2.66711231e-05, 0.55900228, 0.000436577422, 0.999999642, 0.000695285795, -0.559002101, 0.0008205552, -0.829165816)
 		end
@@ -1102,7 +1095,7 @@ Tab:CreateToggle({
 
         if Value == true then
 				spawnItem("OvenDarkGray", lp.HumanoidRootPart.Position + Vector3.new(0, -3, 15))
-   				task.wait(0.5)
+   				toy:WaitForChild("OvenDarkGray")
    				SetNetworkOwner:FireServer(toy.OvenDarkGray.ButtonOven, toy.OvenDarkGray.ButtonOven.CFrame)
 				task.wait(0.3)
 				toy.OvenDarkGray.Name = "NIGGER"
@@ -1128,9 +1121,9 @@ Tab:CreateToggle({
 		if Value then
                 while LoopWD do
 				toy.SprayCanWD.Straw.CFrame = tar.Character.HumanoidRootPart.RagdollTouchedHitbox.CFrame
-				task.wait(0.3)
+				task.wait(0.25)
 				toy.SprayCanWD.Straw.CFrame = CFrame.new(537.325378, 62.6786575, -217.988876, -0.829166114, -2.66711231e-05, 0.55900228, 0.000436577422, 0.999999642, 0.000695285795, -0.559002101, 0.0008205552, -0.829165816)
-				task.wait(0.3)
+				task.wait(0.25)
 				end		
 			end
 		end
@@ -1139,12 +1132,31 @@ Tab:CreateToggle({
 		WD()
 		else
 		spawnItem("SprayCanWD", lp.HumanoidRootPart.Position + Vector3.new(0, -3, 15))
-   		task.wait(0.5)
+   		toy:WaitForChild("SprayCanWD")
+		task.wait(0.03)
 		SetNetworkOwner:FireServer(toy.SprayCanWD.Straw, toy.SprayCanWD.Straw.CFrame)
 		task.wait(0.5)
 		WD()
 		end
     end,
+})
+
+local Toggle = Tab:CreateButton({
+   Name = "Pencil Penis",
+   Callback = function(Value)
+   local t = P:FindFirstChild(Selected).Character
+   spawnItem("ToolPencil", LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0, -3, 15))
+   toysFolder:WaitForChild("ToolPencil")
+   task.wait(0.03)
+   SetNetworkOwner:FireServer(toysFolder.ToolPencil.SoundPart)
+   local f = toysFolder.ToolPencil.StickyPart
+   t.Torso.CanCollide = false
+   task.wait(0.03)
+   f.CFrame = t.HumanoidRootPart.CFrame * CFrame.Angles(0, math.rad(180), 0)
+   f.CFrame = f.CFrame + Vector3.new(0, -0.6, 0)
+   t.Torso.CanCollide = true
+   toysFolder.ToolPencil.Name = "ЭТО ХУЙ!!"
+	end,
 })
 
 local Button = Tab:CreateButton({
@@ -1326,7 +1338,7 @@ local Keybind = Tab:CreateKeybind({
 })
 
 local Toggle = Tab:CreateToggle({
-   Name = "TP To Spawn Grab",
+   Name = "TP To Spawn BlobGrab",
    CurrentValue = false,
    Callback = function(Value)
    local lp = game.Players.LocalPlayer
@@ -1341,218 +1353,21 @@ local Toggle = Tab:CreateToggle({
    end,
 })
 
-local Button = Tab:CreateKeybind({
-   Name = "Kick",
-   CurrentKeybind = "G",
+local Tab = Window:CreateTab("Keybinds", 10723416765)
+
+local Section = Tab:CreateSection("Binds")
+
+local Toggle = Tab:CreateKeybind({
+   Name = "TP Mouse",
+   CurrentKeybind = "Z",
    HoldToInteract = false,
-   Callback = function(Keybind)
-   local lp = game.Players.LocalPlayer
-   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-   game.Workspace.Food.SpawningPlatform.CFrame = CFrame.new(335, 15, 391)
-   game.Workspace.Food.SpawningPlatform.Transparency = 0
-   game.Workspace.Food.SpawningPlatform.CanCollide = true
-   game.Workspace.Ladders.SpawningPlatform.CFrame = CFrame.new(324, 7, 338)
-   game.Workspace.Ladders.SpawningPlatform.Orientation = Vector3.new (90, 0, 0) 
-   game.Workspace.Ladders.SpawningPlatform.Transparency = 0.5
-   game.Workspace.Ladders.SpawningPlatform.CanCollide = true
-   toy.CreatureBlobman.HumanoidRootPart.CFrame = CFrame.new(335, 17, 391)
-
-end,
-})
-
-local Tab = Window:CreateTab("Other", 4483362458)
-
-local Section = Tab:CreateSection("Settings")
-
-local Toggle = Tab:CreateButton({
-   Name = "???",
-   Callback = function(Value)
-   local lp = game.Players.LocalPlayer
-   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-   local t = lp.Character.HumanoidRootPart
-   spawnItem("Pencil", t)
-   task.wait(0.5)
-   SetNetworkOwner:FireServer(toy.ToolPencil.SoundPart)
-   task.wait(1)
-   local f = toy.ToolPencil.StickyPart
-   lp.Character.Torso.CanCollide = false
-   toy.ToolPencil.SoundPart.CanQuery = false
-   t.Anchored = true
-   f.Anchored = true
-	f.CanTouch = false
-	f.CanQuery = false
-	f.CFrame = t.CFrame * CFrame.Angles(0, math.rad(180), 0)
-	wait(0.03)
-	f.CFrame = f.CFrame + Vector3.new(0, -0.85, 0)
-	wait(0.03)
-	f.CanTouch = true
-	f.CanQuery = true
-   t.Anchored = false
-   f.Anchored = false
-   wait(1)
-   lp.Character.Torso.CanCollide = true
-   toy.ToolPencil.Name = "PENCIL!!!"
-	end,
-})
-
-local Button = Tab:CreateToggle({
-   Name = "Cry (Need Campfire)",
-   CurrentValue = false,
-   Callback = function(Value)
-       local lp = game.Players.LocalPlayer
-   local f = lp.Character.OnFireAnimationScript
-   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
-   local c = toy.Campfire
-   local e = game.workspace.Plots.Plot3.Barrier.PlotBarrier.CFrame
-   local function CRY()
-   c.FirePlayerPart.CFrame = lp.Character.HumanoidRootPart.CFrame
-   task.wait(0.3)
-   c.FirePlayerPart.CFrame = CFrame.new(154.299103, 250.697739, 331.101624, 0.930420518, -3.53281782e-09, -0.366493821, 1.9336921e-09, 1, -4.73042405e-09, 0.366493821, 3.69259712e-09, 0.930420518)
-   f.Disabled = true
-   task.wait(0.3)
-   game.workspace.Plots.Plot3.Barrier.PlotBarrier.CFrame = lp.Character.HumanoidRootPart.CFrame
-   task.wait(0.3)
-   game.workspace.Plots.Plot3.Barrier.PlotBarrier.CFrame = e
-   end
-   local function check()
-	   if c and f.Disabled == false then
-	   CRY()
-	   else
-	   f.Enabled = true
-	   game.workspace.Plots.Plot3.Barrier.PlotBarrier.CFrame = lp.Character.HumanoidRootPart.CFrame
-	   task.wait(0.3)
-	   game.workspace.Plots.Plot3.Barrier.PlotBarrier.CFrame = e
-	   lp.Character.Animate.Disabled = true
-	   lp.Character.Animate.Enabled = true 
-   end
-   end
-
-   if Value == true then
-   check()
-   else
-   f.Enabled = true
-   lp.Character.Animate.Disabled = true
-   lp.Character.Animate.Enabled = true
-   end
-
-	Rayfield:Notify({
-   Title = "Cry",
-   Content = "Done",
-   Duration = 3,
-   Image = 4483362458,
-})
-
-   end,
-})
-
-local Button = Tab:CreateButton({
-   Name = "Remove Clouds",
    Callback = function()
-   game.Workspace.Terrain.Clouds:Destroy()
-	print("Done!")
-
-	Rayfield:Notify({
-   Title = "Remove Clouds",
-   Content = "Done",
-   Duration = 3,
-   Image = 4483362458,
-})
-
-end,
-})
-
-local Slider = Tab:CreateSlider({
-   Name = "Map Noises",
-   Range = {0, 1},
-   Increment = 0.01,
-   Suffix = "Volume",
-   CurrentValue = 0.02,
-   Callback = function(Value)
-    game.Workspace.Map.MapNoises.NoisePart1.Sound1.Volume = Value
-	game.Workspace.Map.MapNoises.NoisePart2.Sound1.Volume = Value
-	game.Workspace.Map.MapNoises.NoisePart3.Sound1.Volume = Value
-	game.Workspace.Map.MapNoises.NoisePart4.Sound1.Volume = Value
-	game.Workspace.Map.MapNoises.NoisePart5.Sound1.Volume = Value
-	game.Workspace.Map.MapNoises.NoisePart6.Sound1.Volume = Value
-	game.Workspace.Map.MapNoises.NoisePart7.Sound1.Volume = Value
-	game.Workspace.Map.MapNoises.NoisePart8.Sound1.Volume = Value
-	game.Workspace.Map.MapNoises.NoisePart9.Sound1.Volume = Value
-	game.Workspace.Map.MapNoises.NoisePart10.Sound1.Volume = Value
+   local mouse = LocalPlayer:GetMouse()
+   local char = LocalPlayer.Character
+   if char and char:FindFirstChild("HumanoidRootPart") then
+   char.HumanoidRootPart.CFrame = CFrame.new(mouse.Hit.Position + Vector3.new(0, 3, 0))  
+   end
    end,
-})
-
-local Slider = Tab:CreateSlider({
-   Name = "Screams",
-   Range = {0, 1},
-   Increment = 0.01,
-   Suffix = "Volume",
-   CurrentValue = 0.3,
-   Callback = function(Value)
-   local pls = game:GetService("Players")
-	   while true do
-	   for _, pl in pairs(pls:GetPlayers()) do
-		      if pl.Character then
-			  pl.Character.HumanoidRootPart.Scream.Volume = Value
-			  end
-			  end
-			  wait(0.03)
-			end
-   end,
-})
-
-
-local Button = Tab:CreateButton({
-   Name = "Move Spawn",
-   Callback = function()
-			local spawn = game.Workspace.SpawnLocation
-		spawn.CanCollide = true	
-   spawn.Transparency = 0.7
-spawn.Position = Vector3.new(0, 50, 0)
-
-Rayfield:Notify({
-   Title = "Move Spawn",
-   Content = "Done",
-   Duration = 3,
-   Image = 4483362458,
-})
-			
-end,
-})
-
-local Slider = Tab:CreateSlider({
-   Name = "X",
-   Range = {-1000, 1000},
-   Increment = 0.1,
-   Suffix = "Studs",
-   CurrentValue = 0,
-   Callback = function(Value)
-   local S = game.Workspace.SpawnLocation
-S.Position = Vector3.new(Value, S.Position.Y, S.Position.Z)
-end,
-})
-
-local Slider = Tab:CreateSlider({
-   Name = "Y",
-   Range = {-1000, 1000},
-   Increment = 0.1,
-   Suffix = "Studs",
-   CurrentValue = 0,
-   Callback = function(Value)
-    local S = game.Workspace.SpawnLocation
-S.Position = Vector3.new(S.Position.X, Value, S.Position.Z)
-end,
-})
-
-local Slider = Tab:CreateSlider({
-   Name = "Z",
-   Range = {-1000, 1000},
-   Increment = 0.1,
-   Suffix = "Studs",
-   CurrentValue = 0,
-   Callback = function(Value)
-   local S = game.Workspace.SpawnLocation
-S.Position = Vector3.new(S.Position.X, S.Position.Y, Value)
-end,
 })
 
 local Button = Tab:CreateKeybind({
@@ -1709,7 +1524,114 @@ local Button = Tab:CreateKeybind({
 end,
 })
 
+local Tab = Window:CreateTab("Other", 4483362458)
 
+local Section = Tab:CreateSection("Settings")
+
+local Button = Tab:CreateToggle({
+   Name = "Cry",
+   CurrentValue = false,
+   Callback = function(Value)
+       local lp = game.Players.LocalPlayer
+   local f = lp.Character.OnFireAnimationScript
+   local toy = workspace:FindFirstChild(lp.Name.."SpawnedInToys")
+   local c = toy.Campfire
+   local e = game.workspace.Plots.Plot3.Barrier.PlotBarrier.CFrame
+   local function CRY()
+   c.FirePlayerPart.CFrame = lp.Character.HumanoidRootPart.CFrame
+   task.wait(0.3)
+   c.FirePlayerPart.CFrame = CFrame.new(154.299103, 250.697739, 331.101624, 0.930420518, -3.53281782e-09, -0.366493821, 1.9336921e-09, 1, -4.73042405e-09, 0.366493821, 3.69259712e-09, 0.930420518)
+   f.Disabled = true
+   task.wait(0.3)
+   game.workspace.Plots.Plot3.Barrier.PlotBarrier.CFrame = lp.Character.HumanoidRootPart.CFrame
+   task.wait(0.3)
+   game.workspace.Plots.Plot3.Barrier.PlotBarrier.CFrame = e
+   end
+   local function check()
+	   if c and f.Disabled == false then
+	   CRY()
+	   else
+	   f.Enabled = true
+	   game.workspace.Plots.Plot3.Barrier.PlotBarrier.CFrame = lp.Character.HumanoidRootPart.CFrame
+	   task.wait(0.3)
+	   game.workspace.Plots.Plot3.Barrier.PlotBarrier.CFrame = e
+	   lp.Character.Animate.Disabled = true
+	   lp.Character.Animate.Enabled = true 
+   end
+   end
+
+   if Value == true then
+   check()
+   else
+   f.Enabled = true
+   lp.Character.Animate.Disabled = true
+   lp.Character.Animate.Enabled = true
+   end
+
+	Rayfield:Notify({
+   Title = "Cry",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Remove Clouds",
+   Callback = function()
+   game.Workspace.Terrain.Clouds:Destroy()
+	print("Done!")
+
+	Rayfield:Notify({
+   Title = "Remove Clouds",
+   Content = "Done",
+   Duration = 3,
+   Image = 4483362458,
+})
+
+end,
+})
+
+local Slider = Tab:CreateSlider({
+   Name = "Map Noises",
+   Range = {0, 1},
+   Increment = 0.01,
+   Suffix = "Volume",
+   CurrentValue = 0.02,
+   Callback = function(Value)
+    game.Workspace.Map.MapNoises.NoisePart1.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart2.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart3.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart4.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart5.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart6.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart7.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart8.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart9.Sound1.Volume = Value
+	game.Workspace.Map.MapNoises.NoisePart10.Sound1.Volume = Value
+   end,
+})
+
+local Slider = Tab:CreateSlider({
+   Name = "Screams",
+   Range = {0, 1},
+   Increment = 0.01,
+   Suffix = "Volume",
+   CurrentValue = 0.3,
+   Callback = function(Value)
+   local pls = game:GetService("Players")
+	   while true do
+	   for _, pl in pairs(pls:GetPlayers()) do
+		      if pl.Character then
+			  pl.Character.HumanoidRootPart.Scream.Volume = Value
+			  end
+			  end
+			  wait(0.03)
+			end
+   end,
+})
 
 local Tab = Window:CreateTab("Other Scripts", 10734943448)
 
@@ -1776,7 +1698,7 @@ end,
 })
 
 local Button = Tab:CreateButton({
-   Name = "Dex Mobile",
+   Name = "Dex (InfiniteYield)",
    Callback = function()
    loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"))()
 	print("Done!")
@@ -1977,4 +1899,3 @@ ez.Volume = 0.25
 ez:Play()
 task.wait(3)
 	ez:Destroy()
-game.workspace.SpawnLocation.Decal.Texture = "rbxasset://textures/face.png"
