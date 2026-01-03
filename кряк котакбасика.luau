@@ -571,7 +571,7 @@ end
 					local hrp = char and char:FindFirstChild("HumanoidRootPart")
 					if not hrp then return end
 
-					local ToyName = "FoodHamburger"
+					local ToyName = "FoodSodaCan"
 					local RS = game:GetService("ReplicatedStorage")
 					local Workspace = game:GetService("Workspace")
 					local SpawnRemote = RS.MenuToys.SpawnToyRemoteFunction
