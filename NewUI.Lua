@@ -67,8 +67,8 @@ local Tabs = {
 }
 
 local LP = Tabs.Main:AddLeftGroupbox("LocalPlayer")
-local GB = Tabs.Main:AddRightGroupbox("GrabLine")
-local DF = Tabs.Main:AddLeftGroupbox("Defense")
+local GB = Tabs.Main:AddLeftGroupbox("GrabLine")
+local DF = Tabs.Main:AddRightGroupbox("Defense")
 
 LP:AddSlider("WalkSpeed", {
 	Text = "WalkSpeed",
@@ -126,7 +126,7 @@ LP:AddSlider("FOV", {
 	end,
 })
 
-LP:AddToggle("3rd", {
+LP:AddToggle("Trd", {
 	Text = "Unlock 3rd Person",
 	Default = false,
 	Callback = function(Value)
@@ -238,7 +238,7 @@ GB:AddToggle("Strong", {
 	end,
 })
 
-DF:AddToggle("Anti Grab", {
+DF:AddToggle("AntiGrab", {
 	Text = "Anti Grab",
 	Default = false,
 	Callback = function(Value)
@@ -276,9 +276,31 @@ DF:AddToggle("Anti Grab", {
 	end,
 })
 
+DF:AddToggle("AntiExplosion", {
+	Text = "Anti Explosion",
+	Default = false,
+	Callback = function(Value)
+	if Value then
+	antiexp = RunService.Heartbeat:Connect(function()
+	if char.Humanoid.Ragdolled.Value == true then
+	char:FindFirstChild("HumanoidRootPart").Anchored = true
+	char:FindFirstChild("HumanoidRootPart").Velocity = Vector3.new(0, 0, 0)
+	else
+	char:FindFirstChild("HumanoidRootPart").Anchored = false
+	end
+	end)
+	else
+	if antiexp then
+    antiexp:Disconnect()
+    antiexp = nil
+	end
+	end
+	end,
+})
+
 DF:AddToggle("AntiVoid", {
 	Text = "Anti Void",
-	Default = false,
+	Default = true,
 	Callback = function(Value)
 	if Value then
 	game.Workspace.FallenPartsDestroyHeight = -10e+37
@@ -288,7 +310,7 @@ DF:AddToggle("AntiVoid", {
 	end,
 })
 
-DF:AddToggle("Loop Tp", {
+DF:AddToggle("LoopTp", {
 	Text = "Loop TP",
 	Default = false,
 	Callback = function(Value)
@@ -311,7 +333,7 @@ DF:AddToggle("Loop Tp", {
 	end,
 })
 
-DF:AddToggle("Anti Kick", {
+DF:AddToggle("AntiKick", {
 	Text = "Anti Kick",
 	Default = false,
 	Callback = function(Value)
@@ -387,7 +409,16 @@ MenuGroup:AddLabel("Menu bind")
 	:AddKeyPicker("MenuKeybind", { Default = "Q", NoUI = true, Text = "Menu keybind" })
 
 MenuGroup:AddButton("Unload", function()
-	Library:Unload()
+Toggles.AntiInputLag:SetValue(false)
+Toggles.AntiGrab:SetValue(false)
+Toggles.AntiVoid:SetValue(false)
+Toggles.AntiKick:SetValue(false)
+Toggles.LoopTp:SetValue(false)
+Toggles.Trd:SetValue(false)
+Toggles.PLCD:SetValue(false)
+Toggles.Strong:SetValue(false)
+task.wait()
+Library:Unload()
 end)
 
 Library.ToggleKeybind = Options.MenuKeybind -- Allows you to have a custom keybind for the menu
