@@ -348,9 +348,7 @@ DF:AddToggle("AntiInputLag", {
 		if toysFolder:FindFirstChild(Item) then
 		task.wait()
 		else
-		Toggles.AntiInputLag:SetValue(false)
-		task.wait()
-		Toggles.AntiInputLag:SetValue(true)
+		spawnItem(Item, spaw.Position + Vector3.new(0, 100, 0))
 		end
 	end
 
@@ -358,6 +356,8 @@ DF:AddToggle("AntiInputLag", {
 
 		spawnItem(Item, spaw.Position + Vector3.new(0, 100, 0))
 
+		antiinput = RunService.Heartbeat:Connect(function()
+		check()
 		local startWait = tick()
         repeat 
         RunService.Heartbeat:Wait()
@@ -366,8 +366,6 @@ DF:AddToggle("AntiInputLag", {
 
 		local holdPart = toy:FindFirstChild("HoldPart")
 
-		antiinput = RunService.Heartbeat:Connect(function()
-		check()
 		task.wait()
 		holdPart.HoldItemRemoteFunction:InvokeServer(toy, LocalPlayer.Character)
 		task.wait()
