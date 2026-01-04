@@ -1,13 +1,14 @@
 local SelectedPlayer = nil
 local P = game:GetService("Players")
 local LocalPlayer = P.LocalPlayer
+local char = LocalPlayer.Character
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local CharacterEvents = ReplicatedStorage:WaitForChild("CharacterEvents")
 local Struggle = CharacterEvents:WaitForChild("Struggle")
 local GrabEvents = ReplicatedStorage:WaitForChild("GrabEvents")
 local SetNetworkOwner = GrabEvents:WaitForChild("SetNetworkOwner")
-local toysFolder = workspace:FindFirstChild(LocalPlayer.Name.."SpawnedInToys")
+local toysFolder = game.workspace:FindFirstChild(LocalPlayer.Name.."SpawnedInToys")
 local group = game.workspace
 local spaw = game.workspace.SpawnLocation
 local hue = 0
@@ -27,12 +28,6 @@ local function spawnItem(itemName, position, orientation)
     end)
 end
 
-local function holdItem(itemName)
-    task.spawn(function()
-        ReplicatedStorage.HoldEvents.Hold:InvokeServer(itemName)
-    end)
-end
-
 local function DestroyT(toy)
     local toy = toy or toysFolder:FindFirstChildWhichIsA("Model")
     ReplicatedStorage.MenuToys.DestroyToy:FireServer(toy)
@@ -45,6 +40,8 @@ end
 local function destroyline()
 	GrabEvents.DestroyGrabLine:FireServer(spaw, spaw.CFrame)
 end
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
 
 local repo = "https://raw.githubusercontent.com/deividcomsono/Obsidian/main/"
 local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
@@ -195,7 +192,7 @@ else
 	end,
 })
 
-LP:AddLabel("Keybind"):AddKeyPicker("KeyPicker", {
+LP:AddLabel("TP Mouse"):AddKeyPicker("KeyPicker", {
 	Default = "Z",
 	Callback = function()
 	local mouse = LocalPlayer:GetMouse()
@@ -280,20 +277,11 @@ DF:AddToggle("Loop Tp", {
         if Value then
             task.spawn(function()
                 while LoopTP do
-            LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(569.652527, 13.6484346, -394.444519, -0.953733981, -3.01659959e-08, -0.300651759, -5.31917044e-09, 1, -8.34617495e-08, 0.300651759, -7.80010865e-08, -0.953733981)
-                    task.wait(0.02)
-			LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(79.1195755, 303.694733, 365.037109, 0.300712913, 9.96221416e-08, -0.953714728, -1.43715875e-08, 1, 9.99255008e-08, 0.953714728, -1.63424936e-08, 0.300712913)
-                    task.wait(0.02)
-			LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(42.507618, -6.35040426, -631.584534, -0.976292491, -4.06780316e-08, -0.2164554, -1.58035363e-08, 1, -1.16648309e-07, 0.2164554, -1.10462111e-07, -0.976292491)
-                    task.wait(0.02)
-			LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-556.111572, -7.35040474, 651.426941, -0.766063511, -1.1517696e-07, 0.642764866, -4.87707155e-08, 1, 1.21063692e-07, -0.642764866, 6.13943811e-08, -0.766063511)
-                    task.wait(0.02)
-			LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-406.163055, -6.35040474, -518.774292, -0.963627636, 2.03066879e-08, -0.267248422, -1.42729943e-08, 1, 1.27448985e-07, 0.267248422, 1.26627796e-07, -0.963627636)
-                    task.wait(0.02)
-			LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(602.923462, 26.6475773, 133.185562, 0.325559855, 5.51754091e-08, 0.945521414, 2.13931295e-09, 1, -5.90910822e-08, -0.945521414, 2.12604512e-08, 0.325559855)
-                    task.wait(0.02)
-			LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-555.959473, -6.35040426, 651.610535, -0.731328487, -7.58439569e-08, 0.682025373, -6.26779766e-08, 1, 4.39950867e-08, -0.682025373, -1.05731077e-08, -0.731328487)
-                    task.wait(0.02)
+            local x = math.random(-500, 500)
+			local y = math.random(30, 480)
+			local z = math.random(-500, 500)
+			LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(x, y, z)
+			task.wait(0.03)
 				end
 			end)
 		else
@@ -320,83 +308,49 @@ DF:AddToggle("Anti Kick", {
 	end,
 })
 
+DF:AddDropdown("Anti Input Lag Item", {
+	Values = { "FoodSodaCan", "FoodHamburger", "CupMugWhite", "FoodBanana", "FoodCoconut", "PoopPileSparkle", "CupMugBrown", "FoodBread", "FoodBroccoli", "FoodDippyEgg", "FoodDonut", "FoodHotdog", "FoodMayonnaise", "FoodMeatStick", "FoodMushroomPoison", "FoodPizzaCheese", "PoopPile", "FoodPizzaPepperoni", "FoodFrenchFries", "FoodCakePink", "InstrumentBrassBugle", "InstrumentBrassTrumpet", "InstrumentBrassVuvuzela", "InstrumentDrumBongos", "InstrumentDrumSnare", "InstrumentGuitarAcoustic", "InstrumentGuitarBanjo", "InstrumentGuitarLyre", "InstrumentGuitarUkulele", "InstrumentGuitarViolin", "InstrumentPianoKeyboard", "InstrumentPianoMelodica", "InstrumentVoiceMicrophone", "InstrumentWoodwindOcarina", "InstrumentWoodwindSaxophone" },
+	Default = nil, -- number index of the value / string
+	Multi = false, -- true / false, allows multiple choices to be selected
+	Callback = function(Value)
+		selectedItem = Value
+	end,
+})
+
 DF:AddToggle("Anti Input Lag", {
 	Text = "Anti Input Lag",
 	Default = false,
 	Callback = function(Value)
-	if Value then
-        _G.AntiInputLag = true
-
-        task.spawn(function()
-          local char = LocalPlayer.Character
-          local hrp = char and char:FindFirstChild("HumanoidRootPart")
+	local hrp = char and char:FindFirstChild("HumanoidRootPart")
           if not hrp then return end
+	local item = selectedItem
+	local function check()
+		if not toysFolder:FindFirstChild(item) then
+			spawnItem(item, hrp.Position + Vector3.new(0, 5, 20))
+			else
+			print("ам")
+		end
+	end
 
-          local ToyName = "FoodSodaCan"
-          local RS = game:GetService("ReplicatedStorage")
-          local Workspace = game:GetService("Workspace")
-          local SpawnRemote = RS.MenuToys.SpawnToyRemoteFunction
-
-          while _G.AntiInputLag do
-            local toysFolder = Workspace:FindFirstChild(LocalPlayer.Name.."SpawnedInToys")
-            local burger = toysFolder and toysFolder:FindFirstChild(ToyName)
-
-            if not burger then
-              task.spawn(function()
-                pcall(function()
-                  local spawnCF = hrp.CFrame * CFrame.new(0, 5, 0)
-                  SpawnRemote:InvokeServer(ToyName, spawnCF, Vector3.new(0,0,0))
-                end)
-              end)
-              
-              local startWait = tick()
-              repeat 
-                game:GetService("RunService").Heartbeat:Wait()
-                toysFolder = Workspace:FindFirstChild(LocalPlayer.Name.."SpawnedInToys")
-                burger = toysFolder and toysFolder:FindFirstChild(ToyName)
-              until burger or tick() - startWait > 1 or not _G.AntiInputLag
-            end
-
-            if burger and burger.Parent then
-              local holdPart = burger:FindFirstChild("HoldPart")
-              
-              if holdPart then
-                local holdingPlayer = holdPart:FindFirstChild("HoldingPlayer") and holdPart.HoldingPlayer.Value
-
-                if holdingPlayer and holdingPlayer ~= LocalPlayer then
-                  pcall(function()
-                    holdPart.DropItemRemoteFunction:InvokeServer(
-                      burger,
-                      hrp.CFrame * CFrame.new(0, 2000, 0),
-                      Vector3.new(0,0,0)
-                    )
-                  end)
-                  burger:Destroy()
-                else
-                  pcall(function()
-                    holdPart.HoldItemRemoteFunction:InvokeServer(burger, char)
-                  end)
-                  task.wait()
-                  
-                  pcall(function()
-                    holdPart.DropItemRemoteFunction:InvokeServer(
-                      burger,
-                      hrp.CFrame * CFrame.new(0, 2000, 0),
-                      Vector3.new(0,0,0)
-                    )
-                  end)
-                  task.wait()
-                end
-              end
-            end
-          end
-        end)
-      else
-        _G.AntiInputLag = false
-      end
+	if Value then
+		antiinput = true
+		task.spawn(function()
+		--spawnItem(item, char.HumanoidRootPart.Position)
+		check()
+		toy = toysFolder:WaitForChild(item, 2)
+		task.wait(0.1)
+		while antiinput do
+		check()
+		toy.HoldPart.HoldItemRemoteFunction:InvokeServer(toy, char)
+		toy.HoldPart.DropItemRemoteFunction:InvokeServer(toy, spaw.CFrame * CFrame.new(0, 500000, 0), Vector3.new(0, 0, 0))
+		end
+		end)
+		else
+		antiinput = false
+		DestroyT(toysFolder:FindFirstChild(item))
+	end
     end,
 })
-
 
 -- UI Settings
 local MenuGroup = Tabs["UI Settings"]:AddLeftGroupbox("Menu")
