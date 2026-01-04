@@ -310,6 +310,36 @@ DF:AddToggle("AntiVoid", {
 	end,
 })
 
+DF:AddToggle("DisableBarrierCollisions", {
+	Text = "Disable Barrier Collisions",
+	Default = false,
+	Callback = function(Value)
+	for plotNumber = 1, 5 do
+            local plotName = "Plot" .. plotNumber
+            local plot = game.Workspace.Plots[plotName]
+            
+            if plot then
+                -- Обработка Barrier
+                local group = plot:FindFirstChild("Barrier")
+                if group then
+                    for _, part in ipairs(group:GetChildren()) do
+                        if part.Name == "PlotBarrier" and part:IsA("Part") then
+                            part.CanCollide = not Value
+                            part.CanQuery = not Value
+                        end
+                    end
+                end
+                
+                -- Обработка PlotArea
+                local plotArea = plot:FindFirstChild("PlotArea")
+                if plotArea and plotArea:IsA("BasePart") then
+                    plotArea.CanQuery = not Value
+                end
+            end
+        end
+	end,
+})
+
 DF:AddToggle("LoopTp", {
 	Text = "Loop TP",
 	Default = false,
@@ -459,3 +489,4 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
