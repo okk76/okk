@@ -210,6 +210,13 @@ local MyButton = LP:AddButton({
 	end,
 })
 
+--local MyButton = LP:AddButton({
+	--Text = "R",
+	--Func = function()
+		--Toggles.AntiInputLag:SetValue(false)
+	--end,
+--})
+
 GB:AddToggle("Strong", {
 	Text = "Strong GrabLine",
 	Default = false,
@@ -269,6 +276,18 @@ DF:AddToggle("Anti Grab", {
 	end,
 })
 
+DF:AddToggle("AntiVoid", {
+	Text = "Anti Void",
+	Default = false,
+	Callback = function(Value)
+	if Value then
+	game.Workspace.FallenPartsDestroyHeight = -10e+37
+   	else
+	game.Workspace.FallenPartsDestroyHeight = -100
+	end
+	end,
+})
+
 DF:AddToggle("Loop Tp", {
 	Text = "Loop TP",
 	Default = false,
@@ -317,38 +336,49 @@ DF:AddDropdown("Anti Input Lag Item", {
 	end,
 })
 
-DF:AddToggle("Anti Input Lag", {
+DF:AddToggle("AntiInputLag", {
 	Text = "Anti Input Lag",
 	Default = false,
 	Callback = function(Value)
-	local hrp = char and char:FindFirstChild("HumanoidRootPart")
-          if not hrp then return end
-	local item = selectedItem
+	local Item = selectedItem
+	local hrpp = char:FindFirstChild("HumanoidRootPart").Position
+	local toy = toysFolder:FindFirstChild(Item)
+
 	local function check()
-		if not toysFolder:FindFirstChild(item) then
-			spawnItem(item, hrp.Position + Vector3.new(0, 5, 20))
-			else
-			print("ам")
+		if toysFolder:FindFirstChild(Item) then
+		task.wait()
+		else
+		Toggles.AntiInputLag:SetValue(false)
+		task.wait()
+		Toggles.AntiInputLag:SetValue(true)
 		end
 	end
 
 	if Value then
-		antiinput = true
-		task.spawn(function()
-		--spawnItem(item, char.HumanoidRootPart.Position)
+
+		spawnItem(Item, spaw.Position + Vector3.new(0, 100, 0))
+
+		local startWait = tick()
+        repeat 
+        RunService.Heartbeat:Wait()
+		toy = toysFolder:FindFirstChild(Item)
+        until toy or tick() - startWait > 1 or Value == false
+
+		local holdPart = toy:FindFirstChild("HoldPart")
+
+		antiinput = RunService.Heartbeat:Connect(function()
 		check()
-		toy = toysFolder:WaitForChild(item, 2)
-		task.wait(0.1)
-		while antiinput do
-		check()
-		toy.HoldPart.HoldItemRemoteFunction:InvokeServer(toy, char)
-		toy.HoldPart.DropItemRemoteFunction:InvokeServer(toy, spaw.CFrame * CFrame.new(0, 500000, 0), Vector3.new(0, 0, 0))
-		end
+		task.wait()
+		holdPart.HoldItemRemoteFunction:InvokeServer(toy, LocalPlayer.Character)
+		task.wait()
+		holdPart.DropItemRemoteFunction:InvokeServer(toy, spaw.CFrame * CFrame.new(0, 500000, 0), Vector3.new(0, 0, 0))
+		toy.SoundPart.CanCollide = false
 		end)
-		else
-		antiinput = false
-		DestroyT(toysFolder:FindFirstChild(item))
-	end
+	else
+    	antiinput:Disconnect()
+		antiinput = nil
+		DestroyT(toy)
+      end
     end,
 })
 
