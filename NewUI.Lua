@@ -63,12 +63,14 @@ local Window = Library:CreateWindow({
 
 local Tabs = {
 	Main = Window:AddTab("Main", "user"),
+	Keybinds = Window:AddTab("Keybinds"),
 	["UI Settings"] = Window:AddTab("UI Settings", "settings"),
 }
 
 local LP = Tabs.Main:AddLeftGroupbox("LocalPlayer")
 local GB = Tabs.Main:AddLeftGroupbox("GrabLine")
 local DF = Tabs.Main:AddRightGroupbox("Defense")
+local KB = Tabs.Keybinds:AddLeftGroupbox("Teleports")
 
 LP:AddSlider("WalkSpeed", {
 	Text = "WalkSpeed",
@@ -340,6 +342,27 @@ DF:AddToggle("DisableBarrierCollisions", {
 	end,
 })
 
+local MyButton = DF:AddButton({
+	Text = "Break Barrier",
+	Func = function()
+	local oldp = char:FindFirstChild("HumanoidRootPart").CFrame
+		spawnItem("FoodHamburger", spaw.Position + Vector3.new(0, 100, 0))
+		local startWait = tick()
+        repeat 
+        RunService.Heartbeat:Wait()
+		breaker = toysFolder:FindFirstChild("FoodHamburger")
+        until breaker or tick() - startWait > 1
+		task.wait(0.1)
+		toysFolder.FoodHamburger.HoldPart.HoldItemRemoteFunction:InvokeServer(toysFolder.FoodHamburger, char)
+		task.wait()
+		ReplicatedStorage.HoldEvents.Use:FireServer(toysFolder.FoodHamburger)
+		task.wait(1.885)
+		char.HumanoidRootPart.CFrame = CFrame.new(250, 1, 460)
+		--task.wait(0.75)
+		--char.HumanoidRootPart.CFrame = oldp
+	end,
+})
+
 DF:AddToggle("LoopTp", {
 	Text = "Loop TP",
 	Default = false,
@@ -432,6 +455,78 @@ DF:AddToggle("AntiInputLag", {
     end,
 })
 
+KB:AddLabel("Spawn"):AddKeyPicker("KeyPicker", {
+	Default = "One",
+	Callback = function()
+	char.HumanoidRootPart.CFrame = CFrame.new(0, 5, 0)
+   	char.HumanoidRootPart.Velocity = Vector3.new(0, 1, 0)
+	end,
+})
+
+KB:AddLabel("Plot 1"):AddKeyPicker("KeyPicker", {
+	Default = "Two",
+	Callback = function()
+	char.HumanoidRootPart.CFrame = CFrame.new(-492, 5, -167)
+   	char.HumanoidRootPart.Velocity = Vector3.new(0, 1, 0)
+	end,
+})
+
+KB:AddLabel("Plot 2"):AddKeyPicker("KeyPicker", {
+	Default = "Three",
+	Callback = function()
+	char.HumanoidRootPart.CFrame = CFrame.new(-535, 5, 90)
+   	char.HumanoidRootPart.Velocity = Vector3.new(0, 1, 0)
+	end,
+})
+
+KB:AddLabel("Plot 3"):AddKeyPicker("KeyPicker", {
+	Default = "Four",
+	Callback = function()
+	char.HumanoidRootPart.CFrame = CFrame.new(250, 1, 460)
+   	char.HumanoidRootPart.Velocity = Vector3.new(0, 1, 0)
+	end,
+})
+
+KB:AddLabel("Plot 4"):AddKeyPicker("KeyPicker", {
+	Default = "Five",
+	Callback = function()
+	char.HumanoidRootPart.CFrame = CFrame.new(512, 89, -340)
+   	char.HumanoidRootPart.Velocity = Vector3.new(0, 1, 0)
+	end,
+})
+
+KB:AddLabel("Plot 5"):AddKeyPicker("KeyPicker", {
+	Default = "Six",
+	Callback = function()
+	char.HumanoidRootPart.CFrame = CFrame.new(553, 129, -75)
+   	char.HumanoidRootPart.Velocity = Vector3.new(0, 1, 0)
+	end,
+})
+
+KB:AddLabel("Barn"):AddKeyPicker("KeyPicker", {
+	Default = "Seven",
+	Callback = function()
+	char.HumanoidRootPart.CFrame = CFrame.new(-195, 69, -285)
+   	char.HumanoidRootPart.Velocity = Vector3.new(0, 1, 0)
+	end,
+})
+
+KB:AddLabel("House"):AddKeyPicker("KeyPicker", {
+	Default = "Eight",
+	Callback = function()
+	char.HumanoidRootPart.CFrame = CFrame.new(-282, 84, 313)
+   	char.HumanoidRootPart.Velocity = Vector3.new(0, 1, 0)
+	end,
+})
+
+KB:AddLabel("Island"):AddKeyPicker("KeyPicker", {
+	Default = "Nine",
+	Callback = function()
+	char.HumanoidRootPart.CFrame = CFrame.new(72, 352, 341)
+   	char.HumanoidRootPart.Velocity = Vector3.new(0, 1, 0)
+	end,
+})
+
 -- UI Settings
 local MenuGroup = Tabs["UI Settings"]:AddLeftGroupbox("Menu")
 
@@ -447,6 +542,7 @@ Toggles.LoopTp:SetValue(false)
 Toggles.Trd:SetValue(false)
 Toggles.PLCD:SetValue(false)
 Toggles.Strong:SetValue(false)
+Toggles.DisableBarrierCollisions:SetValue(false)
 task.wait()
 Library:Unload()
 end)
@@ -489,4 +585,3 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
-
