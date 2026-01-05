@@ -1,7 +1,10 @@
 local SelectedPlayer = nil
 local P = game:GetService("Players")
 local LocalPlayer = P.LocalPlayer
-local char = LocalPlayer.Character
+local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+LocalPlayer.CharacterAdded:Connect(function(NewChar)
+	char = NewChar
+end)
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local CharacterEvents = ReplicatedStorage:WaitForChild("CharacterEvents")
@@ -368,21 +371,19 @@ DF:AddToggle("DisableBarrierCollisions", {
 local MyButton = DF:AddButton({
 	Text = "Break Barrier",
 	Func = function()
-	local oldp = char:FindFirstChild("HumanoidRootPart").CFrame
-		spawnItem("FoodHamburger", spaw.CFrame + Vector3.new(0, 100, 0))
+	local hrp = char:FindFirstChild("HumanoidRootPart")
+		spawnItem("FoodHamburger", spaw.Position + Vector3.new(0, 100, 0))
 		local startWait = tick()
         repeat 
         RunService.Heartbeat:Wait()
 		breaker = toysFolder:FindFirstChild("FoodHamburger")
         until breaker or tick() - startWait > 1
 		task.wait(0.05)
-		toysFolder.FoodHamburger.HoldPart.HoldItemRemoteFunction:InvokeServer(toysFolder.FoodHamburger, char)
+		breaker.HoldPart.HoldItemRemoteFunction:InvokeServer(breaker, char)
 		task.wait()
-		ReplicatedStorage.HoldEvents.Use:FireServer(toysFolder.FoodHamburger)
-		task.wait(1.885)
-		char.HumanoidRootPart.CFrame = CFrame.new(250, 1, 460)
-		--task.wait(0.75)
-		--char.HumanoidRootPart.CFrame = oldp
+		ReplicatedStorage.HoldEvents.Use:FireServer(breaker)
+		task.wait(1.88)
+		hrp.CFrame = CFrame.new(250, 1, 460)
 	end,
 })
 
@@ -391,21 +392,50 @@ DF:AddToggle("AntiKick", {
 	Default = false,
 	Callback = function(Value)
 	local hrp = char:FindFirstChild("HumanoidRootPart")
-	local firePart = hrp:FindFirstChild("FirePlayerPart")
-	if Value then
-		spawnItem("NinjaKunai", spaw.Position + Vector3.new(0, 1000, 0))
+	local firePart = hrp:WaitForChild("FirePlayerPart") or hrp:WaitForChild("FirePlayerPart", 5)
+
+	local function checkantikick()
+		if toysFolder:FindFirstChild("NinjaKunai") then
+		task.wait()
+		else
+		spawnItem("NinjaKunai", hrp.Position + Vector3.new(0, 7.5, 20))
 		local startWait = tick()
         repeat 
         RunService.Heartbeat:Wait()
-		antikick = toysFolder:FindFirstChild("NinjaKunai")
-        until antikick or tick() - startWait > 1
+		kunai = toysFolder:FindFirstChild("NinjaKunai")
+        until kunai or tick() - startWait > 1
 		task.wait(0.05)
 		local HL = Instance.new("Highlight")
-		HL.Parent = antikick
 		HL.FillTransparency = 1
-		ReplicatedStorage.PlayerEvents.StickyPartEvent:FireServer(antikick.StickyPart, firePart, CFrame.new(0, -1, 0.075) * CFrame.Angles(0,math.rad(90),math.rad(90)))
+		HL.Parent = kunai
+		SetNetworkOwner:FireServer(kunai.StickyPart, kunai.StickyPart.CFrame)
+		end
+	end
+
+	if Value then
+		spawnItem("NinjaKunai", hrp.Position + Vector3.new(0, 7.5, 20))
+		local startWait = tick()
+        repeat 
+        RunService.Heartbeat:Wait()
+		kunai = toysFolder:FindFirstChild("NinjaKunai")
+        until kunai or tick() - startWait > 1
+		task.wait(0.05)
+		SetNetworkOwner:FireServer(kunai.StickyPart, kunai.StickyPart.CFrame)
+		local HL = Instance.new("Highlight")
+		HL.FillTransparency = 1
+		HL.Parent = kunai
+		--ReplicatedStorage.PlayerEvents.StickyPartEvent:FireServer(kunai.StickyPart, firePart, CFrame.new(0, -1, 0.075) * CFrame.Angles(0,math.rad(90),math.rad(90)))
+		antikick = RunService.Heartbeat:Connect(function()
+		checkantikick()
+		task.wait(0.1)
+		ReplicatedStorage.PlayerEvents.StickyPartEvent:FireServer(kunai.StickyPart, firePart, CFrame.new(0, -1, 0.075) * CFrame.Angles(0,math.rad(90),math.rad(90)))
+		end)
 	else
+		if antikick then
+		antikick:Disconnect()
+		antikick = nil
 		DestroyT(toysFolder:FindFirstChild("NinjaKunai"))
+		end
 	end
 	end,
 })
@@ -427,7 +457,7 @@ DF:AddToggle("AntiInputLag", {
 	local hrpp = char:FindFirstChild("HumanoidRootPart").Position
 	local toy = toysFolder:FindFirstChild(Item)
 
-	local function check()
+	local function checkantiunput()
 		if toysFolder:FindFirstChild(Item) then
 		task.wait()
 		else
@@ -440,7 +470,7 @@ DF:AddToggle("AntiInputLag", {
 		spawnItem(Item, spaw.Position + Vector3.new(0, 100, 0))
 
 		antiinput = RunService.Heartbeat:Connect(function()
-		check()
+		checkantiunput()
 		local startWait = tick()
         repeat 
         RunService.Heartbeat:Wait()
@@ -450,7 +480,7 @@ DF:AddToggle("AntiInputLag", {
 		local holdPart = toy:FindFirstChild("HoldPart")
 
 		task.wait()
-		holdPart.HoldItemRemoteFunction:InvokeServer(toy, LocalPlayer.Character)
+		holdPart.HoldItemRemoteFunction:InvokeServer(toy, char)
 		task.wait()
 		holdPart.DropItemRemoteFunction:InvokeServer(toy, spaw.CFrame * CFrame.new(0, 500000, 0), Vector3.new(0, 0, 0))
 		toy.SoundPart.CanCollide = false
