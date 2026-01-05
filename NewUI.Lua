@@ -312,6 +312,29 @@ DF:AddToggle("AntiVoid", {
 	end,
 })
 
+DF:AddToggle("LoopTp", {
+	Text = "Loop TP",
+	Default = false,
+	Callback = function(Value)
+	LoopTP = Value
+        if Value then
+            task.spawn(function()
+                while LoopTP do
+            local x = math.random(-500, 500)
+			local y = math.random(30, 480)
+			local z = math.random(-500, 500)
+			LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(x, y, z)
+			task.wait(0.03)
+				end
+			end)
+		else
+		task.wait(0.3)
+		LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 0, 0)
+        end
+		
+	end,
+})
+
 DF:AddToggle("DisableBarrierCollisions", {
 	Text = "Disable Barrier Collisions",
 	Default = false,
@@ -346,13 +369,13 @@ local MyButton = DF:AddButton({
 	Text = "Break Barrier",
 	Func = function()
 	local oldp = char:FindFirstChild("HumanoidRootPart").CFrame
-		spawnItem("FoodHamburger", spaw.Position + Vector3.new(0, 100, 0))
+		spawnItem("FoodHamburger", spaw.CFrame + Vector3.new(0, 100, 0))
 		local startWait = tick()
         repeat 
         RunService.Heartbeat:Wait()
 		breaker = toysFolder:FindFirstChild("FoodHamburger")
         until breaker or tick() - startWait > 1
-		task.wait(0.1)
+		task.wait(0.05)
 		toysFolder.FoodHamburger.HoldPart.HoldItemRemoteFunction:InvokeServer(toysFolder.FoodHamburger, char)
 		task.wait()
 		ReplicatedStorage.HoldEvents.Use:FireServer(toysFolder.FoodHamburger)
@@ -363,42 +386,27 @@ local MyButton = DF:AddButton({
 	end,
 })
 
-DF:AddToggle("LoopTp", {
-	Text = "Loop TP",
-	Default = false,
-	Callback = function(Value)
-	LoopTP = Value
-        if Value then
-            task.spawn(function()
-                while LoopTP do
-            local x = math.random(-500, 500)
-			local y = math.random(30, 480)
-			local z = math.random(-500, 500)
-			LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(x, y, z)
-			task.wait(0.03)
-				end
-			end)
-		else
-		task.wait(0.3)
-		LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 0, 0)
-        end
-		
-	end,
-})
-
 DF:AddToggle("AntiKick", {
 	Text = "Anti Kick",
 	Default = false,
 	Callback = function(Value)
-	local function ClearKunai()
-				if toysFolder then
-					for _, v in pairs(toysFolder:GetChildren()) do
-						if v.Name == "AntiKick" or v.Name == "NinjaShuriken" then
-							pcall(function() DestroyT:FireServer(v) end)
-						end
-					end
-				end
-			end
+	local hrp = char:FindFirstChild("HumanoidRootPart")
+	local firePart = hrp:FindFirstChild("FirePlayerPart")
+	if Value then
+		spawnItem("NinjaKunai", spaw.Position + Vector3.new(0, 1000, 0))
+		local startWait = tick()
+        repeat 
+        RunService.Heartbeat:Wait()
+		antikick = toysFolder:FindFirstChild("NinjaKunai")
+        until antikick or tick() - startWait > 1
+		task.wait(0.05)
+		local HL = Instance.new("Highlight")
+		HL.Parent = antikick
+		HL.FillTransparency = 1
+		ReplicatedStorage.PlayerEvents.StickyPartEvent:FireServer(antikick.StickyPart, firePart, CFrame.new(0, -1, 0.075) * CFrame.Angles(0,math.rad(90),math.rad(90)))
+	else
+		DestroyT(toysFolder:FindFirstChild("NinjaKunai"))
+	end
 	end,
 })
 
