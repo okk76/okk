@@ -1,4 +1,3 @@
-local SelectedPlayer = nil
 local P = game:GetService("Players")
 local LocalPlayer = P.LocalPlayer
 local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
@@ -312,6 +311,18 @@ DF:AddToggle("AntiVoid", {
 	game.Workspace.FallenPartsDestroyHeight = -10e+37
    	else
 	game.Workspace.FallenPartsDestroyHeight = -100
+	end
+	end,
+})
+
+DF:AddToggle("AntiLag", {
+	Text = "Anti Lag",
+	Default = true,
+	Callback = function(Value)
+	if Value then
+LocalPlayer.PlayerScripts.CharacterAndBeamMove.Disabled = true
+   	else
+LocalPlayer.PlayerScripts.CharacterAndBeamMove.Enabled = true
 	end
 	end,
 })
@@ -739,3 +750,4 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
