@@ -547,13 +547,17 @@ TR:AddDropdown("TargetPlayer", {
 	local pos = char.HumanoidRootPart.CFrame
 	if Value then
 	Lgrab = true
-	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
-	task.wait(0.25)
-	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	local bop = Instance.new("BodyPosition")
+    local bop = Instance.new("BodyPosition")
 	bop.Position = char.HumanoidRootPart.Position + Vector3.new(0, 20, 0)
 	bop.MaxForce = Vector3.new(40000, 40000, 40000)
 	bop.Parent = tar.Character.HumanoidRootPart
+    task.wait(0.05)
+	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+	task.wait(0.25)
+	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+    task.wait()
+    tar.Character.HumanoidRootPart.CFrame = pos * CFrame.new(0, 20, 0)
+    char.HumanoidRootPart.CFrame = pos
 	--task.wait()
 	--char.HumanoidRootPart.CFrame = pos
 	--task.wait(0.03)
@@ -750,4 +754,5 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
