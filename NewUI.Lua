@@ -528,8 +528,8 @@ TR:AddDropdown("TargetPlayer", {
 		end,
 	})
 
-	TR:AddToggle("LoopGrab", {
-	Text = "Loop Grab",
+	TR:AddToggle("LoopGrab(Kick)", {
+	Text = "Loop Grab (Kick)",
 	Default = false,
 	Callback = function(Value)
 	local tar = selectedTarget
@@ -541,6 +541,7 @@ TR:AddDropdown("TargetPlayer", {
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	local bop = Instance.new("BodyPosition")
 	bop.Position = char.HumanoidRootPart.Position + Vector3.new(0, 20, 0)
+	bop.MaxForce = Vector3.new(40000, 40000, 40000)
 	bop.Parent = tar.Character.HumanoidRootPart
 	--task.wait()
 	--char.HumanoidRootPart.CFrame = pos
@@ -565,8 +566,8 @@ TR:AddDropdown("TargetPlayer", {
 	end,
 })
 
-	TR:AddToggle("Ragdoll", {
-	Text = "Ragdoll",
+	TR:AddToggle("RagdollTarget", {
+	Text = "Ragdoll Target",
 	Default = false,
 	Callback = function(Value)
 	local hrp = char:FindFirstChild("HumanoidRootPart")
