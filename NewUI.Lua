@@ -425,7 +425,7 @@ DF:AddToggle("AntiKick", {
 	end
 
 	if Value then
-	--antikick = true
+	antikick = true
 		spawnItem("NinjaKunai", hrp.Position + Vector3.new(0, 7.5, 20))
 		local startWait = tick()
         repeat 
@@ -437,21 +437,16 @@ DF:AddToggle("AntiKick", {
 		local HL = Instance.new("Highlight")
 		HL.FillTransparency = 1
 		HL.Parent = kunai
-		--task.spawn(function()
-		--while antikick do
-        antikick = RunService.Heartbeat:Connect(function()
+		task.spawn(function()
+		while antikick do
 		checkantikick()
 		task.wait(0.1)
 		ReplicatedStorage.PlayerEvents.StickyPartEvent:FireServer(kunai.StickyPart, firePart, CFrame.new(0, -1, 0.075) * CFrame.Angles(0,math.rad(90),math.rad(90)))
-		--end
+		end
 		end)
 	else
-		--antikick = false
-        if antikick then
-        antikick:Disconnect
-        antikick = nil
+		antikick = false
 		DestroyT(toysFolder:FindFirstChild("NinjaKunai"))
-    end
 	end
 	end,
 })
@@ -759,6 +754,7 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
 
 
