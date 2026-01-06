@@ -59,21 +59,22 @@ Library.ShowToggleFrameInKeybinds = true
 local Window = Library:CreateWindow({
 	Title = "Happy Mod",
 	Footer = "тут нечего читать",
-	Icon = 10723396107,
 	NotifySide = "Right",
 	ShowCustomCursor = true,
 })
 
 local Tabs = {
-	Main = Window:AddTab("Main", "user"),
+	Main = Window:AddTab("Main"),
+	Target = Window:AddTab("Target"),
 	Keybinds = Window:AddTab("Keybinds"),
-	["UI Settings"] = Window:AddTab("UI Settings", "settings"),
+	["UI Settings"] = Window:AddTab("UI Settings"),
 }
 
 local LP = Tabs.Main:AddLeftGroupbox("LocalPlayer")
 local GB = Tabs.Main:AddLeftGroupbox("GrabLine")
 local DF = Tabs.Main:AddRightGroupbox("Defense")
 local KB = Tabs.Keybinds:AddLeftGroupbox("Teleports")
+local TR = Tabs.Target:AddLeftGroupbox("Target")
 
 LP:AddSlider("WalkSpeed", {
 	Text = "WalkSpeed",
@@ -491,6 +492,128 @@ DF:AddToggle("AntiInputLag", {
 		DestroyT(toy)
       end
     end,
+})
+
+local function getPlayerList()
+    local list = {}
+    for _, player in pairs(P:GetPlayers()) do
+            table.insert(list, player.DisplayName .. " (" .. player.Name .. ")")
+    end
+    return list
+end
+
+P.PlayerAdded:Connect(function()
+    Options.TargetPlayer:SetValues(getPlayerList())
+end)
+
+P.PlayerRemoving:Connect(function()
+    Options.TargetPlayer:SetValues(getPlayerList())
+end)
+
+local function getPlayerFromSelection(selection)
+		if not selection then return nil end
+		local username = selection:match("%((.-)%)")
+		if username then
+			return P:FindFirstChild(username)
+		end
+		return nil
+	end
+
+TR:AddDropdown("TargetPlayer", {
+		Values = getPlayerList(),
+		Default = 1,
+		Multi = false,
+		Callback = function(Selected)
+			selectedTarget = getPlayerFromSelection(Selected)
+		end,
+	})
+
+	TR:AddToggle("LoopGrab", {
+	Text = "Loop Grab",
+	Default = false,
+	Callback = function(Value)
+	local tar = selectedTarget
+	if Value then
+	el = true
+	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(3, 3, 3)
+	task.wait(0.25)
+	
+	Lgrab = RunService.Heartbeat:Connect(function()
+    SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(0, 20, 0)
+	tar.Character.HumanoidRootPart.Velocity = Vector3.new(0, 1, 0)
+	end)
+
+	task.spawn(function()
+	while el do
+	task.wait(0.5)
+	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)
+	task.wait(0.5)
+	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)    
+	end
+	end)
+	else
+	if Lgrab then
+		Lgrab:Disconnect()
+		Lgrab = nil
+		el = false
+	  end
+	  end
+	end,
+})
+
+	TR:AddToggle("Ragdoll", {
+	Text = "Ragdoll",
+	Default = false,
+	Callback = function(Value)
+	local hrp = char:FindFirstChild("HumanoidRootPart")
+	local tar = selectedTarget
+	local function checkpallet()
+		if toysFolder:FindFirstChild("PalletLightBrown") then
+		task.wait()
+		else
+		spawnItem("PalletLightBrown", hrp.Position + Vector3.new(0, 7.5, 20))
+		local startWait = tick()
+        repeat 
+        RunService.Heartbeat:Wait()
+		pallet = toysFolder:FindFirstChild("PalletLightBrown")
+        until pallet or tick() - startWait > 1
+		task.wait(0.05)
+		SetNetworkOwner:FireServer(pallet.SoundPart, pallet.SoundPart.CFrame)
+	  
+		end
+	end
+
+	if Value then
+	spawnItem("PalletLightBrown", hrp.Position + Vector3.new(0, 7.5, 20))
+	local startWait = tick()
+    repeat 
+    RunService.Heartbeat:Wait()
+	pallet = toysFolder:FindFirstChild("PalletLightBrown")
+    until pallet or tick() - startWait > 1
+	task.wait(0.05)
+	SetNetworkOwner:FireServer(pallet.SoundPart, pallet.SoundPart.CFrame)
+	local bodypos = Instance.new("BodyPosition")
+	bodypos.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
+	bodypos.Position = Vector3.new(0, 1000000, 0)
+	bodypos.Parent = toysFolder:FindFirstChild("PalletLightBrown").SoundPart
+	ragdo = RunService.Heartbeat:Connect(function()
+		checkpallet()
+		task.wait(0.5)
+		pallet.SoundPart.CFrame = tar.Character.Head.CFrame * CFrame.Angles(0, 0, math.rad(90))
+		task.wait(0.5)
+		pallet.SoundPart.CFrame = CFrame.new(0, 1000000, 0)
+		pallet.SoundPart.CanCollide = false
+	end)
+	else
+	if ragdo then
+		ragdo:Disconnect()
+		ragdo = nil
+		bodypos:Destroy()
+		DestroyT(toysFolder:FindFirstChild("PalletLightBrown"))
+		end
+	  end
+	end,
 })
 
 KB:AddLabel("Spawn"):AddKeyPicker("KeyPicker", {
