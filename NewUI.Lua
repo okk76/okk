@@ -425,7 +425,7 @@ DF:AddToggle("AntiKick", {
 	end
 
 	if Value then
-	antikick = true
+	--antikick = true
 		spawnItem("NinjaKunai", hrp.Position + Vector3.new(0, 7.5, 20))
 		local startWait = tick()
         repeat 
@@ -438,16 +438,21 @@ DF:AddToggle("AntiKick", {
 		HL.FillTransparency = 1
 		HL.Parent = kunai
 		--ReplicatedStorage.PlayerEvents.StickyPartEvent:FireServer(kunai.StickyPart, firePart, CFrame.new(0, -1, 0.075) * CFrame.Angles(0,math.rad(90),math.rad(90)))
-		task.spawn(function()
-		while antikick do
+		--task.spawn(function()
+		--while antikick do
+        antikick = RunService.Heartbeat:Connect(function()
 		checkantikick()
 		task.wait(0.1)
 		ReplicatedStorage.PlayerEvents.StickyPartEvent:FireServer(kunai.StickyPart, firePart, CFrame.new(0, -1, 0.075) * CFrame.Angles(0,math.rad(90),math.rad(90)))
-		end
+		--end
 		end)
 	else
-		antikick = false
+		--antikick = false
+        if antikick then
+        antikick:Disconnect
+        antikick = nil
 		DestroyT(toysFolder:FindFirstChild("NinjaKunai"))
+    end
 	end
 	end,
 })
@@ -555,7 +560,7 @@ TR:AddDropdown("TargetPlayer", {
 	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 	task.wait(0.25)
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-    task.wait(0.2)
+    task.wait(0.4)
     tar.Character.HumanoidRootPart.CFrame = pos * CFrame.new(0, 20, 0)
     char.HumanoidRootPart.CFrame = pos
 	--task.wait()
@@ -602,6 +607,7 @@ TR:AddDropdown("TargetPlayer", {
 	task.wait(0.25)
 	SetNetworkOwner:FireServer(pallet.SoundPart, pallet.SoundPart.CFrame)
 	pallet.SoundPart.CanCollide = false
+    task.wait(0.1)
 	local bodypos = Instance.new("BodyPosition")
 	bodypos.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
 	bodypos.Position = Vector3.new(0, 1000000, 0)
@@ -754,6 +760,7 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
 
 
