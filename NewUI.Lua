@@ -555,7 +555,7 @@ TR:AddDropdown("TargetPlayer", {
 	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 	task.wait(0.25)
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-    task.wait()
+    task.wait(0.2)
     tar.Character.HumanoidRootPart.CFrame = pos * CFrame.new(0, 20, 0)
     char.HumanoidRootPart.CFrame = pos
 	--task.wait()
@@ -754,5 +754,6 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
 
