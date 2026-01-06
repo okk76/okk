@@ -437,7 +437,6 @@ DF:AddToggle("AntiKick", {
 		local HL = Instance.new("Highlight")
 		HL.FillTransparency = 1
 		HL.Parent = kunai
-		--ReplicatedStorage.PlayerEvents.StickyPartEvent:FireServer(kunai.StickyPart, firePart, CFrame.new(0, -1, 0.075) * CFrame.Angles(0,math.rad(90),math.rad(90)))
 		--task.spawn(function()
 		--while antikick do
         antikick = RunService.Heartbeat:Connect(function()
@@ -760,6 +759,7 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
 
 
