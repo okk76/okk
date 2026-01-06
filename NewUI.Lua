@@ -414,6 +414,7 @@ DF:AddToggle("AntiKick", {
 	end
 
 	if Value then
+	antikick = true
 		spawnItem("NinjaKunai", hrp.Position + Vector3.new(0, 7.5, 20))
 		local startWait = tick()
         repeat 
@@ -426,17 +427,16 @@ DF:AddToggle("AntiKick", {
 		HL.FillTransparency = 1
 		HL.Parent = kunai
 		--ReplicatedStorage.PlayerEvents.StickyPartEvent:FireServer(kunai.StickyPart, firePart, CFrame.new(0, -1, 0.075) * CFrame.Angles(0,math.rad(90),math.rad(90)))
-		antikick = RunService.Heartbeat:Connect(function()
+		task.spawn(function()
+		while antikick do
 		checkantikick()
 		task.wait(0.1)
 		ReplicatedStorage.PlayerEvents.StickyPartEvent:FireServer(kunai.StickyPart, firePart, CFrame.new(0, -1, 0.075) * CFrame.Angles(0,math.rad(90),math.rad(90)))
+		end
 		end)
 	else
-		if antikick then
-		antikick:Disconnect()
-		antikick = nil
+		antikick = false
 		DestroyT(toysFolder:FindFirstChild("NinjaKunai"))
-		end
 	end
 	end,
 })
@@ -533,32 +533,35 @@ TR:AddDropdown("TargetPlayer", {
 	Default = false,
 	Callback = function(Value)
 	local tar = selectedTarget
+	local pos = char.HumanoidRootPart.CFrame
 	if Value then
-	el = true
-	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(3, 3, 3)
+	Lgrab = true
+	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 	task.wait(0.25)
-	
-	Lgrab = RunService.Heartbeat:Connect(function()
-    SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(0, 20, 0)
-	tar.Character.HumanoidRootPart.Velocity = Vector3.new(0, 1, 0)
-	end)
-
+	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	local bop = Instance.new("BodyPosition")
+	bop.Position = char.HumanoidRootPart.Position + Vector3.new(0, 20, 0)
+	bop.Parent = tar.Character.HumanoidRootPart
+	--task.wait()
+	--char.HumanoidRootPart.CFrame = pos
+	--task.wait(0.03)
+	--tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(0, 20, 0)
 	task.spawn(function()
-	while el do
-	task.wait(0.5)
-	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)
-	task.wait(0.5)
-	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)    
+	while Lgrab do
+	task.wait()
+    SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	task.wait()
+	--tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(0, 20, 0)
+	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
+	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
+	--GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)
 	end
 	end)
 	else
-	if Lgrab then
-		Lgrab:Disconnect()
-		Lgrab = nil
-		el = false
-	  end
-	  end
+	char.HumanoidRootPart.Anchored = false
+	Lgrab = false
+	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
+	end
 	end,
 })
 
@@ -568,50 +571,39 @@ TR:AddDropdown("TargetPlayer", {
 	Callback = function(Value)
 	local hrp = char:FindFirstChild("HumanoidRootPart")
 	local tar = selectedTarget
-	local function checkpallet()
-		if toysFolder:FindFirstChild("PalletLightBrown") then
-		task.wait()
-		else
-		spawnItem("PalletLightBrown", hrp.Position + Vector3.new(0, 7.5, 20))
-		local startWait = tick()
-        repeat 
-        RunService.Heartbeat:Wait()
-		pallet = toysFolder:FindFirstChild("PalletLightBrown")
-        until pallet or tick() - startWait > 1
-		task.wait(0.05)
-		SetNetworkOwner:FireServer(pallet.SoundPart, pallet.SoundPart.CFrame)
-	  
-		end
-	end
 
 	if Value then
+	ragdo = true
+
 	spawnItem("PalletLightBrown", hrp.Position + Vector3.new(0, 7.5, 20))
+
 	local startWait = tick()
     repeat 
     RunService.Heartbeat:Wait()
 	pallet = toysFolder:FindFirstChild("PalletLightBrown")
     until pallet or tick() - startWait > 1
-	task.wait(0.05)
+
+	task.wait(0.25)
 	SetNetworkOwner:FireServer(pallet.SoundPart, pallet.SoundPart.CFrame)
+	pallet.SoundPart.CanCollide = false
 	local bodypos = Instance.new("BodyPosition")
 	bodypos.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
 	bodypos.Position = Vector3.new(0, 1000000, 0)
 	bodypos.Parent = toysFolder:FindFirstChild("PalletLightBrown").SoundPart
-	ragdo = RunService.Heartbeat:Connect(function()
-		checkpallet()
-		task.wait(0.5)
-		pallet.SoundPart.CFrame = tar.Character.Head.CFrame * CFrame.Angles(0, 0, math.rad(90))
-		task.wait(0.5)
+
+	task.spawn(function()
+	while ragdo do
+		task.wait(0.1)
+		pallet.SoundPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 1, 0) * CFrame.Angles(0, math.rad(90), 0)
+		task.wait(0.05)
 		pallet.SoundPart.CFrame = CFrame.new(0, 1000000, 0)
 		pallet.SoundPart.CanCollide = false
+	end
 	end)
+
 	else
-	if ragdo then
-		ragdo:Disconnect()
-		ragdo = nil
-		bodypos:Destroy()
-		DestroyT(toysFolder:FindFirstChild("PalletLightBrown"))
-		end
+		ragdo = false
+		DestroyT(pallet)
 	  end
 	end,
 })
