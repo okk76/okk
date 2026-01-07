@@ -223,7 +223,7 @@ local MyButton = LP:AddButton({
 --})
 
 GB:AddToggle("Strong", {
-	Text = "Strong GrabLine",
+	Text = "Massless GrabLine",
 	Default = false,
 	Callback = function(Value)
 	local d = game.ReplicatedFirst.GrabParts.DragPart
@@ -322,8 +322,42 @@ DF:AddToggle("AntiLag", {
 	if Value then
 LocalPlayer.PlayerScripts.CharacterAndBeamMove.Disabled = true
    	else
-LocalPlayer.PlayerScripts.CharacterAndBeamMove.Enabled = true
+LocalPlayer.PlayerScripts.CharacterAndBeamMove.Disabled = false
 	end
+	end,
+})
+
+DF:AddToggle("WaterWalk", {
+	Text = "WaterWalk",
+	Default = false,
+	Callback = function(Value)
+	local water = game.Workspace.Map.AlwaysHereTweenedObjects.Ocean.Object:FindFirstChild("ObjectModel")
+if water then
+    for _, part in ipairs(water:GetChildren()) do
+        if part.Name == "Ocean" and part:IsA("Part") then
+            part.CanCollide = Value
+        end
+    end
+end
+	end,
+})
+
+DF:AddSlider("WaterTransparency", {
+	Text = "Water Transparency",
+	Default = 0,
+	Min = 0,
+	Max = 1,
+	Rounding = 1,
+	Compact = false,
+	Callback = function(Num)
+	local water = game.Workspace.Map.AlwaysHereTweenedObjects.Ocean.Object:FindFirstChild("ObjectModel")
+if water then
+    for _, part in ipairs(water:GetChildren()) do
+        if part.Name == "Ocean" and part:IsA("Part") then
+            part.Transparency = Num
+        end
+    end
+end
 	end,
 })
 
@@ -735,6 +769,115 @@ TR:AddDropdown("TargetPlayer", {
 		end,
 	})
 
+local MyButton = TR:AddButton({
+	Text = "Kill",
+	Func = function()
+		local tar = selectedTarget
+		local pos = char.HumanoidRootPart.CFrame
+		char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+		task.wait(0.25)
+		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+		tar.Character.Humanoid.Health = 0
+		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+		GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
+		GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
+    	task.wait(0.1)
+    	char.HumanoidRootPart.CFrame = pos
+	end,
+})
+
+local MyButton = TR:AddButton({
+	Text = "Remove Legs",
+	Func = function()
+		local tar = selectedTarget
+		local hrp = char:FindFirstChild("HumanoidRootPart")
+		game.Workspace.FallenPartsDestroyHeight = -100
+		tar.Character["Left Leg"].CFrame = CFrame.new(100000, -100000, 100000)
+		tar.Character["Right Leg"].CFrame = CFrame.new(100000, -100000, 100000)
+		task.wait(0.25)
+		spawnItem("PalletLightBrown", hrp.Position + Vector3.new(0, 5, 20))
+		local startWait = tick()
+    	repeat 
+    	RunService.Heartbeat:Wait()
+		palletr = toysFolder:FindFirstChild("PalletLightBrown")
+    	until pallet or tick() - startWait > 1
+		task.wait(0.05)
+		if pallletr then
+		DestroyT(palletr)
+		else
+		task.wait()
+		end
+		game.Workspace.FallenPartsDestroyHeight = -10e+37
+	end,
+})
+
+local MyButton = TR:AddButton({
+	Text = "Remove Arms",
+	Func = function()
+		local tar = selectedTarget
+		local hrp = char:FindFirstChild("HumanoidRootPart")
+		game.Workspace.FallenPartsDestroyHeight = -100
+		tar.Character["Left Arm"].CFrame = CFrame.new(100000, -100000, 100000)
+		tar.Character["Right Arm"].CFrame = CFrame.new(100000, -100000, 100000)
+		task.wait(0.25)
+		spawnItem("PalletLightBrown", hrp.Position + Vector3.new(0, 5, 20))
+		local startWait = tick()
+    	repeat 
+    	RunService.Heartbeat:Wait()
+		palletr = toysFolder:FindFirstChild("PalletLightBrown")
+    	until pallet or tick() - startWait > 1
+		task.wait(0.1)
+		if pallletr then
+		DestroyT(palletr)
+		else
+		task.wait()
+		end
+		game.Workspace.FallenPartsDestroyHeight = -10e+37
+	end,
+})
+
+	TR:AddToggle("LoopGrab", {
+	Text = "Loop Grab",
+	Default = false,
+	Callback = function(Value)
+	local tar = selectedTarget
+	if Value then
+	Lgrab = true
+	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(-3, 0, 0)
+	task.wait(0.25)
+	local bop = Instance.new("BodyPosition")
+	bop.Position = char.HumanoidRootPart.Position + Vector3.new(0, 5, 0)
+	bop.MaxForce = Vector3.new(40000, 40000, 40000)
+	bop.Parent = tar.Character.HumanoidRootPart
+    task.wait(0.05)
+	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
+	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
+    task.wait(0.3)
+    tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(0, 5, 0)
+	--task.wait()
+	--char.HumanoidRootPart.CFrame = pos
+	--task.wait(0.03)
+	--tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(0, 20, 0)
+	task.spawn(function()
+	while Lgrab do
+	--task.wait()
+    SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	task.wait()
+	--GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
+	--GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
+	end
+	end)
+	else
+	Lgrab = false
+	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
+	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
+	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
+	end
+	end,
+})
+
 	TR:AddToggle("LoopGrab(Kick)", {
 	Text = "Loop Grab (Kick)",
 	Default = false,
@@ -742,7 +885,7 @@ TR:AddDropdown("TargetPlayer", {
 	local tar = selectedTarget
 	local pos = char.HumanoidRootPart.CFrame
 	if Value then
-	Lgrab = true
+	Lgrabk = true
     local bop = Instance.new("BodyPosition")
 	bop.Position = char.HumanoidRootPart.Position + Vector3.new(0, 20, 0)
 	bop.MaxForce = Vector3.new(40000, 40000, 40000)
@@ -751,7 +894,9 @@ TR:AddDropdown("TargetPlayer", {
 	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 	task.wait(0.25)
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-    task.wait(0.4)
+	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
+	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
+    task.wait(0.3)
     tar.Character.HumanoidRootPart.CFrame = pos * CFrame.new(0, 20, 0)
     char.HumanoidRootPart.CFrame = pos
 	--task.wait()
@@ -759,7 +904,7 @@ TR:AddDropdown("TargetPlayer", {
 	--task.wait(0.03)
 	--tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(0, 20, 0)
 	task.spawn(function()
-	while Lgrab do
+	while Lgrabk do
 	task.wait()
     SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
@@ -770,7 +915,7 @@ TR:AddDropdown("TargetPlayer", {
 	end
 	end)
 	else
-	Lgrab = false
+	Lgrabk = false
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
 	end
 	end,
@@ -797,6 +942,11 @@ TR:AddDropdown("TargetPlayer", {
 	task.wait(0.25)
 	SetNetworkOwner:FireServer(pallet.SoundPart, pallet.SoundPart.CFrame)
 	pallet.SoundPart.CanCollide = false
+	for _, part in ipairs(pallet:GetChildren()) do
+       if part.Name == "Part" and part:IsA("Part") then
+         part.Transparency = 1
+          end
+     end
     task.wait(0.1)
 	local bodypos = Instance.new("BodyPosition")
 	bodypos.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
@@ -849,18 +999,14 @@ TR:AddDropdown("TargetPlayer", {
     until not parts or tick() - startWait > 3
 	task.wait(0.05)
 	holdPart.DropItemRemoteFunction:InvokeServer(banan, hrp.CFrame * CFrame.new(-3, 5, 0), Vector3.new(0, 0, 0))
-	local startWait = tick()
-    repeat 
-    RunService.Heartbeat:Wait()
-    until banan or tick() - startWait > 3
+	task.wait(0.5)
 	SetNetworkOwner:FireServer(toysFolder.FoodBanana.SoundPart, toysFolder.FoodBanana.SoundPart.CFrame)
-	GrabEvents.CreateGrabLine:FireServer(toysFolder.FoodBanana.SoundPart, Vector3.zero, toysFolder.FoodBanana.SoundPart.Position, false)   
-	GrabEvents.DestroyGrabLine:FireServer(toysFolder.FoodBanana.SoundPart)
+	task.wait(0.5)
 	task.spawn(function()
 	while Lbanana do
 	task.wait(0.25)
 	banan.SoundPart.CFrame = tar.Character["Left Leg"].CFrame
-	task.wait(0.125)
+	task.wait(0.1)
 	banan.SoundPart.CFrame = CFrame.new(118, 296, 330)
 	banan.SoundPart.Velocity = Vector3.new(0, 0, 0)
 	end
