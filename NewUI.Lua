@@ -609,7 +609,7 @@ TR:AddDropdown("TargetPlayer", {
 
 	task.spawn(function()
 	while ragdo do
-		task.wait(0.025)
+		task.wait(0.25)
 		pallet.SoundPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 1, 0) * CFrame.Angles(0, math.rad(90), 0)
 		task.wait(0.025)
 		pallet.SoundPart.CFrame = CFrame.new(0, 1000000, 0)
@@ -753,6 +753,7 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
 
 
