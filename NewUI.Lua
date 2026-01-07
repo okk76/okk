@@ -800,9 +800,9 @@ local MyButton = TR:AddButton({
     	repeat 
     	RunService.Heartbeat:Wait()
 		palletr = toysFolder:FindFirstChild("PalletLightBrown")
-    	until pallet or tick() - startWait > 1
-		task.wait(0.05)
-		if pallletr then
+    	until palletr or tick() - startWait > 1
+		task.wait(0.25)
+		if palletr then
 		DestroyT(palletr)
 		else
 		task.wait()
@@ -825,9 +825,36 @@ local MyButton = TR:AddButton({
     	repeat 
     	RunService.Heartbeat:Wait()
 		palletr = toysFolder:FindFirstChild("PalletLightBrown")
-    	until pallet or tick() - startWait > 1
-		task.wait(0.1)
-		if pallletr then
+    	until palletr or tick() - startWait > 1
+		task.wait(0.25)
+		if palletr then
+		DestroyT(palletr)
+		else
+		task.wait()
+		end
+		game.Workspace.FallenPartsDestroyHeight = -10e+37
+	end,
+})
+
+local MyButton = TR:AddButton({
+	Text = "Remove Legs and Arms",
+	Func = function()
+		local tar = selectedTarget
+		local hrp = char:FindFirstChild("HumanoidRootPart")
+		game.Workspace.FallenPartsDestroyHeight = -100
+		tar.Character["Left Leg"].CFrame = CFrame.new(100000, -100000, 100000)
+		tar.Character["Right Leg"].CFrame = CFrame.new(100000, -100000, 100000)
+		tar.Character["Left Arm"].CFrame = CFrame.new(100000, -100000, 100000)
+		tar.Character["Right Arm"].CFrame = CFrame.new(100000, -100000, 100000)
+		task.wait(0.25)
+		spawnItem("PalletLightBrown", hrp.Position + Vector3.new(0, 5, 20))
+		local startWait = tick()
+    	repeat 
+    	RunService.Heartbeat:Wait()
+		palletr = toysFolder:FindFirstChild("PalletLightBrown")
+    	until palletr or tick() - startWait > 1
+		task.wait(0.25)
+		if palletr then
 		DestroyT(palletr)
 		else
 		task.wait()
