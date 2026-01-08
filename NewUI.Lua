@@ -905,8 +905,8 @@ local MyButton = TR:AddButton({
     char.HumanoidRootPart.CFrame = pos
 	task.spawn(function()
 	while Lgrabk do
-    task.wait()
     SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+    task.wait()
 	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
 	end
@@ -1158,6 +1158,7 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
 
 
