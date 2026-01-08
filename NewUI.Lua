@@ -879,7 +879,7 @@ local MyButton = TR:AddButton({
 	end,
 })
 
-	TR:AddToggle("LoopGrab(Kick)", {
+	TR:AddToggle("LoopGrabKick", {
 	Text = "Loop Grab (Kick)",
 	Default = false,
 	Callback = function(Value)
@@ -954,10 +954,14 @@ local MyButton = TR:AddButton({
 
 	task.spawn(function()
 	while ragdo do
+	if Lgrabk == true and tar then
 		task.wait(0.15)
 		pallet.SoundPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 1, 0) * CFrame.Angles(0, math.rad(90), 0)
 		task.wait(0.025)
 		pallet.SoundPart.CFrame = CFrame.new(0, 1000000, 0)
+	else
+		task.wait()
+	end
 	end
 	end)
 
@@ -972,7 +976,7 @@ local MyButton = TR:AddButton({
 	end,
 })
 
-	TR:AddToggle("LoopGrabBanana", {
+	TR:AddToggle("LoopBanana", {
 	Text = "Loop Banana",
 	Default = false,
 	Callback = function(Value)
@@ -1110,6 +1114,10 @@ Toggles.Trd:SetValue(false)
 Toggles.PLCD:SetValue(false)
 Toggles.Strong:SetValue(false)
 Toggles.DisableBarrierCollisions:SetValue(false)
+Toggles.LoopGrabKick:SetValue(false)
+Toggles.LoopGrab:SetValue(false)
+Toggles.LoopBanana:SetValue(false)
+Toggles.RagdollTarget:SetValue(false)
 task.wait()
 Library:Unload()
 end)
