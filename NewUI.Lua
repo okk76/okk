@@ -802,7 +802,7 @@ local MyButton = TR:AddButton({
 		char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 		task.wait()
-		until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name
+		until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or Value == false
 		tar.Character.HumanoidRootPart.CFrame = pos
     	char.HumanoidRootPart.CFrame = pos
 		GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
@@ -896,13 +896,12 @@ local MyButton = TR:AddButton({
 	bog.MaxTorque = Vector3.new(10e+37, 10e+37, 10e+37)
 	bog.Parent = tar.Character.HumanoidRootPart
     task.wait(0.05)
-	--task.wait(0.25)
 	repeat
 	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
-	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name
-    --task.wait(0.3)
+	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or Lgrabk == false
+    tar.Character.HumanoidRootPart.Velocity = Vector3.new(0, -1, 0)
     --tar.Character.HumanoidRootPart.CFrame = pos * CFrame.new(0, 20, 0)
     char.HumanoidRootPart.CFrame = pos
 	task.spawn(function()
@@ -954,7 +953,7 @@ local MyButton = TR:AddButton({
 
 	task.spawn(function()
 	while ragdo do
-	if Lgrabk == true and tar then
+	if Lgrabk == true and tar.Character:FindFirstChild("HumanoidRootPart") then
 		task.wait(0.15)
 		pallet.SoundPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 1, 0) * CFrame.Angles(0, math.rad(90), 0)
 		task.wait(0.025)
