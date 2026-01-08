@@ -15,6 +15,8 @@ local group = game.workspace
 local spaw = game.workspace.SpawnLocation
 local hue = 0
 
+LocalPlayer.PlayerScripts.CharacterAndBeamMove.Disabled = true
+
 spaw.Position = Vector3.new(spaw.Position, -10.85, spaw.Position)
 spaw.Decal.Transparency = 0.8
 RunService.Heartbeat:Connect(function()
@@ -776,9 +778,12 @@ local MyButton = TR:AddButton({
 		local pos = char.HumanoidRootPart.CFrame
 		char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 		task.wait(0.25)
+		repeat
+		char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+		task.wait()
+		until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name
 		tar.Character.Humanoid.Health = 0
-		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 		GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
 		GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
     	task.wait(0.1)
@@ -793,10 +798,12 @@ local MyButton = TR:AddButton({
 		local pos = char.HumanoidRootPart.CFrame
 		char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 		task.wait(0.25)
+		repeat
+		char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+		task.wait()
+		until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name
 		tar.Character.HumanoidRootPart.CFrame = pos
-		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-    	task.wait(0.1)
     	char.HumanoidRootPart.CFrame = pos
 		GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
 		GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
@@ -837,7 +844,7 @@ local MyButton = TR:AddButton({
 	local tar = selectedTarget
 	if Value then
 	Lgrab = true
-	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(-3, 0, 0)
+	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 	task.wait(0.25)
 	local bop = Instance.new("BodyPosition")
 	bop.Position = char.HumanoidRootPart.Position + Vector3.new(0, 5, 0)
@@ -889,12 +896,14 @@ local MyButton = TR:AddButton({
 	bog.MaxTorque = Vector3.new(10e+37, 10e+37, 10e+37)
 	bog.Parent = tar.Character.HumanoidRootPart
     task.wait(0.05)
+	--task.wait(0.25)
+	repeat
 	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
-	task.wait(0.25)
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
-	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
-    task.wait(0.3)
+	task.wait()
+	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name
+    --task.wait(0.3)
+    --tar.Character.HumanoidRootPart.CFrame = pos * CFrame.new(0, 20, 0)
     char.HumanoidRootPart.CFrame = pos
 	task.spawn(function()
 	while Lgrabk do
@@ -902,7 +911,6 @@ local MyButton = TR:AddButton({
     SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
-	--GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)
 	end
 	end)
 	else
@@ -930,8 +938,7 @@ local MyButton = TR:AddButton({
     RunService.Heartbeat:Wait()
 	pallet = toysFolder:FindFirstChild("PalletLightBrown")
     until pallet or tick() - startWait > 1
-
-	task.wait(0.25)
+	task.wait(0.15)
 	SetNetworkOwner:FireServer(pallet.SoundPart, pallet.SoundPart.CFrame)
 	pallet.SoundPart.CanCollide = false
 	for _, part in ipairs(pallet:GetChildren()) do
@@ -939,18 +946,17 @@ local MyButton = TR:AddButton({
          part.Transparency = 1
           end
      end
-    task.wait(0.1)
 	local bodypos = Instance.new("BodyPosition")
 	bodypos.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
-	bodypos.D = 10000
+	bodypos.D = 12500
 	bodypos.Position = Vector3.new(0, 1000000, 0)
 	bodypos.Parent = toysFolder:FindFirstChild("PalletLightBrown").SoundPart
 
 	task.spawn(function()
 	while ragdo do
-		task.wait(0.2)
+		task.wait(0.15)
 		pallet.SoundPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 1, 0) * CFrame.Angles(0, math.rad(90), 0)
-		task.wait()
+		task.wait(0.025)
 		pallet.SoundPart.CFrame = CFrame.new(0, 1000000, 0)
 	end
 	end)
@@ -1146,6 +1152,3 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
-
-
-
