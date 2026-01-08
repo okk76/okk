@@ -895,18 +895,11 @@ local MyButton = TR:AddButton({
 	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
     task.wait(0.3)
-    --tar.Character.HumanoidRootPart.CFrame = pos * CFrame.new(0, 20, 0)
     char.HumanoidRootPart.CFrame = pos
-	--task.wait()
-	--char.HumanoidRootPart.CFrame = pos
-	--task.wait(0.03)
-	--tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(0, 20, 0)
 	task.spawn(function()
 	while Lgrabk do
 	task.wait()
     SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	task.wait()
-	--tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(0, 20, 0)
 	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
 	--GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)
@@ -1153,5 +1146,6 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
 
