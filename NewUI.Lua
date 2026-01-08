@@ -900,15 +900,14 @@ local MyButton = TR:AddButton({
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
 	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or Lgrabk == false
-    tar.Character.HumanoidRootPart.Velocity = Vector3.new(0, -1, 0)
     --tar.Character.HumanoidRootPart.CFrame = pos * CFrame.new(0, 20, 0)
     char.HumanoidRootPart.CFrame = pos
 	task.spawn(function()
 	while Lgrabk do
     SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-    task.wait()
 	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
+    task.wait()
 	end
 	end)
 	else
@@ -1158,6 +1157,7 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
 
 
