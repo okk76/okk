@@ -889,7 +889,7 @@ local MyButton = TR:AddButton({
 	Lgrabk = true
     local bop = Instance.new("BodyPosition")
 	bop.Position = char.HumanoidRootPart.Position + Vector3.new(0, 15, 0)
-	bop.MaxForce = Vector3.new(40000, 40000, 40000)
+	bop.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
 	bop.Parent = tar.Character.HumanoidRootPart
 	local bog = Instance.new("BodyGyro")
 	bog.MaxTorque = Vector3.new(10e+37, 10e+37, 10e+37)
@@ -904,10 +904,10 @@ local MyButton = TR:AddButton({
     char.HumanoidRootPart.CFrame = pos
 	task.spawn(function()
 	while Lgrabk do
+    task.wait()
     SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
-    task.wait()
 	end
 	end)
 	else
@@ -1157,6 +1157,7 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
 
 
