@@ -787,52 +787,19 @@ local MyButton = TR:AddButton({
 })
 
 local MyButton = TR:AddButton({
-	Text = "Remove Legs",
+	Text = "TP Target",
 	Func = function()
 		local tar = selectedTarget
-		local hrp = char:FindFirstChild("HumanoidRootPart")
-		game.Workspace.FallenPartsDestroyHeight = -100
-		tar.Character["Left Leg"].CFrame = CFrame.new(100000, -100000, 100000)
-		tar.Character["Right Leg"].CFrame = CFrame.new(100000, -100000, 100000)
+		local pos = char.HumanoidRootPart.CFrame
+		char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 		task.wait(0.25)
-		spawnItem("PalletLightBrown", hrp.Position + Vector3.new(0, 5, 20))
-		local startWait = tick()
-    	repeat 
-    	RunService.Heartbeat:Wait()
-		palletr = toysFolder:FindFirstChild("PalletLightBrown")
-    	until palletr or tick() - startWait > 1
-		task.wait(0.25)
-		if palletr then
-		DestroyT(palletr)
-		else
-		task.wait()
-		end
-		game.Workspace.FallenPartsDestroyHeight = -10e+37
-	end,
-})
-
-local MyButton = TR:AddButton({
-	Text = "Remove Arms",
-	Func = function()
-		local tar = selectedTarget
-		local hrp = char:FindFirstChild("HumanoidRootPart")
-		game.Workspace.FallenPartsDestroyHeight = -100
-		tar.Character["Left Arm"].CFrame = CFrame.new(100000, -100000, 100000)
-		tar.Character["Right Arm"].CFrame = CFrame.new(100000, -100000, 100000)
-		task.wait(0.25)
-		spawnItem("PalletLightBrown", hrp.Position + Vector3.new(0, 5, 20))
-		local startWait = tick()
-    	repeat 
-    	RunService.Heartbeat:Wait()
-		palletr = toysFolder:FindFirstChild("PalletLightBrown")
-    	until palletr or tick() - startWait > 1
-		task.wait(0.25)
-		if palletr then
-		DestroyT(palletr)
-		else
-		task.wait()
-		end
-		game.Workspace.FallenPartsDestroyHeight = -10e+37
+		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+		tar.Character.HumanoidRootPart.CFrame = pos
+		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+    	task.wait(0.1)
+    	char.HumanoidRootPart.CFrame = pos
+		GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
+		GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
 	end,
 })
 
