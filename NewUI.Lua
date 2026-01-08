@@ -841,7 +841,7 @@ local MyButton = TR:AddButton({
 	task.wait(0.25)
 	local bop = Instance.new("BodyPosition")
 	bop.Position = char.HumanoidRootPart.Position + Vector3.new(0, 5, 0)
-	bop.MaxForce = Vector3.new(40000, 40000, 40000)
+	bop.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
 	bop.Parent = tar.Character.HumanoidRootPart
     task.wait(0.05)
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
@@ -882,8 +882,12 @@ local MyButton = TR:AddButton({
 	Lgrabk = true
     local bop = Instance.new("BodyPosition")
 	bop.Position = char.HumanoidRootPart.Position + Vector3.new(0, 20, 0)
-	bop.MaxForce = Vector3.new(40000, 40000, 40000)
+	bop.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
+	bop.D = 100
 	bop.Parent = tar.Character.HumanoidRootPart
+	local bog = Instance.new("BodyGyro")
+	bog.MaxTorque = Vector3.new(10e+37, 10e+37, 10e+37)
+	bog.Parent = tar.Character.HumanoidRootPart
     task.wait(0.05)
 	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 	task.wait(0.25)
@@ -891,7 +895,7 @@ local MyButton = TR:AddButton({
 	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
     task.wait(0.3)
-    tar.Character.HumanoidRootPart.CFrame = pos * CFrame.new(0, 20, 0)
+    --tar.Character.HumanoidRootPart.CFrame = pos * CFrame.new(0, 20, 0)
     char.HumanoidRootPart.CFrame = pos
 	--task.wait()
 	--char.HumanoidRootPart.CFrame = pos
@@ -911,6 +915,7 @@ local MyButton = TR:AddButton({
 	else
 	Lgrabk = false
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
+	tar.Character.HumanoidRootPart.BodyGyro:Destroy()
 	end
 	end,
 })
@@ -944,6 +949,7 @@ local MyButton = TR:AddButton({
     task.wait(0.1)
 	local bodypos = Instance.new("BodyPosition")
 	bodypos.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
+	bodypos.D = 12500
 	bodypos.Position = Vector3.new(0, 1000000, 0)
 	bodypos.Parent = toysFolder:FindFirstChild("PalletLightBrown").SoundPart
 
