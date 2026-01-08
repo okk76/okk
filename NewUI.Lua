@@ -957,7 +957,7 @@ local MyButton = TR:AddButton({
 	while ragdo do
 		task.wait(0.25)
 		pallet.SoundPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 1, 0) * CFrame.Angles(0, math.rad(90), 0)
-		task.wait(0.025)
+		task.wait(0.05)
 		pallet.SoundPart.CFrame = CFrame.new(0, 1000000, 0)
 	end
 	end)
