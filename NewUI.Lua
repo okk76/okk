@@ -949,15 +949,15 @@ local MyButton = TR:AddButton({
     task.wait(0.1)
 	local bodypos = Instance.new("BodyPosition")
 	bodypos.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
-	bodypos.D = 12500
+	bodypos.D = 10000
 	bodypos.Position = Vector3.new(0, 1000000, 0)
 	bodypos.Parent = toysFolder:FindFirstChild("PalletLightBrown").SoundPart
 
 	task.spawn(function()
 	while ragdo do
-		task.wait(0.25)
+		task.wait(0.2)
 		pallet.SoundPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 1, 0) * CFrame.Angles(0, math.rad(90), 0)
-		task.wait(0.05)
+		task.wait()
 		pallet.SoundPart.CFrame = CFrame.new(0, 1000000, 0)
 	end
 	end)
@@ -1153,4 +1153,5 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
