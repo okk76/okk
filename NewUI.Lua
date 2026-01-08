@@ -881,7 +881,7 @@ local MyButton = TR:AddButton({
 	if Value then
 	Lgrabk = true
     local bop = Instance.new("BodyPosition")
-	bop.Position = char.HumanoidRootPart.Position + Vector3.new(0, 20, 0)
+	bop.Position = char.HumanoidRootPart.Position + Vector3.new(0, 15, 0)
 	bop.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
 	bop.D = 100
 	bop.Parent = tar.Character.HumanoidRootPart
@@ -1153,3 +1153,4 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
