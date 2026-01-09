@@ -76,7 +76,7 @@ local GB = Tabs.Main:AddLeftGroupbox("GrabLine")
 local DF = Tabs.Main:AddRightGroupbox("Defense")
 local KB = Tabs.Keybinds:AddLeftGroupbox("Teleports")
 local TR = Tabs.Target:AddLeftGroupbox("Target")
-local CTR = Tabs.Target:AddRightGroupbox("Target")
+local CTR = Tabs.Target:AddRightGroupbox("Control")
 
 LP:AddSlider("WalkSpeed", {
 	Text = "WalkSpeed",
@@ -798,7 +798,7 @@ local MyButton = TR:AddButton({
 	end,
 })
 
-local MyButton = TR:AddButton({
+local MyButton = CTR:AddButton({
 	Text = "TP Target",
 	Func = function()
 		local tar = selectedTarget
@@ -817,7 +817,7 @@ local MyButton = TR:AddButton({
 	end,
 })
 
-local MyButton = TR:AddButton({
+local MyButton = CTR:AddButton({
 	Text = "Remove Legs and Arms",
 	Func = function()
 		local tar = selectedTarget
@@ -844,7 +844,7 @@ local MyButton = TR:AddButton({
 	end,
 })
 
-	TR:AddToggle("LoopGrab", {
+	CTR:AddToggle("LoopGrab", {
 	Text = "Loop Grab",
 	Default = false,
 	Callback = function(Value)
@@ -988,7 +988,7 @@ local MyButton = TR:AddButton({
 	end,
 })
 
-	TR:AddToggle("RagdollTarget", {
+	CTR:AddToggle("RagdollTarget", {
 	Text = "Ragdoll Target",
 	Default = false,
 	Callback = function(Value)
@@ -1043,7 +1043,7 @@ local MyButton = TR:AddButton({
 	end,
 })
 
-	TR:AddToggle("LoopBanana", {
+	CTR:AddToggle("LoopBanana", {
 	Text = "Loop Banana",
 	Default = false,
 	Callback = function(Value)
@@ -1092,7 +1092,7 @@ local MyButton = TR:AddButton({
 	end,
 })
 
-local MyButton = CTR:AddButton({
+local MyButton = TR:AddButton({
 	Text = "Blob Kick",
 	Func = function()
 		local tar = selectedTarget
