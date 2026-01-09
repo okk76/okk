@@ -890,6 +890,7 @@ local MyButton = TR:AddButton({
     local bop = Instance.new("BodyPosition")
 	bop.Position = char.HumanoidRootPart.Position + Vector3.new(0, 15, 0)
 	bop.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
+	bop.D = 100
 	bop.Parent = tar.Character.HumanoidRootPart
 	local bog = Instance.new("BodyGyro")
 	bog.MaxTorque = Vector3.new(10e+37, 10e+37, 10e+37)
@@ -904,9 +905,10 @@ local MyButton = TR:AddButton({
     char.HumanoidRootPart.CFrame = pos
 	task.spawn(function()
 	while Lgrabk do
-    task.wait()
+	task.wait()
     SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)
+	task.wait()
+	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
 	end
 	end)
@@ -952,7 +954,7 @@ local MyButton = TR:AddButton({
 	task.spawn(function()
 	while ragdo do
 	if Lgrabk == true and tar.Character:FindFirstChild("HumanoidRootPart") then
-		task.wait(0.15)
+		task.wait(0.05)
 		pallet.SoundPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 1, 0) * CFrame.Angles(0, math.rad(90), 0)
 		task.wait(0.025)
 		pallet.SoundPart.CFrame = CFrame.new(0, 1000000, 0)
@@ -1157,17 +1159,3 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
