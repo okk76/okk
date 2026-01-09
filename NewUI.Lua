@@ -1127,6 +1127,51 @@ local MyButton = TR:AddButton({
 	end,
 })
 
+		CTR:AddToggle("LoopBanana", {
+		Text = "Loop Banana",
+		Default = false,
+		Callback = function(Value)
+		local tar = selectedTarget
+		local function GrabToy(toy)
+		local part = toy:FindFirstChild("SoundPart")
+		if part then
+		SetNetworkOwner:FireServer(part, part.CFrame)
+		if part:FindFirstChild("PartOwner") and part.PartOwner.Value == LocalPlayer.Name then
+		part.CFrame = CFrame.new(0, 1000, 0)
+				end
+			end
+		end
+
+		if Value then
+		GrabAntiKick = true
+			task.spawn(function()
+				while GrabAntiKick do
+				if tar then
+					local toysFolderTarget = workspace:FindFirstChild(tar.Name.."SpawnedInToys")
+					if toysFolderTarget then
+						if toysFolderTarget:FindFirstChild("NinjaKunai") then
+							GrabToy(toysFolderTarget.NinjaKunai)
+						end
+
+						if toysFolderTarget:FindFirstChild("NinjaShuriken") then
+							GrabToy(toysFolderTarget.NinjaShuriken)
+						end
+
+						if toysFolderTarget:FindFirstChild("AntiKick") then
+							GrabToy(toysFolderTarget.AntiKick)
+						end
+					end
+				end
+			task.wait()
+		end
+		end)
+		else
+		GrabAntiKick = false
+		end
+	end,
+})
+					
+
 KB:AddLabel("Spawn"):AddKeyPicker("KeyPicker", {
 	Default = "One",
 	Callback = function()
@@ -1217,6 +1262,7 @@ Toggles.PLCD:SetValue(false)
 Toggles.Strong:SetValue(false)
 Toggles.DisableBarrierCollisions:SetValue(false)
 Toggles.LoopGrabKick:SetValue(false)
+Toggles.LoopGrabBlobKick:SetValue(false)
 Toggles.LoopGrab:SetValue(false)
 Toggles.LoopBanana:SetValue(false)
 Toggles.RagdollTarget:SetValue(false)
