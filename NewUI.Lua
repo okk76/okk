@@ -1135,10 +1135,15 @@ local MyButton = TR:AddButton({
 		bopBk.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
 		bopBk.D = 100
 		bopBk.Parent = tar.Character.HumanoidRootPart
-		repeat
 		seatParent.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 		seatParent.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+		repeat
+		pcall(function()
 		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+		end)
+		seatParent.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+		seatParent.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
 		task.wait()
 		until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or LgrabB == false
 		seatParent.HumanoidRootPart.Anchored = true
