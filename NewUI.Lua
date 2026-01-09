@@ -771,11 +771,11 @@ TR:AddDropdown("TargetPlayer", {
 		end,
 	})
 
-Options.TargetPlayer:OnChanged(function()
-	Toggles.RagdollTarget:SetValue(false)
-	task.wait(0.1)
-	Toggles.RagdollTarget:SetValue(true)
-end)
+--Options.TargetPlayer:OnChanged(function()
+--Toggles.RagdollTarget:SetValue(false)
+--task.wait(0.1)
+--Toggles.RagdollTarget:SetValue(true)
+--end)
 
 local MyButton = TR:AddButton({
 	Text = "Kill",
@@ -1225,3 +1225,4 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
