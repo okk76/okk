@@ -76,6 +76,7 @@ local GB = Tabs.Main:AddLeftGroupbox("GrabLine")
 local DF = Tabs.Main:AddRightGroupbox("Defense")
 local KB = Tabs.Keybinds:AddLeftGroupbox("Teleports")
 local TR = Tabs.Target:AddLeftGroupbox("Target")
+local CTR = Tabs.Target:AddRightGroupbox("Target")
 
 LP:AddSlider("WalkSpeed", {
 	Text = "WalkSpeed",
@@ -886,7 +887,7 @@ local MyButton = TR:AddButton({
 })
 
 	TR:AddToggle("LoopGrabKick", {
-	Text = "Loop Grab (Kick)",
+	Text = "Loop Grab Kick",
 	Default = false,
 	Callback = function(Value)
 	local tar = selectedTarget
@@ -926,8 +927,8 @@ local MyButton = TR:AddButton({
 	end,
 })
 
-	TR:AddToggle("LoopGrabBlob", {
-	Text = "Loop Grab Blob",
+	TR:AddToggle("LoopGrabBlobKick", {
+	Text = "Loop Grab Blob Kick",
 	Default = false,
 	Callback = function(Value)
 	local tar = selectedTarget
@@ -948,7 +949,7 @@ local MyButton = TR:AddButton({
 	bopB.D = 100
 	bopB.Parent = tar.Character.HumanoidRootPart
 	repeat
-	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+	seatParent.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 	seatParent.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
@@ -982,6 +983,7 @@ local MyButton = TR:AddButton({
 	LgrabB = false
 	seatParent.HumanoidRootPart.BodyPosition:Destroy()
 	seatParent.HumanoidRootPart.BodyGyro:Destroy()
+	DestroyT(seatParent)
 	end
 	end,
 })
@@ -1002,8 +1004,8 @@ local MyButton = TR:AddButton({
     repeat 
     RunService.Heartbeat:Wait()
 	pallet = toysFolder:FindFirstChild("PalletLightBrown")
-    until pallet or tick() - startWait > 1
-	task.wait(0.2)
+    until pallet or tick() - startWait > 3
+	task.wait(0.1)
 	SetNetworkOwner:FireServer(pallet.SoundPart, pallet.SoundPart.CFrame)
 	pallet.SoundPart.CanCollide = false
 	for _, part in ipairs(pallet:GetChildren()) do
@@ -1087,6 +1089,41 @@ local MyButton = TR:AddButton({
 		task.wait()
 		end
 	end
+	end,
+})
+
+local MyButton = CTR:AddButton({
+	Text = "Blob Kick",
+	Func = function()
+		local tar = selectedTarget
+		local pos = char.HumanoidRootPart.CFrame
+		local hum = char and char:FindFirstChild("Humanoid")
+		local seat = hum and hum.SeatPart
+		local seatParent = seat.Parent
+		local grabB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureGrab")
+		local dropB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureDrop")
+		local leftDet = seatParent:FindFirstChild("LeftDetector")
+		local rightDet = seatParent:FindFirstChild("RightDetector")
+		local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
+		local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
+		local bopBk = Instance.new("BodyPosition")
+		bopBk.Position = tar.Character.HumanoidRootPart.Position + Vector3.new(0, 25, 0)
+		bopBk.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
+		bopBk.D = 100
+		bopBk.Parent = tar.Character.HumanoidRootPart
+		repeat
+		seatParent.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+		seatParent.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+		task.wait()
+		until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or LgrabB == false
+		task.wait()
+		GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
+		GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
+		tar.Character.HumanoidRootPart.BodyPosition:Destroy()
+		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
+		task.wait(1.75)
+		DestroyT(seatParent)
 	end,
 })
 
@@ -1225,4 +1262,3 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
-
