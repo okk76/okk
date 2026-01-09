@@ -949,25 +949,39 @@ local MyButton = TR:AddButton({
 	bopB.Parent = tar.Character.HumanoidRootPart
 	repeat
 	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
-	task.wait()
+	seatParent.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
+	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or LgrabB == false
+	task.wait(0.5)
 	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
-	task.wait()
-	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or LgrabB == false
-	task.wait(0.75)
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
+	local bopBl = Instance.new("BodyPosition")
+	bopBl.Position = tar.Character.HumanoidRootPart.Position + Vector3.new(0, 15, 0)
+	bopBl.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
+	bopBl.D = 100
+	bopBl.Parent = seatParent.HumanoidRootPart
+	local bogBl = Instance.new("BodyGyro")
+	bogBl.MaxTorque = Vector3.new(10e+37, 10e+37, 10e+37)
+	bogBl.Parent = seatParent.HumanoidRootPart
+	seatParent.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 15, 0)
 	task.spawn(function()
 	while LgrabB do
 	grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
 	task.wait()
 	dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
 	task.wait()
+	grabB:FireServer(rightDet, tar.Character.HumanoidRootPart, rightWeld)
+	task.wait()
+	dropB:FireServer(rightWeld, tar.Character.HumanoidRootPart)
+	task.wait()
 	end
 	end)
 	else
 	LgrabB = false
+	seatParent.HumanoidRootPart.BodyPosition:Destroy()
+	seatParent.HumanoidRootPart.BodyGyro:Destroy()
 	end
 	end,
 })
@@ -989,7 +1003,7 @@ local MyButton = TR:AddButton({
     RunService.Heartbeat:Wait()
 	pallet = toysFolder:FindFirstChild("PalletLightBrown")
     until pallet or tick() - startWait > 1
-	task.wait(0.15)
+	task.wait(0.2)
 	SetNetworkOwner:FireServer(pallet.SoundPart, pallet.SoundPart.CFrame)
 	pallet.SoundPart.CanCollide = false
 	for _, part in ipairs(pallet:GetChildren()) do
