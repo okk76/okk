@@ -77,6 +77,7 @@ local DF = Tabs.Main:AddRightGroupbox("Defense")
 local KB = Tabs.Keybinds:AddLeftGroupbox("Teleports")
 local TR = Tabs.Target:AddLeftGroupbox("Target")
 local CTR = Tabs.Target:AddRightGroupbox("Control")
+local BL = Tabs.Target:AddLeftGroupbox("Blobman Settings")
 
 LP:AddSlider("WalkSpeed", {
 	Text = "WalkSpeed",
@@ -179,7 +180,7 @@ LP:AddToggle("PLCD", {
 	plcd = RunService.Heartbeat:Connect(function()
     for _, part in ipairs(group:GetChildren()) do
         if part.Name == "PlayerCharacterLocationDetector" and part:IsA("Part") then
-            part.Transparency = 0.8
+            part.Transparency = 0.85
 			part.Material = Enum.Material.Neon
  			hue = (hue + 0.00005) % 1
  			part.Color = Color3.fromHSV(hue, 1, 1)
@@ -833,8 +834,9 @@ local MyButton = CTR:AddButton({
 		task.wait(0.25)
 		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
 		task.wait(0.25)
+		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
     	char.HumanoidRootPart.CFrame = pos
-		task.wait(0.5)
+		task.wait(0.75)
 		dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
 	end,
 })
@@ -1139,12 +1141,13 @@ local MyButton = TR:AddButton({
 		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 		task.wait()
 		until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or LgrabB == false
-		task.wait()
+		seatParent.HumanoidRootPart.Anchored = true
+		task.wait(0.25)
 		GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
 		GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
 		tar.Character.HumanoidRootPart.BodyPosition:Destroy()
 		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
-		task.wait(1.75)
+		task.wait(1.25)
 		DestroyT(seatParent)
 	end,
 })
@@ -1208,7 +1211,26 @@ local MyButton = TR:AddButton({
 		end
 	end,
 })
-					
+
+local MyButton = TR:AddButton({
+	Text = "Destroy Blobman Gucci",
+	Func = function()
+		local tar = selectedTarget
+		local pos = char.HumanoidRootPart.CFrame
+		local hum = char and char:FindFirstChild("Humanoid")
+		local toysFolderTarget = workspace:FindFirstChild(tar.Name.."SpawnedInToys")
+		if tar and toysFolderTarget then
+			local blobm = toysFolderTarget:FindFirstChild("CreatureBlobman")
+			blobm:FindFirstChild("VehicleSeat"):Sit(hum)
+			task.wait(0.1)
+			hum.Sit = false
+			hum.Jump = true											
+			task.wait(0.1)
+			char.HumanoidRootPart.CFrame = pos
+			char.HumanoidRootPart.Velocity = Vector3.zero
+		end
+	end,
+})
 
 KB:AddLabel("Spawn"):AddKeyPicker("KeyPicker", {
 	Default = "One",
