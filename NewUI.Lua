@@ -1127,8 +1127,8 @@ local MyButton = TR:AddButton({
 	end,
 })
 
-		CTR:AddToggle("LoopBanana", {
-		Text = "Loop Banana",
+		CTR:AddToggle("GrabAntiKick", {
+		Text = "Grab Anti Kick",
 		Default = false,
 		Callback = function(Value)
 		local tar = selectedTarget
@@ -1157,9 +1157,25 @@ local MyButton = TR:AddButton({
 							GrabToy(toysFolderTarget.NinjaShuriken)
 						end
 
-						if toysFolderTarget:FindFirstChild("AntiKick") then
-							GrabToy(toysFolderTarget.AntiKick)
+						if toysFolderTarget:FindFirstChild("ToolCleaver") then
+							GrabToy(toysFolderTarget.ToolCleaver)
 						end
+
+						if toysFolderTarget:FindFirstChild("ToolPencil") then
+							GrabToy(toysFolderTarget.ToolPencil)
+						end
+
+						if toysFolderTarget:FindFirstChild("ToolDiggingForkRusty") then
+							GrabToy(toysFolderTarget.ToolDiggingForkRusty)
+						end
+
+						if toysFolderTarget:FindFirstChild("ToolPickaxe") then
+							GrabToy(toysFolderTarget.ToolPickaxe)
+						end
+
+						--if toysFolderTarget:FindFirstChild("NinjaKatana") then
+							--GrabToy(toysFolderTarget.NinjaKatana)
+						--end
 					end
 				end
 			task.wait()
