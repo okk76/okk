@@ -886,7 +886,7 @@ local MyButton = CTR:AddButton({
 	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
     task.wait(0.3)
-    tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(0, 5, 0)
+    tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(0, 7.5, 0)
 	--task.wait()
 	--char.HumanoidRootPart.CFrame = pos
 	--task.wait(0.03)
@@ -932,7 +932,10 @@ local MyButton = CTR:AddButton({
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
 	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or Lgrabk == false
-    --tar.Character.HumanoidRootPart.CFrame = pos * CFrame.new(0, 20, 0)
+    if Lgrab == false then
+	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
+	tar.Character.HumanoidRootPart.BodyGyro:Destroy()
+	else
     char.HumanoidRootPart.CFrame = pos
 	task.spawn(function()
 	while Lgrabk do
@@ -943,6 +946,7 @@ local MyButton = CTR:AddButton({
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
 	end
 	end)
+	end
 	else
 	Lgrabk = false
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
@@ -978,6 +982,10 @@ local MyButton = CTR:AddButton({
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
 	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or LgrabB == false
+	if LgrabB == false then
+	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
+	DestroyT(seatParent)
+	else
 	task.wait(0.5)
 	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
@@ -1003,6 +1011,7 @@ local MyButton = CTR:AddButton({
 	task.wait()
 	end
 	end)
+	end
 	else
 	LgrabB = false
 	seatParent.HumanoidRootPart.BodyPosition:Destroy()
