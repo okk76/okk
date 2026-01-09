@@ -565,20 +565,20 @@ DF:AddToggle("AntiKickB", {
 						
 						local firePart = currentHRP:FindFirstChild("FirePlayerPart") or currentHRP:WaitForChild("FirePlayerPart", 5)
 						if firePart then
-							stickyEvent:FireServer(kunai.StickyPart, firePart, CFrame.new(0,-0.25,0) * CFrame.Angles(0,math.rad(90),math.rad(90)))
+							stickyEvent:FireServer(kunai.StickyPart, firePart, CFrame.new(0, -1, 0.075) * CFrame.Angles(0,math.rad(90),math.rad(90)))
 						end
 						
 						for _, obj in pairs(kunai:GetChildren()) do
 							if obj.Name == "Pyramid" then
-								obj.CanTouch = false; obj.CanCollide = false; obj.CanQuery = false; obj.Transparency = 0
+								obj.CanTouch = false; obj.CanCollide = false; obj.CanQuery = false;
 								if not obj:FindFirstChild("Highlight") then
 									local high = Instance.new("Highlight", kunai)
-									high.FillColor = Color3.fromRGB(0, 0, 0)
+									high.FillTransparency = 1
 								end
 							elseif obj.Name == "Main" then
 								obj.CanTouch = false; obj.CanCollide = false; obj.CanQuery = false; obj.Transparency = 1
 							elseif obj:IsA("BasePart") then
-								obj.CanTouch = false; obj.CanCollide = false; obj.CanQuery = false; obj.Transparency = 1
+								obj.CanTouch = false; obj.CanCollide = false; obj.CanQuery = false;
 							end
 						end
 					end
@@ -772,11 +772,11 @@ TR:AddDropdown("TargetPlayer", {
 		end,
 	})
 
---Options.TargetPlayer:OnChanged(function()
---Toggles.RagdollTarget:SetValue(false)
---task.wait(0.1)
---Toggles.RagdollTarget:SetValue(true)
---end)
+Options.TargetPlayer:OnChanged(function()
+Toggles.GrabAntiKick:SetValue(false)
+task.wait()
+Toggles.GrabAntiKick:SetValue(true)
+end)
 
 local MyButton = TR:AddButton({
 	Text = "Kill",
@@ -1282,6 +1282,7 @@ Toggles.LoopGrabBlobKick:SetValue(false)
 Toggles.LoopGrab:SetValue(false)
 Toggles.LoopBanana:SetValue(false)
 Toggles.RagdollTarget:SetValue(false)
+Toggles.GrabAntiKick:SetValue(false)
 task.wait()
 Library:Unload()
 end)
