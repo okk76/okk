@@ -799,7 +799,7 @@ local MyButton = TR:AddButton({
 })
 
 local MyButton = CTR:AddButton({
-	Text = "TP Target",
+	Text = "Bring Target",
 	Func = function()
 		local tar = selectedTarget
 		local pos = char.HumanoidRootPart.CFrame
@@ -814,6 +814,28 @@ local MyButton = CTR:AddButton({
     	char.HumanoidRootPart.CFrame = pos
 		GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
 		GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
+	end,
+})
+
+local MyButton = CTR:AddButton({
+	Text = "Bring Target Blob",
+	Func = function()
+		local tar = selectedTarget
+		local pos = char.HumanoidRootPart.CFrame
+		local hum = char and char:FindFirstChild("Humanoid")
+		local seat = hum and hum.SeatPart
+		local seatParent = seat.Parent
+		local grabB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureGrab")
+		local dropB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureDrop")
+		local leftDet = seatParent:FindFirstChild("LeftDetector")
+		local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
+		char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+		task.wait(0.25)
+		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
+		task.wait(0.25)
+    	char.HumanoidRootPart.CFrame = pos
+		task.wait(0.5)
+		dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
 	end,
 })
 
