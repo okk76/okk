@@ -771,6 +771,12 @@ TR:AddDropdown("TargetPlayer", {
 		end,
 	})
 
+Options.TargetPlayer:OnChanged(function()
+	Toggles.RagdollTarget:SetValue(false)
+	task.wait(0.1)
+	Toggles.RagdollTarget:SetValue(true)
+end)
+
 local MyButton = TR:AddButton({
 	Text = "Kill",
 	Func = function()
@@ -916,6 +922,52 @@ local MyButton = TR:AddButton({
 	Lgrabk = false
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
 	tar.Character.HumanoidRootPart.BodyGyro:Destroy()
+	end
+	end,
+})
+
+	TR:AddToggle("LoopGrabBlob", {
+	Text = "Loop Grab Blob",
+	Default = false,
+	Callback = function(Value)
+	local tar = selectedTarget
+	local hum = char and char:FindFirstChild("Humanoid")
+	local seat = hum and hum.SeatPart
+	local seatParent = seat.Parent
+	local grabB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureGrab")
+	local dropB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureDrop")
+	local leftDet = seatParent:FindFirstChild("LeftDetector")
+	local rightDet = seatParent:FindFirstChild("RightDetector")
+	local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
+	local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
+	if Value then
+	LgrabB = true
+	local bopB = Instance.new("BodyPosition")
+	bopB.Position = tar.Character.HumanoidRootPart.Position + Vector3.new(0, 25, 0)
+	bopB.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
+	bopB.D = 100
+	bopB.Parent = tar.Character.HumanoidRootPart
+	repeat
+	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+	task.wait()
+	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	task.wait()
+	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
+	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
+	task.wait()
+	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or LgrabB == false
+	task.wait(0.75)
+	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
+	task.spawn(function()
+	while LgrabB do
+	grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
+	task.wait()
+	dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
+	task.wait()
+	end
+	end)
+	else
+	LgrabB = false
 	end
 	end,
 })
