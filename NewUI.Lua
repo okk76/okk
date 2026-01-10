@@ -129,7 +129,7 @@ LP:AddSlider("Gravity", {
 	Text = "Gravity",
 	Default = 100,
 	Min = 0,
-	Max = 1000,
+	Max = 100,
 	Rounding = 1,
 	Compact = false,
 	Callback = function(Value)
@@ -1013,15 +1013,38 @@ local MyButton = CTR:AddButton({
 	end,
 })
 
-
-	TR:AddToggle("LoopGrabKick", {
-	Text = "Loop Grab Kick",
+	TR:AddToggle("LoopGrabKickStable", {
+	Text = "Loop Grab Kick Stable",
 	Default = false,
 	Callback = function(Value)
 	local tar = selectedTarget
 	local pos = char.HumanoidRootPart.CFrame
+	local hrp = char:FindFirstChild("HumanoidRootPart")
+	local function ragdoll()
+	while ragdoS do
+	task.wait(0.05)
+	pallet.SoundPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 1, 0) * CFrame.Angles(0, math.rad(90), 0)
+	task.wait(0.025)
+	pallet.SoundPart.CFrame = CFrame.new(0, 1000000, 0)
+	end
+	end
 	if Value then
-	Lgrabk = true
+	LgrabkS = true
+	ragdoS = true
+	spawnItem("FoodPlate", hrp.Position + Vector3.new(0, 5, 20))
+	local startWait = tick()
+	repeat 
+    RunService.Heartbeat:Wait()
+	pallet = toysFolder:FindFirstChild("FoodPlate")
+    until pallet or tick() - startWait > 3
+	task.wait(0.15)
+	SetNetworkOwner:FireServer(pallet.SoundPart, pallet.SoundPart.CFrame)
+	pallet.SoundPart.CanCollide = false
+	local bodypos = Instance.new("BodyPosition")
+	bodypos.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
+	bodypos.D = 12500
+	bodypos.Position = Vector3.new(0, 1000000, 0)
+	bodypos.Parent = toysFolder:FindFirstChild("FoodPlate").SoundPart
     local bop = Instance.new("BodyPosition")
 	bop.Position = char.HumanoidRootPart.Position + Vector3.new(0, 15, 0)
 	bop.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
@@ -1030,19 +1053,18 @@ local MyButton = CTR:AddButton({
 	local bog = Instance.new("BodyGyro")
 	bog.MaxTorque = Vector3.new(10e+37, 10e+37, 10e+37)
 	bog.Parent = tar.Character.HumanoidRootPart
-    task.wait(0.05)
 	repeat
 	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
-	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or Lgrabk == false
-    if Lgrab == false then
+	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or LgrabkS == false
+    if LgrabS == false then
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
 	tar.Character.HumanoidRootPart.BodyGyro:Destroy()
 	else
     char.HumanoidRootPart.CFrame = pos
 	task.spawn(function()
-	while Lgrabk do
+	while LgrabkS do
 	task.wait()
     SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
@@ -1050,11 +1072,77 @@ local MyButton = CTR:AddButton({
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
 	end
 	end)
+	task.spawn(function()
+	ragdoll()
+	end)
 	end
 	else
-	Lgrabk = false
+	LgrabkS = false
+	ragdoS = false
+	DestroyT(pallet)
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
 	tar.Character.HumanoidRootPart.BodyGyro:Destroy()
+	end
+	end,
+})
+
+	TR:AddToggle("LoopGrabKickFast", {
+	Text = "Loop Grab Kick Fast",
+	Default = false,
+	Callback = function(Value)
+	local tar = selectedTarget
+	local pos = char.HumanoidRootPart.CFrame
+	local hrp = char:FindFirstChild("HumanoidRootPart")
+	local function ragdoll()
+	while ragdoF do
+	task.wait(0.05)
+	pallet.SoundPart.CFrame = tar.Character.Head.CFrame * CFrame.new(0, 0.5, 0) * CFrame.Angles(0, math.rad(90), 0)
+	task.wait()
+	pallet.SoundPart.CFrame = CFrame.new(0, 1000000, 0)
+	end
+	end
+	if Value then
+	LgrabkF = true
+	ragdoF = true
+	spawnItem("FoodPlate", hrp.Position + Vector3.new(0, 5, 20))
+	local startWait = tick()
+	repeat
+    RunService.Heartbeat:Wait()
+	pallet = toysFolder:FindFirstChild("FoodPlate")
+    until pallet or tick() - startWait > 3
+	task.wait(0.15)
+	SetNetworkOwner:FireServer(pallet.SoundPart, pallet.SoundPart.CFrame)
+	pallet.SoundPart.CanCollide = false
+	local bodypos = Instance.new("BodyPosition")
+	bodypos.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
+	bodypos.D = 12500
+	bodypos.Position = Vector3.new(0, 1000000, 0)
+	bodypos.Parent = toysFolder:FindFirstChild("FoodPlate").SoundPart
+	repeat
+	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	task.wait()
+	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or LgrabkF == false
+	tar.Character.HumanoidRootPart.CFrame = pos * CFrame.new(0, 15, 0)
+    char.HumanoidRootPart.CFrame = pos
+	task.spawn(function()
+	while LgrabkF do
+	task.wait()
+    SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	tar.Character.HumanoidRootPart.CFrame = pos * CFrame.new(0, 15, 0)
+	tar.Character.HumanoidRootPart.Velocity = Vector3.zero
+	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
+	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
+	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)
+	end
+	end)
+	task.spawn(function()
+	ragdoll()
+	end)
+	else
+	LgrabkF = false
+	ragdoF = false
+	DestroyT(pallet)
 	end
 	end,
 })
@@ -1122,61 +1210,6 @@ local MyButton = CTR:AddButton({
 	seatParent.HumanoidRootPart.BodyGyro:Destroy()
 	DestroyT(seatParent)
 	end
-	end,
-})
-
-	CTR:AddToggle("RagdollTarget", {
-	Text = "Ragdoll Target",
-	Default = false,
-	Callback = function(Value)
-	local hrp = char:FindFirstChild("HumanoidRootPart")
-	local tar = selectedTarget
-
-	if Value then
-	ragdo = true
-
-	spawnItem("PalletLightBrown", hrp.Position + Vector3.new(0, 5, 20))
-
-	local startWait = tick()
-    repeat 
-    RunService.Heartbeat:Wait()
-	pallet = toysFolder:FindFirstChild("PalletLightBrown")
-    until pallet or tick() - startWait > 3
-	task.wait(0.1)
-	SetNetworkOwner:FireServer(pallet.SoundPart, pallet.SoundPart.CFrame)
-	pallet.SoundPart.CanCollide = false
-	for _, part in ipairs(pallet:GetChildren()) do
-       if part.Name == "Part" and part:IsA("Part") then
-         part.Transparency = 1
-          end
-     end
-	local bodypos = Instance.new("BodyPosition")
-	bodypos.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
-	bodypos.D = 12500
-	bodypos.Position = Vector3.new(0, 1000000, 0)
-	bodypos.Parent = toysFolder:FindFirstChild("PalletLightBrown").SoundPart
-
-	task.spawn(function()
-	while ragdo do
-	if Lgrabk == true and tar.Character:FindFirstChild("HumanoidRootPart") then
-		task.wait(0.05)
-		pallet.SoundPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 1, 0) * CFrame.Angles(0, math.rad(90), 0)
-		task.wait(0.025)
-		pallet.SoundPart.CFrame = CFrame.new(0, 1000000, 0)
-	else
-		task.wait()
-	end
-	end
-	end)
-
-	else
-		ragdo = false
-		if pallet then
-		DestroyT(pallet)
-		else
-		task.wait()
-		end
-	  end
 	end,
 })
 
@@ -1481,11 +1514,10 @@ Toggles.Trd:SetValue(false)
 Toggles.PLCD:SetValue(false)
 Toggles.Strong:SetValue(false)
 Toggles.DisableBarrierCollisions:SetValue(false)
-Toggles.LoopGrabKick:SetValue(false)
+Toggles.LoopGrabKickStable:SetValue(false)
 Toggles.LoopGrabBlobKick:SetValue(false)
 Toggles.LoopGrab:SetValue(false)
 Toggles.LoopBanana:SetValue(false)
-Toggles.RagdollTarget:SetValue(false)
 Toggles.GrabAntiKick:SetValue(false)
 Toggles.Strength:SetValue(false)
 Toggles.PacketLag:SetValue(false)
