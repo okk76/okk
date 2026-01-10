@@ -79,6 +79,7 @@ local Window = Library:CreateWindow({
 local Tabs = {
 	Main = Window:AddTab("Main"),
 	Target = Window:AddTab("Target"),
+	Fun = Window:AddTab("Fun"),
 	Keybinds = Window:AddTab("Keybinds"),
 	["UI Settings"] = Window:AddTab("UI Settings"),
 }
@@ -90,6 +91,7 @@ local KB = Tabs.Keybinds:AddLeftGroupbox("Teleports")
 local TR = Tabs.Target:AddLeftGroupbox("Target")
 local CTR = Tabs.Target:AddRightGroupbox("Control")
 local BL = Tabs.Target:AddLeftGroupbox("Blobman Settings")
+local FN = Tabs.Fun:AddLeftGroupbox("Functions")
 
 LP:AddSlider("WalkSpeed", {
 	Text = "WalkSpeed",
@@ -298,6 +300,38 @@ GB:AddToggle("Strong", {
 		d.AlignOrientation.Responsiveness = 30
 		d.AlignOrientation.MaxTorque = 600000
 	end
+	end,
+})
+
+GB:AddSlider("PacketAmountSlider", {
+        Text = "Packet Lag Strength",
+        Default = 10,
+        Min = 10,
+        Max = 5000,
+        Rounding = 0,
+        Callback = function(Value)
+            PacketSpamAmount = Value
+        end
+    })
+
+GB:AddToggle("PacketLagToggle", {
+        Text = "Packet Lag",
+        Default = false,
+        Callback = function(Value)
+		local extGrabLineEvent = GrabEvents:WaitForChild("ExtendGrabLine")
+		PacketLagActive = Value
+        if Value then
+            task.spawn(function()
+                while PacketLagActive do
+                    pcall(function()
+                        extGrabLineEvent:FireServer(string.rep("Balls Balls Balls Balls", PacketSpamAmount))
+                    end)
+                    task.wait()
+                end
+            end)
+        else
+            PacketLagActive = false
+        end
 	end,
 })
 
@@ -854,30 +888,7 @@ local MyButton = CTR:AddButton({
 })
 
 local MyButton = CTR:AddButton({
-	Text = "Kill Blobman",
-	Func = function()
-		local tar = selectedTarget
-		local pos = char.HumanoidRootPart.CFrame
-		local hum = char and char:FindFirstChild("Humanoid")
-		local seat = hum and hum.SeatPart
-		local seatParent = seat.Parent
-		local grabB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureGrab")
-		local dropB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureDrop")
-		local leftDet = seatParent:FindFirstChild("LeftDetector")
-		local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
-		char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
-		task.wait(0.25)
-		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
-		task.wait(0.25)
-		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-    	char.HumanoidRootPart.CFrame = pos
-		task.wait(0.75)
-		dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
-	end,
-})
-
-local MyButton = CTR:AddButton({
-	Text = "Bring Target",
+	Text = "Bring Target Grab",
 	Func = function()
 		local tar = selectedTarget
 		local pos = char.HumanoidRootPart.CFrame
@@ -1361,6 +1372,49 @@ local MyButton = TR:AddButton({
 			char.HumanoidRootPart.Velocity = Vector3.zero
 		end
 	end,
+})
+
+FN:AddToggle("Boobs", {
+	Text = "Boobs (Only in Plots)",
+	Default = false,
+	Callback = function(Value)
+	local function checkplots()
+	if game.workspace.Plots.Plot1.PlotSign.ThisPlotsOwners.Value.Value == LocalPlayer.Name then
+		PlayerPlot = game.workspace.PlotItems.Plot1
+	else
+	if game.workspace.Plots.Plot2.PlotSign.ThisPlotsOwners.Value.Value == LocalPlayer.Name then
+		PlayerPlot = game.workspace.PlotItems.Plot2
+	else
+	if game.workspace.Plots.Plot3.PlotSign.ThisPlotsOwners.Value.Value == LocalPlayer.Name then
+		PlayerPlot = game.workspace.PlotItems.Plot3
+	else
+	if game.workspace.Plots.Plot4.PlotSign.ThisPlotsOwners.Value.Value == LocalPlayer.Name then
+		PlayerPlot = game.workspace.PlotItems.Plot4
+	else
+	if game.workspace.Plots.Plot5.PlotSign.ThisPlotsOwners.Value.Value == LocalPlayer.Name then
+		PlayerPlot = game.workspace.PlotItems.Plot5
+	end
+	end
+	end
+	end
+	end
+	end	
+	print(PlayerPlot)
+	checkplots()
+	print(PlayerPlot)
+  	--local toy = PlayerPlot
+   	--local h = char.Torso
+  	--if toy:FindFirstChild("a") then
+   	--toy.FoodCoconut.SoundPart.CFrame = h.CFrame + Vector3.new(-0.7, 0.2, -0.5)
+  	--toy.FoodCoconut.SoundPart.Anchored = true
+   	--toy.FoodCoconut.SoundPart.CanCollide = false
+   	--toy.FoodCoconut.Name = "b"
+   	--else
+   	--toy.FoodCoconut.SoundPart.CFrame = h.CFrame + Vector3.new(-0.7, 0.2, 0.5)
+	--toy.FoodCoconut.SoundPart.Anchored = true
+	--toy.FoodCoconut.SoundPart.CanCollide = false
+  	--toy.FoodCoconut.Name = "a"  
+    end,
 })
 
 KB:AddLabel("Spawn"):AddKeyPicker("KeyPicker", {
