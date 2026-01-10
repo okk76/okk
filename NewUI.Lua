@@ -88,6 +88,7 @@ local LP = Tabs.Main:AddLeftGroupbox("LocalPlayer")
 local GB = Tabs.Main:AddLeftGroupbox("GrabLine")
 local DF = Tabs.Main:AddRightGroupbox("Defense")
 local KB = Tabs.Keybinds:AddLeftGroupbox("Teleports")
+local FKB = Tabs.Keybinds:AddRightGroupbox("Functions")
 local TR = Tabs.Target:AddLeftGroupbox("Target")
 local CTR = Tabs.Target:AddRightGroupbox("Control")
 local BL = Tabs.Target:AddLeftGroupbox("Blobman Settings")
@@ -101,12 +102,18 @@ LP:AddSlider("WalkSpeed", {
 	Rounding = 1,
 	Compact = false,
 	Callback = function(Value)
-		local character = game.Players.LocalPlayer.Character
-      if character and character:FindFirstChild("Humanoid") then
-          character.Humanoid.WalkSpeed = Value
-      end
-   character.BobbingAndCrouch.Disabled = true
-   character.BobbingAndCrouch.Enabled = true
+    if char and char:FindFirstChild("Humanoid") then
+    char.Humanoid.WalkSpeed = Value
+    end
+   	char.BobbingAndCrouch.Enabled = false
+   	char.BobbingAndCrouch.Enabled = true
+
+   	LocalPlayer.CharacterAdded:Connect(function(char)
+  	char:WaitForChild("Humanoid")
+  	char.Humanoid.WalkSpeed = Value
+  	char.BobbingAndCrouch.Enabled = false
+  	char.BobbingAndCrouch.Enabled = true
+    end)
 	end,
 })
 
@@ -118,10 +125,16 @@ LP:AddSlider("JumpPower", {
 	Rounding = 1,
 	Compact = false,
 	Callback = function(Value)
-		local character = game.Players.LocalPlayer.Character
-      if character and character:FindFirstChild("Humanoid") then
-          character.Humanoid.JumpPower = Value
-      end
+    if char and char:FindFirstChild("Humanoid") then
+    char.Humanoid.JumpPower = Value
+    end
+   	char.BobbingAndCrouch.Enabled = false
+   	char.BobbingAndCrouch.Enabled = true
+
+   	LocalPlayer.CharacterAdded:Connect(function(char)
+  	char:WaitForChild("Humanoid")
+  	char.Humanoid.JumpPower = Value
+    end)
 	end,
 })
 
@@ -153,24 +166,24 @@ LP:AddToggle("Trd", {
 	Text = "Unlock 3rd Person",
 	Default = false,
 	Callback = function(Value)
-		local group = LocalPlayer.Character
    if Value then
    LocalPlayer.CameraMaxZoomDistance = 100000
    LocalPlayer.CameraMode = 0
+   LocalPlayer.DevEnableMouseLock = true
    lico = RunService.Heartbeat:Connect(function()
-	for _, part in ipairs(group:GetChildren()) do
+	for _, part in ipairs(char:GetChildren()) do
         if part:IsA("Accessory") then
         part.Handle.Transparency = 0
-		group.Torso.Transparency = 0
-		group.Head.Transparency = 0
-		group["Left Leg"].Transparency = 0
-		group["Left Arm"].Transparency = 0
-		group["Right Leg"].Transparency = 0
-		group["Right Arm"].Transparency = 0
+		char.Torso.Transparency = 0
+		char.Head.Transparency = 0
+		char["Left Leg"].Transparency = 0
+		char["Left Arm"].Transparency = 0
+		char["Right Leg"].Transparency = 0
+		char["Right Arm"].Transparency = 0
 		if part.Name == "TypingKeyboardMyWorld" then
-			group.TypingKeyboardMyWorld:Destroy()
+			char.TypingKeyboardMyWorld:Destroy()
 			else
-			task.wait(0.01)
+			task.wait()
 		end
     end
 end
@@ -181,6 +194,7 @@ end)
 		lico = nil
 		LocalPlayer.CameraMaxZoomDistance = 0.5
    		LocalPlayer.CameraMode = 1
+		LocalPlayer.DevEnableMouseLock = false
 	end
 	end
 	end,
