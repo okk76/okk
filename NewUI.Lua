@@ -11,11 +11,23 @@ local Struggle = CharacterEvents:WaitForChild("Struggle")
 local GrabEvents = ReplicatedStorage:WaitForChild("GrabEvents")
 local SetNetworkOwner = GrabEvents:WaitForChild("SetNetworkOwner")
 local toysFolder = game.workspace:FindFirstChild(LocalPlayer.Name.."SpawnedInToys")
+local UserInputService = game:GetService("UserInputService")
+local Debris = game:GetService("Debris")
 local group = game.workspace
 local spaw = game.workspace.SpawnLocation
 local hue = 0
 
 LocalPlayer.PlayerScripts.CharacterAndBeamMove.Disabled = true
+game.Workspace.Map.MapNoises.NoisePart1.Sound1.Volume = 0
+game.Workspace.Map.MapNoises.NoisePart2.Sound1.Volume = 0
+game.Workspace.Map.MapNoises.NoisePart3.Sound1.Volume = 0
+game.Workspace.Map.MapNoises.NoisePart4.Sound1.Volume = 0
+game.Workspace.Map.MapNoises.NoisePart5.Sound1.Volume = 0
+game.Workspace.Map.MapNoises.NoisePart6.Sound1.Volume = 0
+game.Workspace.Map.MapNoises.NoisePart7.Sound1.Volume = 0
+game.Workspace.Map.MapNoises.NoisePart8.Sound1.Volume = 0
+game.Workspace.Map.MapNoises.NoisePart9.Sound1.Volume = 0
+game.Workspace.Map.MapNoises.NoisePart10.Sound1.Volume = 0
 
 spaw.Position = Vector3.new(spaw.Position, -10.85, spaw.Position)
 spaw.Decal.Transparency = 0.8
@@ -226,8 +238,50 @@ local MyButton = LP:AddButton({
 	--end,
 --})
 
+GB:AddSlider("StrengthPower", {
+	Text = "Strength Power",
+	Default = 300,
+	Min = 300,
+	Max = 40000,
+	Rounding = 1,
+	Compact = false,
+	Callback = function(Value)
+        strength = Value
+    end,
+ })
+
+GB:AddToggle("Strength", {
+    Text = "Strength",
+	Default = false,
+	Callback = function(on)
+        if on then
+            strengthCon = game.workspace.ChildAdded:Connect(function(model)
+                if model.Name == "GrabParts" then
+                    local partToImpulse = model.GrabPart.WeldConstraint.Part1
+                    if partToImpulse then
+                        local fling = Instance.new("BodyVelocity", partToImpulse)
+                        model:GetPropertyChangedSignal("Parent"):Connect(function()
+                            if not model.Parent then
+                                if UserInputService:GetLastInputType() == Enum.UserInputType.MouseButton2 then
+                                    fling.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+                                    fling.Velocity = game.workspace.CurrentCamera.CFrame.LookVector * strength
+                                    Debris:AddItem(fling, 1)
+                                else
+                                    fling:Destroy()
+                                end
+                            end
+                        end)
+                    end
+                end
+            end)
+        elseif strengthCon then
+            strengthCon:Disconnect()
+        end
+    end,
+})
+
 GB:AddToggle("Strong", {
-	Text = "Massless GrabLine",
+	Text = "Massless Grab",
 	Default = false,
 	Callback = function(Value)
 	local d = game.ReplicatedFirst.GrabParts.DragPart
@@ -678,7 +732,7 @@ DF:AddToggle("AntiKickB", {
 })
 
 DF:AddDropdown("Anti Input Lag Item", {
-	Values = { "FoodSodaCan", "FoodHamburger", "CupMugWhite", "FoodBanana", "FoodCoconut", "PoopPileSparkle", "CupMugBrown", "FoodBread", "FoodBroccoli", "FoodDippyEgg", "FoodDonut", "FoodHotdog", "FoodMayonnaise", "FoodMeatStick", "FoodMushroomPoison", "FoodPizzaCheese", "PoopPile", "FoodPizzaPepperoni", "FoodFrenchFries", "FoodCakePink", "InstrumentBrassBugle", "InstrumentBrassTrumpet", "InstrumentBrassVuvuzela", "InstrumentDrumBongos", "InstrumentDrumSnare", "InstrumentGuitarAcoustic", "InstrumentGuitarBanjo", "InstrumentGuitarLyre", "InstrumentGuitarUkulele", "InstrumentGuitarViolin", "InstrumentPianoKeyboard", "InstrumentPianoMelodica", "InstrumentVoiceMicrophone", "InstrumentWoodwindOcarina", "InstrumentWoodwindSaxophone" },
+	Values = { "PoopPileSparkle", "FoodHamburger", "CupMugWhite", "FoodBanana", "FoodCoconut", "FoodSodaCan", "CupMugBrown", "FoodBread", "FoodBroccoli", "FoodDippyEgg", "FoodDonut", "FoodHotdog", "FoodMayonnaise", "FoodMeatStick", "FoodMushroomPoison", "FoodPizzaCheese", "PoopPile", "FoodPizzaPepperoni", "FoodFrenchFries", "FoodCakePink", "InstrumentBrassBugle", "InstrumentBrassTrumpet", "InstrumentBrassVuvuzela", "InstrumentDrumBongos", "InstrumentDrumSnare", "InstrumentGuitarAcoustic", "InstrumentGuitarBanjo", "InstrumentGuitarLyre", "InstrumentGuitarUkulele", "InstrumentGuitarViolin", "InstrumentPianoKeyboard", "InstrumentPianoMelodica", "InstrumentVoiceMicrophone", "InstrumentWoodwindOcarina", "InstrumentWoodwindSaxophone" },
 	Default = nil, -- number index of the value / string
 	Multi = false, -- true / false, allows multiple choices to be selected
 	Callback = function(Value)
@@ -779,7 +833,7 @@ task.wait()
 Toggles.GrabAntiKick:SetValue(true)
 end)
 
-local MyButton = TR:AddButton({
+local MyButton = CTR:AddButton({
 	Text = "Kill",
 	Func = function()
 		local tar = selectedTarget
@@ -796,6 +850,29 @@ local MyButton = TR:AddButton({
 		GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
     	task.wait(0.1)
     	char.HumanoidRootPart.CFrame = pos
+	end,
+})
+
+local MyButton = CTR:AddButton({
+	Text = "Kill Blobman",
+	Func = function()
+		local tar = selectedTarget
+		local pos = char.HumanoidRootPart.CFrame
+		local hum = char and char:FindFirstChild("Humanoid")
+		local seat = hum and hum.SeatPart
+		local seatParent = seat.Parent
+		local grabB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureGrab")
+		local dropB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureDrop")
+		local leftDet = seatParent:FindFirstChild("LeftDetector")
+		local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
+		char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+		task.wait(0.25)
+		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
+		task.wait(0.25)
+		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+    	char.HumanoidRootPart.CFrame = pos
+		task.wait(0.75)
+		dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
 	end,
 })
 
@@ -909,6 +986,46 @@ local MyButton = CTR:AddButton({
 	end
 	end,
 })
+
+	CTR:AddToggle("Lock Target", {
+	Text = "Lock Target",
+	Default = false,
+	Callback = function(Value)
+	local tar = selectedTarget
+	local hum = char and char:FindFirstChild("Humanoid")
+	local pos = char.HumanoidRootPart.CFrame
+	local seat = hum and hum.SeatPart
+	local seatParent = seat.Parent
+	local grabB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureGrab")
+	local dropB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureDrop")
+	local leftDet = seatParent:FindFirstChild("LeftDetector")
+	local rightDet = seatParent:FindFirstChild("RightDetector")
+	local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
+	local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
+	if Value then
+	LockB = true
+	seatParent.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+	task.wait(0.25)
+	grabB:FireServer(rightDet, tar.Character.HumanoidRootPart, rightWeld)
+	task.wait(0.5)
+	char.HumanoidRootPart.CFrame = pos
+	task.wait(0.5)
+	dropB:FireServer(rightWeld, tar.Character.HumanoidRootPart)
+	task.spawn(function()
+	while LockB do
+	grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
+	--grabB:FireServer(rightDet, tar.Character.HumanoidRootPart, rightWeld)
+	task.wait()
+	--dropB:FireServer(rightWeld, tar.Character.HumanoidRootPart)
+	dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
+	end
+	end)
+	else
+	LockB = false
+	end
+	end,
+})
+
 
 	TR:AddToggle("LoopGrabKick", {
 	Text = "Loop Grab Kick",
@@ -1239,7 +1356,7 @@ local MyButton = TR:AddButton({
 			task.wait(0.1)
 			hum.Sit = false
 			hum.Jump = true											
-			task.wait(0.1)
+			task.wait()
 			char.HumanoidRootPart.CFrame = pos
 			char.HumanoidRootPart.Velocity = Vector3.zero
 		end
@@ -1341,6 +1458,7 @@ Toggles.LoopGrab:SetValue(false)
 Toggles.LoopBanana:SetValue(false)
 Toggles.RagdollTarget:SetValue(false)
 Toggles.GrabAntiKick:SetValue(false)
+Toggles.Strength:SetValue(false)
 task.wait()
 Library:Unload()
 end)
