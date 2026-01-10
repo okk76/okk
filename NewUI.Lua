@@ -951,35 +951,49 @@ local MyButton = CTR:AddButton({
 	Default = false,
 	Callback = function(Value)
 	local tar = selectedTarget
+	local function ragdoll()
+	while Lgrab do
+	task.wait(0.05)
+	pallet.SoundPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 0) * CFrame.Angles(0, math.rad(90), 0)
+	task.wait()
+	pallet.SoundPart.CFrame = CFrame.new(0, 1000000, 0)
+	end
+	end
 	if Value then
 	Lgrab = true
+	spawnItem("FoodPlate", char.HumanoidRootPart.Position + Vector3.new(0, 5, 20))
+	local startWait = tick()
+	repeat 
+    RunService.Heartbeat:Wait()
+	pallet = toysFolder:FindFirstChild("FoodPlate")
+    until pallet or tick() - startWait > 3
+	task.wait(0.15)
+	SetNetworkOwner:FireServer(pallet.SoundPart, pallet.SoundPart.CFrame)
+	pallet.SoundPart.CanCollide = false
+	pallet.SoundPart.Transparency = 1
+	local bodypos = Instance.new("BodyPosition")
+	bodypos.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
+	bodypos.D = 12500
+	bodypos.Position = Vector3.new(0, 1000000, 0)
+	bodypos.Parent = toysFolder:FindFirstChild("FoodPlate").SoundPart
 	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 	task.wait(0.25)
 	local bop = Instance.new("BodyPosition")
-	bop.Position = char.HumanoidRootPart.Position + Vector3.new(0, 5, 0)
+	bop.Position = tar.Character.HumanoidRootPart.Position
 	bop.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
 	bop.Parent = tar.Character.HumanoidRootPart
-    task.wait(0.05)
-	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
-	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
-    task.wait(0.3)
-    tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(0, 7.5, 0)
-	--task.wait()
-	--char.HumanoidRootPart.CFrame = pos
-	--task.wait(0.03)
-	--tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(0, 20, 0)
 	task.spawn(function()
 	while Lgrab do
-	--task.wait()
     SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
-	--GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
-	--GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
 	end
+	end)
+	task.spawn(function()
+	ragdoll()
 	end)
 	else
 	Lgrab = false
+	DestroyT(pallet)
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
@@ -1054,6 +1068,7 @@ local MyButton = CTR:AddButton({
 	task.wait(0.15)
 	SetNetworkOwner:FireServer(pallet.SoundPart, pallet.SoundPart.CFrame)
 	pallet.SoundPart.CanCollide = false
+	pallet.SoundPart.Transparency = 1
 	local bodypos = Instance.new("BodyPosition")
 	bodypos.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
 	bodypos.D = 12500
@@ -1127,6 +1142,7 @@ local MyButton = CTR:AddButton({
 	task.wait(0.15)
 	SetNetworkOwner:FireServer(pallet.SoundPart, pallet.SoundPart.CFrame)
 	pallet.SoundPart.CanCollide = false
+	pallet.SoundPart.Transparency = 1
 	local bodypos = Instance.new("BodyPosition")
 	bodypos.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
 	bodypos.D = 12500
