@@ -226,13 +226,6 @@ LP:AddLabel("TP Mouse"):AddKeyPicker("KeyPicker", {
 	end,
 })
 
-local MyButton = LP:AddButton({
-	Text = "Reset",
-	Func = function()
-		LocalPlayer.Character.Humanoid.Health = 0
-	end,
-})
-
 --local MyButton = LP:AddButton({
 	--Text = "R",
 	--Func = function()
@@ -250,7 +243,7 @@ GB:AddSlider("StrengthPower", {
 	Callback = function(Value)
         strength = Value
     end,
- })
+})
 
 GB:AddToggle("Strength", {
     Text = "Strength",
@@ -303,34 +296,74 @@ GB:AddToggle("Strong", {
 	end,
 })
 
-GB:AddSlider("PacketAmountSlider", {
+GB:AddToggle("FartherReach", {
+    Text = "FartherReach",
+	Default = false,
+	Callback = function(on)
+	local Activator = game.ReplicatedStorage.MenuToys.LimitedTimeToyEvent
+	local dead
+	if on then
+	local LineTexture = LocalPlayer:FindFirstChild("FartherReach")
+    if LineTexture then
+    LineTexture:Destroy()
+	end
+    local LineTexture = Instance.new("BoolValue")
+    LineTexture.Name = "FartherReach"
+    LineTexture.Value = true
+    LineTexture.Parent = LocalPlayer
+	char.GrabbingScript.Enabled = false
+    char.GrabbingScript.Enabled = true
+	task.delay(0.1, function()
+    Activator:FireServer()
+    end)
+	dead = LocalPlayer.CharacterAdded:Connect(function(Character)
+            Character:WaitForChild("GrabbingScript")
+            Toggles.FartherReach:SetValue(false)
+            Toggles.FartherReach:SetValue(true)
+        end)
+	else
+	local LineTexture = LocalPlayer:FindFirstChild("FartherReach")
+	if LineTexture then
+	LineTexture:Destroy()
+	end
+	char.GrabbingScript.Enabled = false
+    char.GrabbingScript.Enabled = true
+	if dead then
+	dead:Disconnect()
+	dead = nil
+	end
+	end
+    end,
+})
+
+GB:AddSlider("PacketStrength", {
         Text = "Packet Lag Strength",
-        Default = 10,
-        Min = 10,
+        Default = 300,
+        Min = 100,
         Max = 5000,
         Rounding = 0,
         Callback = function(Value)
-            PacketSpamAmount = Value
+            PacketAmount = Value
         end
     })
 
-GB:AddToggle("PacketLagToggle", {
+GB:AddToggle("PacketLag", {
         Text = "Packet Lag",
         Default = false,
         Callback = function(Value)
 		local extGrabLineEvent = GrabEvents:WaitForChild("ExtendGrabLine")
-		PacketLagActive = Value
-        if Value then
+		if Value then
+		PacketLag = true
             task.spawn(function()
-                while PacketLagActive do
+                while PacketLag do
                     pcall(function()
-                        extGrabLineEvent:FireServer(string.rep("Balls Balls Balls Balls", PacketSpamAmount))
+                        extGrabLineEvent:FireServer(string.rep("veseliepaketikiveseliepaketikiveseliepaketiki", PacketAmount))
                     end)
                     task.wait()
                 end
             end)
         else
-            PacketLagActive = false
+            PacketLag = false
         end
 	end,
 })
@@ -527,63 +560,6 @@ local MyButton = DF:AddButton({
 
 DF:AddToggle("AntiKick", {
 	Text = "Anti Kick",
-	Default = false,
-	Callback = function(Value)
-	local hrp = char:FindFirstChild("HumanoidRootPart")
-	local firePart = hrp:WaitForChild("FirePlayerPart") or hrp:WaitForChild("FirePlayerPart", 5)
-
-	local function checkantikick()
-		if toysFolder:FindFirstChild("NinjaKunai") then
-		task.wait()
-		else
-		spawnItem("NinjaKunai", hrp.Position + Vector3.new(0, 7.5, 20))
-		local startWait = tick()
-        repeat 
-        RunService.Heartbeat:Wait()
-		kunai = toysFolder:FindFirstChild("NinjaKunai")
-        until kunai or tick() - startWait > 1
-		task.wait(0.05)
-		local HL = Instance.new("Highlight")
-		HL.FillTransparency = 1
-		HL.Parent = kunai
-		SetNetworkOwner:FireServer(kunai.StickyPart, kunai.StickyPart.CFrame)
-		task.wait(0.1)
-		ReplicatedStorage.PlayerEvents.StickyPartEvent:FireServer(kunai.StickyPart, firePart, CFrame.new(0, -1, 0.075) * CFrame.Angles(0,math.rad(90),math.rad(90)))
-		end
-	end
-
-	if Value then
-	antikick = true
-		spawnItem("NinjaKunai", hrp.Position + Vector3.new(0, 7.5, 20))
-		local startWait = tick()
-        repeat 
-        RunService.Heartbeat:Wait()
-		kunai = toysFolder:FindFirstChild("NinjaKunai")
-        until kunai or tick() - startWait > 1
-		task.wait(0.05)
-		SetNetworkOwner:FireServer(kunai.StickyPart, kunai.StickyPart.CFrame)
-		local HL = Instance.new("Highlight")
-		HL.FillTransparency = 1
-		HL.Parent = kunai
-		ReplicatedStorage.PlayerEvents.StickyPartEvent:FireServer(kunai.StickyPart, firePart, CFrame.new(0, -1, 0.075) * CFrame.Angles(0,math.rad(90),math.rad(90)))
-		task.spawn(function()
-		while antikick do
-		checkantikick()
-		end
-		end)
-	else
-		antikick = false
-		if toysFolder:FindFirstChild("NinjaKunai") then
-		DestroyT(toysFolder:FindFirstChild("NinjaKunai"))
-		else
-		task.wait()
-		end
-	end
-	end,
-})
-
-DF:AddToggle("AntiKickB", {
-	Text = "Anti Kick (better)",
 	Default = false,
 	Callback = function(Value)
 		_G.ShurikenAntiKick = Value
@@ -1500,7 +1476,6 @@ Toggles.AntiInputLag:SetValue(false)
 Toggles.AntiGrab:SetValue(false)
 Toggles.AntiVoid:SetValue(false)
 Toggles.AntiKick:SetValue(false)
-Toggles.AntiKickB:SetValue(false)
 Toggles.LoopTp:SetValue(false)
 Toggles.Trd:SetValue(false)
 Toggles.PLCD:SetValue(false)
@@ -1513,6 +1488,8 @@ Toggles.LoopBanana:SetValue(false)
 Toggles.RagdollTarget:SetValue(false)
 Toggles.GrabAntiKick:SetValue(false)
 Toggles.Strength:SetValue(false)
+Toggles.PacketLag:SetValue(false)
+Toggles.FartherReach:SetValue(false)
 task.wait()
 Library:Unload()
 end)
