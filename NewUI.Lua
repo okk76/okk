@@ -608,7 +608,7 @@ DF:AddToggle("AntiKick", {
 				
 				if inv and destroyrem then
 					for _, v in pairs(inv:GetChildren()) do
-						if v.Name == "AntiKick" or v.Name == "NinjaKunai" then
+						if v.Name == "AntiKick" or v.Name == "NinjaShuriken" then
 							pcall(function() destroyrem:FireServer(v) end)
 						end
 					end
@@ -677,13 +677,8 @@ DF:AddToggle("AntiKick", {
 									local high = Instance.new("Highlight", kunai)
 									high.FillTransparency = 1
 								end
-							elseif obj.Name == "Main" then
-								obj.CanTouch = false; obj.CanCollide = false; obj.CanQuery = false; obj.Transparency = 1
-							elseif obj:IsA("BasePart") then
-								obj.CanTouch = false; obj.CanCollide = false; obj.CanQuery = false;
 							end
 						end
-					end
 
 					local function SpawnToy(name)
 						local t = tick()
@@ -720,7 +715,7 @@ DF:AddToggle("AntiKick", {
 						end
 						
 						local inv = workspace:FindFirstChild(plr.Name.."SpawnedInToys")
-						local kunai = inv and inv:FindFirstChild("NinjaKunai")
+						local kunai = inv and inv:FindFirstChild("NinjaShuriken")
 						
 						if workspace.PlotItems.PlayersInPlots:FindFirstChild(plr.Name) then 
 							local boolik, house = CheckForHome()
@@ -1255,23 +1250,13 @@ TR:AddToggle("LoopGrabBlobKick", {
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
 	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or LgrabB == false
-	if LgrabB == false then
+	if LgrabBG == false then
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
 	DestroyT(seatParent)
 	else
 	task.wait(0.5)
 	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
-	
-	local bopBl = Instance.new("BodyPosition")
-	bopBl.Position = tar.Character.HumanoidRootPart.Position + Vector3.new(0, 3, 0)
-	bopBl.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
-	bopBl.D = 100
-	bopBl.Parent = seatParent.HumanoidRootPart
-	local bogBl = Instance.new("BodyGyro")
-	bogBl.MaxTorque = Vector3.new(10e+37, 10e+37, 10e+37)
-	bogBl.Parent = seatParent.HumanoidRootPart
-	seatParent.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 3, 0)
 	task.spawn(function()
 	while LgrabBG do
 	grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
@@ -1280,9 +1265,9 @@ TR:AddToggle("LoopGrabBlobKick", {
 	task.wait()
 	end
 	end)
-task.spawn(function()
+    task.spawn(function()
 	while LgrabBG do
-SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+    SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
 	end
 	end)
@@ -1290,7 +1275,7 @@ SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.Humanoi
 	else
 	LgrabBG = false	
 	DestroyT(seatParent)
-tar.Character.HumanoidRootPart.BodyPosition:Destroy()
+    tar.Character.HumanoidRootPart.BodyPosition:Destroy()
 	end
 	end,
 })
@@ -1714,6 +1699,7 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
 
 
