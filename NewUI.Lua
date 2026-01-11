@@ -1257,7 +1257,7 @@ TR:AddToggle("LoopBlobKick", {
 	if Value then
 	LgrabB = true
 	local bopB = Instance.new("BodyPosition")
-	bopB.Position = tar.Character.HumanoidRootPart.Position + Vector3.new(0, 25, 0)
+	bopB.Position = char.HumanoidRootPart.Position + Vector3.new(0, 25, 0)
 	bopB.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
 	bopB.D = 100
 	bopB.Parent = tar.Character.HumanoidRootPart
@@ -1649,6 +1649,7 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
 
 
