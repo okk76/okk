@@ -1244,10 +1244,10 @@ TR:AddToggle("LoopBlobKick", {
 	Default = false,
 	Callback = function(Value)
 	local tar = selectedTarget
-    local posB = seatParent.HumanoidRootPart.CFrame
 	local hum = char and char:FindFirstChild("Humanoid")
 	local seat = hum and hum.SeatPart
 	local seatParent = seat.Parent
+    local posB = seatParent.HumanoidRootPart.CFrame
 	local grabB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureGrab")
 	local dropB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureDrop")
 	local leftDet = seatParent:FindFirstChild("LeftDetector")
@@ -1653,6 +1653,7 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
 
 
