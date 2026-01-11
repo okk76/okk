@@ -239,6 +239,24 @@ LP:AddLabel("TP Mouse"):AddKeyPicker("KeyPicker", {
 	end,
 })
 
+LP:AddToggle("LoopRagdoll", {
+	Text = "Loop Ragdoll",
+	Default = false,
+	Callback = function(Value)
+	if Value then
+	rag = true
+	task.spawn(function()
+    while rag do
+    ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart)
+    task.wait()
+	end
+    end)
+   	else
+	rag = false
+	end
+	end,
+})
+
 --local MyButton = LP:AddButton({
 	--Text = "R",
 	--Func = function()
@@ -419,28 +437,6 @@ DF:AddToggle("AntiGrab", {
 	end,
 })
 
-DF:AddToggle("AntiExplosion", {
-	Text = "Anti Explosion",
-	Default = false,
-	Callback = function(Value)
-	if Value then
-	antiexp = RunService.Heartbeat:Connect(function()
-	if char.Humanoid.Ragdolled.Value == true then
-	char:FindFirstChild("HumanoidRootPart").Anchored = true
-	char:FindFirstChild("HumanoidRootPart").Velocity = Vector3.new(0, 0, 0)
-	else
-	char:FindFirstChild("HumanoidRootPart").Anchored = false
-	end
-	end)
-	else
-	if antiexp then
-    antiexp:Disconnect()
-    antiexp = nil
-	end
-	end
-	end,
-})
-
 DF:AddToggle("AntiVoid", {
 	Text = "Anti Void",
 	Default = false,
@@ -456,7 +452,6 @@ DF:AddToggle("AntiVoid", {
 local MyButton = DF:AddButton({
 	Text = "Anti Banana (Delete Legs)",
 	Func = function()
-	Toggles.AntiExplosion:SetValue(false)
 	repeat
 	ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 3)
 	task.wait()
@@ -464,17 +459,20 @@ local MyButton = DF:AddButton({
 	char["Left Leg"].CFrame = CFrame.new(100000, -100000, 100000)
 	char["Right Leg"].CFrame = CFrame.new(100000, -100000, 100000)
 	task.wait(0.1)
-	spawnItem("FoodPlat", char.HumanoidRootPart.Position + Vector3.new(0, 0, 20))
+	spawnItem("FoodPlate", char.HumanoidRootPart.Position + Vector3.new(0, 0, 20))
 	local startWait = tick()
     repeat 
     RunService.Heartbeat:Wait()
 	plate = toysFolder:FindFirstChild("FoodPlate")
-    until plate or tick() - startWait > 1
+    until plate or tick() - startWait > 2
 	task.wait(0.25)
 	DestroyT(plate)
-	char.BobbingAndCrouch.Enabled = false
+	task.spawn(function()
+    while char.Humanoid.Health > 0 do
 	char.Humanoid.HipHeight = 2
-	Toggles.AntiExplosion:SetValue(true)
+	task.wait()
+	end
+	end)
 	end,
 })
 
@@ -1590,7 +1588,7 @@ MenuGroup:AddLabel("Menu bind")
 	:AddKeyPicker("MenuKeybind", { Default = "Q", NoUI = true, Text = "Menu keybind" })
 
 MenuGroup:AddButton("Unload", function()
-Toggles.AntiInputLag:SetValue(false)
+Toggles.LoopRagdoll:SetValue(false)
 Toggles.AntiGrab:SetValue(false)
 Toggles.AntiVoid:SetValue(false)
 Toggles.AntiKick:SetValue(false)
@@ -1607,7 +1605,7 @@ Toggles.GrabAntiKick:SetValue(false)
 Toggles.Strength:SetValue(false)
 Toggles.PacketLag:SetValue(false)
 Toggles.FartherReach:SetValue(false)
-Toggles.AntiExplosion:SetValue(false)
+Toggles.AntiInputLag:SetValue(false)
 task.wait()
 Library:Unload()
 end)
