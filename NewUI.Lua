@@ -1271,15 +1271,12 @@ TR:AddToggle("LoopBlobKick", {
 	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or LgrabB == false
 	if LgrabB == false then
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
-	DestroyT(seatParent)
 	else
     seatParent.HumanoidRootPart.Velocity = Vector3.zero
     seatParent.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
     seatParent.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
     seatParent.HumanoidRootPart.CFrame = posB
-	task.wait(0.1)
-	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
-	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
+	task.wait(0.25)
 	task.spawn(function()
 	while LgrabB do
     seatParent.HumanoidRootPart.Velocity = Vector3.zero
@@ -1294,7 +1291,6 @@ TR:AddToggle("LoopBlobKick", {
 	end
 	else
 	LgrabB = false
-	DestroyT(seatParent)
     tar.Character.HumanoidRootPart.BodyPosition:Destroy()
 	end
 	end,
@@ -1653,6 +1649,7 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
 
 
