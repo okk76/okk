@@ -953,11 +953,11 @@ local MyButton = CTR:AddButton({
 		tar.Character["Left Arm"].CFrame = CFrame.new(100000, -100000, 100000)
 		tar.Character["Right Arm"].CFrame = CFrame.new(100000, -100000, 100000)
 		task.wait(0.25)
-		spawnItem("PalletLightBrown", hrp.Position + Vector3.new(0, 5, 20))
+		spawnItem("ChildrensTableBenchSmall", tar.Character.HumanoidRootPart.Position + Vector3.new(0, 5, 20))
 		local startWait = tick()
     	repeat 
     	RunService.Heartbeat:Wait()
-		palletr = toysFolder:FindFirstChild("PalletLightBrown")
+		palletr = toysFolder:FindFirstChild("ChildrensTableBenchSmall")
     	until palletr or tick() - startWait > 1
 		task.wait(0.25)
 		if palletr then
