@@ -1244,6 +1244,7 @@ TR:AddToggle("LoopBlobKick", {
 	Default = false,
 	Callback = function(Value)
 	local tar = selectedTarget
+    local posB = seatParent.HumanoidRootPart.CFrame
 	local hum = char and char:FindFirstChild("Humanoid")
 	local seat = hum and hum.SeatPart
 	local seatParent = seat.Parent
@@ -1262,7 +1263,9 @@ TR:AddToggle("LoopBlobKick", {
 	bopB.Parent = tar.Character.HumanoidRootPart
 	repeat
 	seatParent.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
-	seatParent.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+	seatParent.HumanoidRootPart.Velocity = Vector3.zero
+    seatParent.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
+    seatParent.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
 	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or LgrabB == false
@@ -1270,14 +1273,18 @@ TR:AddToggle("LoopBlobKick", {
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
 	DestroyT(seatParent)
 	else
-	task.wait(0.5)
+    seatParent.HumanoidRootPart.Velocity = Vector3.zero
+    seatParent.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
+    seatParent.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
+    seatParent.HumanoidRootPart.CFrame = posB
+	task.wait(0.1)
 	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
-	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
 	task.spawn(function()
 	while LgrabB do
-seatParent.HumanoidRootPart.Velocity = Vector3.zero
-seatParent.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
+    seatParent.HumanoidRootPart.Velocity = Vector3.zero
+    seatParent.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
+    seatParent.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero       
 	grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
 	task.wait()
 	dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
@@ -1288,6 +1295,7 @@ seatParent.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
 	else
 	LgrabB = false
 	DestroyT(seatParent)
+    tar.Character.HumanoidRootPart.BodyPosition:Destroy()
 	end
 	end,
 })
@@ -1645,6 +1653,7 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
 
 
