@@ -1280,10 +1280,6 @@ CTR:AddToggle("LoopGrab", {
 	task.wait()
 	dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
 	task.wait()
-	end
-	end)
-    task.spawn(function()
-	while LgrabB do
 	grabB:FireServer(rightDet, tar.Character.HumanoidRootPart, rightWeld)
 	task.wait()
 	dropB:FireServer(rightWeld, tar.Character.HumanoidRootPart)
@@ -1652,4 +1648,5 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
