@@ -722,7 +722,7 @@ DF:AddToggle("AntiKick", {
 							if boolik and house and workspace.Plots:FindFirstChild(house.Name) then
 								local sign = workspace.Plots[house.Name]:FindFirstChild("PlotSign")
 								if sign and sign.ThisPlotsOwners.Value.TimeRemainingNum.Value > 89 then 
-									kunai = SpawnToy("NinjaKunai")
+									kunai = SpawnToy("NinjaShuriken")
 									if kunai == nil then continue end
 									kunai.Name = "AntiKick" 
 									StickKunai(kunai)
@@ -732,7 +732,7 @@ DF:AddToggle("AntiKick", {
 						
 						if not kunai then
 							if workspace.PlotItems.PlayersInPlots:FindFirstChild(plr.Name) then continue end 
-							kunai = SpawnToy("NinjaKunai")
+							kunai = SpawnToy("NinjaShuriken")
 							if kunai == nil then continue end 
 							kunai.Name = "AntiKick"
 							if not kunai then continue end 
@@ -1699,6 +1699,7 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
 
 
