@@ -70,9 +70,9 @@ Library.ForceCheckbox = false
 Library.ShowToggleFrameInKeybinds = true
 local Window = Library:CreateWindow({
 	Title = "Happy Mod",
-	Footer = "тут нечего читать",
+	Footer = "это красти краб? нет это патрик",
 	NotifySide = "Right",
-	ShowCustomCursor = true,
+	ShowCustomCursor = false,
 })
 
 local Tabs = {
@@ -452,6 +452,31 @@ DF:AddToggle("AntiVoid", {
 	end
 	end,
 })
+
+local MyButton = DF:AddButton({
+	Text = "Anti Banana (Delete Legs)",
+	Func = function()
+	Toggles.AntiExplosion:SetValue(false)
+	repeat
+	ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 3)
+	task.wait()
+	until char.Humanoid.Ragdolled.Value == true or char.Humanoid.Health == 0
+	char["Left Leg"].CFrame = CFrame.new(100000, -100000, 100000)
+	char["Right Leg"].CFrame = CFrame.new(100000, -100000, 100000)
+	task.wait(0.1)
+	spawnItem("FoodPlat", char.HumanoidRootPart.Position + Vector3.new(0, 0, 20))
+	local startWait = tick()
+    repeat 
+    RunService.Heartbeat:Wait()
+	plate = toysFolder:FindFirstChild("FoodPlate")
+    until plate or tick() - startWait > 1
+	task.wait(0.25)
+	DestroyT(plate)
+	char.Humanoid.HipHeight = 2
+	Toggles.AntiExplosion:SetValue(true)
+	end,
+})
+
 
 DF:AddToggle("AntiLag", {
 	Text = "Anti Lag",
@@ -1581,6 +1606,7 @@ Toggles.GrabAntiKick:SetValue(false)
 Toggles.Strength:SetValue(false)
 Toggles.PacketLag:SetValue(false)
 Toggles.FartherReach:SetValue(false)
+Toggles.AntiExplosion:SetValue(false)
 task.wait()
 Library:Unload()
 end)
