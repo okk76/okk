@@ -1285,7 +1285,6 @@ TR:AddToggle("LoopBlobKick", {
     seatParent.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
     seatParent.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero       
 	grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
-	task.wait()
 	dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
 	task.wait()
 	end
@@ -1650,6 +1649,7 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
 
 
