@@ -165,20 +165,33 @@ LP:AddToggle("Trd", {
 	Text = "Unlock 3rd Person",
 	Default = false,
 	Callback = function(Value)
+	local es = true
+	local function legs()
+	if not char:FindFirstChild("Left Leg") or not char:FindFirstChild("Right Leg") then
+	es = false
+	else
+	es = true
+	end
+   end
    if Value then
+   legs()
    LocalPlayer.CameraMaxZoomDistance = 100000
    LocalPlayer.CameraMode = 0
    LocalPlayer.DevEnableMouseLock = true
    lico = RunService.Heartbeat:Connect(function()
-	for _, part in ipairs(char:GetChildren()) do
+   char.Torso.Transparency = 0
+   char.Head.Transparency = 0
+   char["Left Arm"].Transparency = 0
+   char["Right Arm"].Transparency = 0
+   if es then
+   char["Left Leg"].Transparency = 0
+   char["Right Leg"].Transparency = 0
+   else
+   task.wait()
+   end
+   for _, part in ipairs(char:GetChildren()) do
         if part:IsA("Accessory") then
         part.Handle.Transparency = 0
-		char.Torso.Transparency = 0
-		char.Head.Transparency = 0
-		char["Left Leg"].Transparency = 0
-		char["Left Arm"].Transparency = 0
-		char["Right Leg"].Transparency = 0
-		char["Right Arm"].Transparency = 0
 		if part.Name == "TypingKeyboardMyWorld" then
 			char.TypingKeyboardMyWorld:Destroy()
 			else
@@ -679,6 +692,7 @@ DF:AddToggle("AntiKick", {
 								end
 							end
 						end
+					end
 
 					local function SpawnToy(name)
 						local t = tick()
@@ -1240,7 +1254,7 @@ TR:AddToggle("LoopGrabBlobKick", {
 	if Value then
 	LgrabBG = true
 	local bopB = Instance.new("BodyPosition")
-	bopB.Position = tar.Character.HumanoidRootPart.Position + Vector3.new(0, 20, 0)
+	bopB.Position = tar.Character.HumanoidRootPart.Position + Vector3.new(0, 25, 0)
 	bopB.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
 	bopB.D = 100
 	bopB.Parent = tar.Character.HumanoidRootPart
@@ -1267,8 +1281,11 @@ TR:AddToggle("LoopGrabBlobKick", {
 	end)
     task.spawn(function()
 	while LgrabBG do
+	task.wait()
     SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
+	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)
+	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
 	end
 	end)
 	end
@@ -1699,9 +1716,3 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
-
-
-
-
-
-
