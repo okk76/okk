@@ -472,6 +472,7 @@ local MyButton = DF:AddButton({
     until plate or tick() - startWait > 1
 	task.wait(0.25)
 	DestroyT(plate)
+	char.BobbingAndCrouch.Enabled = false
 	char.Humanoid.HipHeight = 2
 	Toggles.AntiExplosion:SetValue(true)
 	end,
