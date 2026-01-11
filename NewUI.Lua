@@ -1305,6 +1305,59 @@ CTR:AddToggle("LoopGrab", {
 	end,
 })
 
+TR:AddToggle("LoopBlobKickNew", {
+	Text = "Loop Blob Kick New",
+	Default = false,
+	Callback = function(Value)
+	local tar = selectedTarget
+	local hum = char and char:FindFirstChild("Humanoid")
+	local seat = hum and hum.SeatPart
+	local seatParent = seat.Parent
+	local grabB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureGrab")
+	local dropB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureDrop")
+	local leftDet = seatParent:FindFirstChild("LeftDetector")
+	local rightDet = seatParent:FindFirstChild("RightDetector")
+	local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
+	local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
+	if Value then
+	LgrabB = true
+	local bopB = Instance.new("BodyPosition")
+	bopB.Position = tar.Character.HumanoidRootPart.Position + Vector3.new(0, 25, 0)
+	bopB.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
+	bopB.D = 100
+	bopB.Parent = tar.Character.HumanoidRootPart
+	repeat
+	seatParent.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+	seatParent.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	task.wait()
+	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or LgrabB == false
+	if LgrabB == false then
+	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
+	DestroyT(seatParent)
+	else
+	task.wait(0.5)
+	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
+	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
+	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
+	task.spawn(function()
+	while LgrabB do
+seatParent.HumanoidRootPart.Velocity = Vector3.zero
+seatParent.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
+	grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
+	task.wait()
+	dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
+	task.wait()
+	end
+	end)
+	end
+	else
+	LgrabB = false
+	DestroyT(seatParent)
+	end
+	end,
+})
+
 	CTR:AddToggle("LoopBanana", {
 	Text = "Loop Banana",
 	Default = false,
@@ -1607,8 +1660,8 @@ Toggles.PLCD:SetValue(false)
 Toggles.Strong:SetValue(false)
 Toggles.DisableBarrierCollisions:SetValue(false)
 Toggles.LoopGrabKickStable:SetValue(false)
-Toggles.LoopGrabBlobKick:SetValue(false)
 Toggles.LoopBlobKick:SetValue(false)
+Toggles.LoopBlobKickNew:SetValue(false)
 Toggles.LoopGrab:SetValue(false)
 Toggles.LoopBanana:SetValue(false)
 Toggles.GrabAntiKick:SetValue(false)
@@ -1658,4 +1711,5 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
