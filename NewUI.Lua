@@ -1262,7 +1262,7 @@ TR:AddToggle("LoopBlobKick", {
 	task.wait()
 	until blob or Value == false
     task.wait(0.125)
-    seatParent.VehicleSeat:Sit(hum)
+    blob.VehicleSeat:Sit(hum)
     task.wait(0.125)
 	LgrabB = true
 	local bopB = Instance.new("BodyPosition")
@@ -1658,6 +1658,7 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
 
 
