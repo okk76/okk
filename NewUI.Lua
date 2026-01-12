@@ -1247,6 +1247,7 @@ TR:AddToggle("LoopBlobKick", {
 	local hum = char and char:FindFirstChild("Humanoid")
 	local seat = hum and hum.SeatPart
 	local seatParent = seat.Parent
+    local blob = toysFolder:FindFirstChild("CreatureBlobman")
     local posB = seatParent.HumanoidRootPart.CFrame
 	local grabB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureGrab")
 	local dropB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureDrop")
@@ -1255,10 +1256,9 @@ TR:AddToggle("LoopBlobKick", {
 	local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
 	local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
 	if Value then
-    if not seatParent then
+    if not hum.SeatPart then
     spawnItem("CreatureBlobman", hrp.Position + Vector3.new(0, 5, 15))
     repeat
-	local blob = toysFolder:FindFirstChild("CreatureBlobman")
 	task.wait()
 	until blob or Value == false
     task.wait(0.125)
@@ -1658,6 +1658,7 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
 
 
