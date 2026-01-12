@@ -911,7 +911,7 @@ DF:AddToggle("AntiInputLag", {
 		while antiinput do
 		holdPart.DropItemRemoteFunction:InvokeServer(toy, spaw.CFrame * CFrame.new(0, 500000, 0), Vector3.new(0, 0, 0))
 		holdPart.HoldItemRemoteFunction:InvokeServer(toy, char)
-		task.wait(0.25)
+		task.wait()
 		end
 		end)
 	else
@@ -1740,3 +1740,4 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
