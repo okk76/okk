@@ -905,8 +905,8 @@ DF:AddToggle("AntiInputLag", {
         RunService.Heartbeat:Wait()
 		toy = toysFolder:FindFirstChild(Item)
         until toy or tick() - startWait > 1 or Value == false
+		toy = toysFolder:WaitForChild(Item, 5)
 		local holdPart = toy:FindFirstChild("HoldPart")
-		task.wait(0.25)
 		task.spawn(function()
 		while antiinput do
 		holdPart.DropItemRemoteFunction:InvokeServer(toy, spaw.CFrame * CFrame.new(0, 500000, 0), Vector3.new(0, 0, 0))
