@@ -562,6 +562,8 @@ local MyButton = DF:AddButton({
 	task.wait()
 	end
 	end)
+	Toggles.Trd:SetValue(false)
+	Toggles.Trd:SetValue(true)
 	end,
 })
 
@@ -904,14 +906,12 @@ DF:AddToggle("AntiInputLag", {
 		toy = toysFolder:FindFirstChild(Item)
         until toy or tick() - startWait > 1 or Value == false
 		local holdPart = toy:FindFirstChild("HoldPart")
+		task.wait(0.25)
 		task.spawn(function()
 		while antiinput do
-		checkantiunput()
-		task.wait()
-		holdPart.HoldItemRemoteFunction:InvokeServer(toy, char)
-		task.wait()
 		holdPart.DropItemRemoteFunction:InvokeServer(toy, spaw.CFrame * CFrame.new(0, 500000, 0), Vector3.new(0, 0, 0))
-		toy.SoundPart.CanCollide = false
+		holdPart.HoldItemRemoteFunction:InvokeServer(toy, char)
+		task.wait(0.25)
 		end
 		end)
 	else
