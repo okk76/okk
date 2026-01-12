@@ -63,6 +63,14 @@ local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
 local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
 local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
 
+local function notify(title, content, duration)
+		Library:Notify({
+			Title = title or "Notification",
+			Description = content or "",
+			Time = duration or 5,
+		})
+	end
+
 local Options = Library.Options
 local Toggles = Library.Toggles
 
@@ -437,6 +445,84 @@ DF:AddToggle("AntiGrab", {
                 autoStruggleCoroutine = nil
             end
         end
+	end,
+})
+
+local antiGucciConnection
+	local safePosition
+	local restoreFrames = 0
+	local function spawnBlobman()
+		local args = {[1] = "CreatureBlobman", [2] = CFrame.new(0, 5000000, 0), [3] = Vector3.new(0, 60, 0)}
+		pcall(function() ReplicatedStorage.MenuToys.SpawnToyRemoteFunction:InvokeServer(unpack(args)) end)
+		if toysFolder and toysFolder:FindFirstChild("CreatureBlobman") then
+			local blob = toysFolder.CreatureBlobman
+			if blob:FindFirstChild("Head") then blob.Head.CFrame = CFrame.new(0, 50000, 0) blob.Head.Anchored = true end
+			notify("Anti Gucci", "Blobman Spawned", 3)
+		end
+	end
+	local function startAntiGucci()
+		local humanoid = char:WaitForChild("Humanoid")
+		local hrp = char:WaitForChild("HumanoidRootPart")
+		safePosition = hrp.Position
+		local blob = toysFolder and toysFolder:FindFirstChild("CreatureBlobman")
+		local seat = blob and blob:FindFirstChild("VehicleSeat")
+		if not blob then spawnBlobman() task.wait(0.75) blob = toysFolder and toysFolder:FindFirstChild("CreatureBlobman") seat = blob and blob:FindFirstChild("VehicleSeat") end
+		if seat and seat:IsA("VehicleSeat") then hrp.CFrame = seat.CFrame + Vector3.new(0, 2, 0) seat:Sit(humanoid) end
+		humanoid:GetPropertyChangedSignal("Jump"):Connect(function() if humanoid.Jump and humanoid.Sit then restoreFrames = 15 safePosition = hrp.Position end end)
+		if antiGucciConnection then antiGucciConnection:Disconnect() end
+		antiGucciConnection = RunService.Heartbeat:Connect(function()
+			if not hrp or not humanoid then return end
+			ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(hrp, 0)
+			if restoreFrames > 0 then hrp.CFrame = CFrame.new(safePosition) restoreFrames = restoreFrames - 1 end
+		end)
+		task.spawn(function() while humanoid.Sit do task.wait(0.5) end task.wait(0.5) hrp.CFrame = CFrame.new(safePosition) end)
+	end
+	local function stopAntiGucci()
+		if antiGucciConnection then antiGucciConnection:Disconnect() antiGucciConnection = nil end
+		local blobFolder = Workspace:FindFirstChild(LocalPlayer.Name.."SpawnedInToys")
+		if blobFolder and blobFolder:FindFirstChild("CreatureBlobman") then DestroyT(blobFolder.CreatureBlobman) end
+	end
+
+DF:AddToggle("AntiGrabGucci", {
+	Text = "Anti Grab Gucci",
+	Default = false,
+	Callback = function(Value)
+		autoGucciActive = Value
+
+			if Value then
+				startAntiGucci()
+				notify("Anti Gucci", "Processing", 3)
+
+				task.spawn(function()
+					while autoGucciActive do
+						local toysFolder = Workspace:FindFirstChild(LocalPlayer.Name .. "SpawnedInToys")
+						local blobExists = toysFolder and toysFolder:FindFirstChild("CreatureBlobman")
+
+						if not blobExists then
+							stopAntiGucci() 
+							spawnBlobman() 
+							notify("Anti Gucci", "Broken", 3)
+
+							local retries = 0
+							repeat
+								task.wait(0.2)
+								retries = retries + 1
+								toysFolder = Workspace:FindFirstChild(LocalPlayer.Name .. "SpawnedInToys")
+							until (toysFolder and toysFolder:FindFirstChild("CreatureBlobman")) or retries > 25 or not autoGucciActive
+
+							if autoGucciActive and toysFolder and toysFolder:FindFirstChild("CreatureBlobman") then
+								startAntiGucci()
+								notify("Anti Gucci", "Fixed", 3)
+							end
+						end
+						task.wait(0.5) 
+					end
+				end)
+			else
+				autoGucciActive = false
+				stopAntiGucci()
+				notify("Anti Gucci", "Disabled", 3)
+		end
 	end,
 })
 
