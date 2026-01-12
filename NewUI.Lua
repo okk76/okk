@@ -944,7 +944,6 @@ local MyButton = CTR:AddButton({
 		task.wait(0.25)
 		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
 		task.wait(0.25)
-		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
     	char.HumanoidRootPart.CFrame = pos
 		task.wait(0.75)
 		dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
@@ -1257,8 +1256,10 @@ TR:AddToggle("LoopBlobKick", {
 	local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
 	if Value then
 	LgrabB = true
+	leftWeld.Enabled = false
+	rightWeld.Enabled = false
 	local bopB = Instance.new("BodyPosition")
-	bopB.Position = char.HumanoidRootPart.Position + Vector3.new(0, 15, 0)
+	bopB.Position = char.HumanoidRootPart.Position + Vector3.new(0, 25, 0)
 	bopB.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
 	bopB.D = 100
 	bopB.Parent = tar.Character.HumanoidRootPart
@@ -1268,7 +1269,7 @@ TR:AddToggle("LoopBlobKick", {
     seatParent.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
     seatParent.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
 	grabB:FireServer(rightDet, tar.Character.HumanoidRootPart, rightWeld)
-	task.wait(0.75)
+	task.wait(0.25)
 	seatParent.HumanoidRootPart.CFrame = posB
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	seatParent.HumanoidRootPart.Velocity = Vector3.zero
@@ -1276,11 +1277,9 @@ TR:AddToggle("LoopBlobKick", {
     seatParent.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
 	task.wait(0.25)
 	dropB:FireServer(rightWeld, tar.Character.HumanoidRootPart)
-	task.wait(0.1)
+	task.wait(0.25)
 	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or LgrabB == false
 	if LgrabB == false then
-	seatParent.HumanoidRootPart.BodyPosition:Destroy()
-	seatParent.HumanoidRootPart.BodyGyro:Destroy()
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
 	else
     seatParent.HumanoidRootPart.Velocity = Vector3.zero
@@ -1289,14 +1288,6 @@ TR:AddToggle("LoopBlobKick", {
     seatParent.HumanoidRootPart.CFrame = posB
     GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
-	local bopBl = Instance.new("BodyPosition")
-	bopBl.Position = char.HumanoidRootPart.Position + Vector3.new(0, 30, 0)
-	bopBl.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
-	bopBl.D = 100
-	bopBl.Parent = seatParent.HumanoidRootPart
-	local bogBl = Instance.new("BodyGyro")
-	bogBl.MaxTorque = Vector3.new(10e+37, 10e+37, 10e+37)
-	bogBl.Parent = seatParent.HumanoidRootPart
 	task.wait(0.25)
 	task.spawn(function()
 	while LgrabB do
@@ -1311,8 +1302,8 @@ TR:AddToggle("LoopBlobKick", {
 	end
 	else
 	LgrabB = false
-	seatParent.HumanoidRootPart.BodyPosition:Destroy()
-	seatParent.HumanoidRootPart.BodyGyro:Destroy()
+	leftWeld.Enabled = true
+	rightWeld.Enabled = true
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
 	end
 	end,
