@@ -1258,6 +1258,7 @@ TR:AddToggle("LoopBlobKick", {
 	if Value then
     if not blob then
     spawnItem("CreatureBlobman", hrp.Position + Vector3.new(0, 5, 15))
+    end
     repeat
 	task.wait()
 	until blob or Value == false
@@ -1658,6 +1659,7 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
 
 
