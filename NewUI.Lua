@@ -423,21 +423,11 @@ DF:AddToggle("AntiGrab", {
                     local head = character.Head
                     local partOwner = head:FindFirstChild("PartOwner")
                     if partOwner then
-                        Struggle:FireServer()
-                        ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
-                        for _, part in pairs(character:GetChildren()) do
-                            if part:IsA("BasePart") then
-                                part.Anchored = true
-                            end
-                        end
-                        while LocalPlayer.IsHeld.Value do
-                            wait()
-                        end
-                        for _, part in pairs(character:GetChildren()) do
-                            if part:IsA("BasePart") then
-                                part.Anchored = false
-                            end
-                        end
+                    Struggle:FireServer()
+					ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 0)
+                    ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
+					task.wait()
+					char.Humanoid.Sit = false
                     end
                 end
             end)
@@ -874,6 +864,8 @@ local function getPlayerFromSelection(selection)
 		return nil
 	end
 
+
+
 TR:AddDropdown("TargetPlayer", {
 		Values = getPlayerList(),
 		Default = 1,
@@ -1020,7 +1012,7 @@ CTR:AddToggle("LoopGrab", {
 	task.wait(0.25)
 	if lok then
 	local bop = Instance.new("BodyPosition")
-	bop.Position = tar.Character.HumanoidRootPart.Position
+	bop.Position = tar.Character.HumanoidRootPart.Position + Vector3.new(0, -2, 0)
 	bop.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
 	bop.Parent = tar.Character.HumanoidRootPart
 	else
