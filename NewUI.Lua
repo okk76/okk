@@ -1256,7 +1256,7 @@ TR:AddToggle("LoopBlobKick", {
 	local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
 	local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
 	if Value then
-    if not hum.SeatPart then
+    if not blob then
     spawnItem("CreatureBlobman", hrp.Position + Vector3.new(0, 5, 15))
     repeat
 	task.wait()
@@ -1658,6 +1658,7 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
 
 
 
