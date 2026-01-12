@@ -401,7 +401,7 @@ GB:AddToggle("PacketLag", {
             task.spawn(function()
                 while PacketLag do
                     pcall(function()
-                        extGrabLineEvent:FireServer(string.rep("veseliepaketikiveseliepaketikiveseliepaketiki", PacketAmount))
+                        extGrabLineEvent:FireServer(string.rep("ASS", PacketAmount))
                     end)
                     task.wait()
                 end
@@ -937,6 +937,7 @@ local MyButton = CTR:AddButton({
 		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
 		task.wait(0.25)
     	char.HumanoidRootPart.CFrame = pos
+		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 		task.wait(0.75)
 		dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
 	end,
