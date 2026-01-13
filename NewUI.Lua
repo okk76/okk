@@ -348,6 +348,18 @@ GB:AddToggle("Strong", {
 	end,
 })
 
+GB:AddLabel("Anchor"):AddKeyPicker("KeyPicker", {
+	Default = "X",
+	Callback = function()
+	local parts = game.workspace.GrabParts
+	local item = parts.GrabPart.WeldConstraint.Part1
+	local anchor = Instance.new("BodyPosition", item)
+	anchor.Position = char.HumanoidRootPart.Position + Vector3.new(0, 15, 0)
+	anchor.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
+	anchor.D = 100
+	end,
+})
+
 GB:AddToggle("FartherReach", {
     Text = "FartherReach",
 	Default = false,
@@ -390,9 +402,9 @@ GB:AddToggle("FartherReach", {
 
 GB:AddSlider("PacketStrength", {
         Text = "Packet Lag Strength",
-        Default = 300,
-        Min = 100,
-        Max = 5000,
+        Default = 500,
+        Min = 500,
+        Max = 50000,
         Rounding = 0,
         Callback = function(Value)
             PacketAmount = Value
@@ -408,10 +420,8 @@ GB:AddToggle("PacketLag", {
 		PacketLag = true
             task.spawn(function()
                 while PacketLag do
-                    pcall(function()
-                        extGrabLineEvent:FireServer(string.rep("ASS", PacketAmount))
-                    end)
-                    task.wait()
+                        extGrabLineEvent:FireServer(string.rep("🤣🤣🤣🤣🤣", PacketAmount))
+                    task.wait(0.5)
                 end
             end)
         else
@@ -783,7 +793,7 @@ DF:AddToggle("AntiKick", {
 						if currentHRP then
 							task.spawn(function()
 								pcall(function()
-									spawnRemote:InvokeServer(name, currentHRP.CFrame * CFrame.new(0, 12, 20), Vector3.new(0,0,0))
+									spawnRemote:InvokeServer(name, currentHRP.CFrame * CFrame.new(0, 12, 15), Vector3.new(0,0,0))
 								end)
 							end)
 						end
@@ -906,11 +916,14 @@ DF:AddToggle("AntiInputLag", {
 		toy = toysFolder:FindFirstChild(Item)
         until toy or tick() - startWait > 1 or Value == false
 		toy = toysFolder:WaitForChild(Item, 5)
-		local holdPart = toy:FindFirstChild("HoldPart")
 		task.spawn(function()
 		while antiinput do
+		pcall(function()
+		toy = toysFolder:FindFirstChild(Item)
+		local holdPart = toy:FindFirstChild("HoldPart")
 		holdPart.DropItemRemoteFunction:InvokeServer(toy, spaw.CFrame * CFrame.new(0, 500000, 0), Vector3.new(0, 0, 0))
 		holdPart.HoldItemRemoteFunction:InvokeServer(toy, char)
+		end)
 		task.wait()
 		end
 		end)
@@ -1508,21 +1521,21 @@ local MyButton = TR:AddButton({
 							GrabToy(toysFolderTarget.NinjaShuriken)
 						end
 
-						if toysFolderTarget:FindFirstChild("ToolCleaver") then
-							GrabToy(toysFolderTarget.ToolCleaver)
-						end
+						--if toysFolderTarget:FindFirstChild("ToolCleaver") then
+						--	GrabToy(toysFolderTarget.ToolCleaver)
+						--end
 
-						if toysFolderTarget:FindFirstChild("ToolPencil") then
-							GrabToy(toysFolderTarget.ToolPencil)
-						end
+						--if toysFolderTarget:FindFirstChild("ToolPencil") then
+						--	GrabToy(toysFolderTarget.ToolPencil)
+						--end
 
-						if toysFolderTarget:FindFirstChild("ToolDiggingForkRusty") then
-							GrabToy(toysFolderTarget.ToolDiggingForkRusty)
-						end
+						--if toysFolderTarget:FindFirstChild("ToolDiggingForkRusty") then
+						--	GrabToy(toysFolderTarget.ToolDiggingForkRusty)
+						--end
 
-						if toysFolderTarget:FindFirstChild("ToolPickaxe") then
-							GrabToy(toysFolderTarget.ToolPickaxe)
-						end
+						--if toysFolderTarget:FindFirstChild("ToolPickaxe") then
+						--	GrabToy(toysFolderTarget.ToolPickaxe)
+						--end
 
 						--if toysFolderTarget:FindFirstChild("NinjaKatana") then
 							--GrabToy(toysFolderTarget.NinjaKatana)
@@ -1740,4 +1753,3 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
-
