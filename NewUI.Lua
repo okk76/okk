@@ -278,6 +278,23 @@ LP:AddToggle("LoopRagdoll", {
 	end,
 })
 
+LP:AddLabel("Jerk Off"):AddKeyPicker("KeyPicker", {
+	Default = "G",
+	Callback = function(Value)
+	animator = char:WaitForChild("Humanoid"):WaitForChild("Animator")
+	local anim = Instance.new("Animation", char.Humanoid)
+	anim.AnimationId = "rbxassetid://168268306"
+	jerkoff = animator:LoadAnimation(anim)
+	jerkoffanimation = Value; jerkoff:Play()
+	task.spawn(function()
+	while jerkoffanimation do
+	jerkoff.TimePosition = 0.3
+	task.wait(0.075)
+	end
+	end)
+	end,
+})
+
 --local MyButton = LP:AddButton({
 	--Text = "R",
 	--Func = function()
@@ -348,17 +365,17 @@ GB:AddToggle("Strong", {
 	end,
 })
 
-GB:AddLabel("Anchor"):AddKeyPicker("KeyPicker", {
-	Default = "X",
-	Callback = function()
-	local parts = game.workspace.GrabParts
-	local item = parts.GrabPart.WeldConstraint.Part1
-	local anchor = Instance.new("BodyPosition", item)
-	anchor.Position = char.HumanoidRootPart.Position + Vector3.new(0, 15, 0)
-	anchor.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
-	anchor.D = 100
-	end,
-})
+--GB:AddLabel("Anchor"):AddKeyPicker("KeyPicker", {
+--	Default = "X",
+--	Callback = function()
+--	local parts = game.workspace.GrabParts
+--	local item = parts.GrabPart.WeldConstraint.Part1
+--	local anchor = Instance.new("BodyPosition", item)
+--	anchor.Position = char.HumanoidRootPart.Position + Vector3.new(0, 15, 0)
+--	anchor.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
+--	anchor.D = 100
+--	end,
+--})
 
 GB:AddToggle("FartherReach", {
     Text = "FartherReach",
@@ -1711,6 +1728,7 @@ Toggles.Strength:SetValue(false)
 Toggles.PacketLag:SetValue(false)
 Toggles.FartherReach:SetValue(false)
 Toggles.AntiInputLag:SetValue(false)
+jerkoffanimation = false
 task.wait()
 Library:Unload()
 end)
