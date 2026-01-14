@@ -713,6 +713,59 @@ local MyButton = DF:AddButton({
 	end,
 })
 
+local paintPartsBackup = {}
+	local paintConnections = {}
+	local function deleteAllPaintParts()
+		for _, obj in ipairs(Workspace:GetDescendants()) do
+			if obj:IsA("BasePart") and obj.Name == "PaintPlayerPart" then
+				local clone = obj:Clone()
+				clone.Archivable = true
+				paintPartsBackup[obj:GetDebugId()] = { clone = clone, parent = obj.Parent }
+				obj:Destroy()
+			end
+		end
+	end
+	local function restorePaintParts()
+		for _, data in pairs(paintPartsBackup) do
+			if data.clone and data.parent then data.clone.Parent = data.parent end
+		end
+		paintPartsBackup = {}
+	end
+	local function watchNewPaintParts()
+		table.insert(paintConnections, Workspace.DescendantAdded:Connect(function(obj)
+			if obj:IsA("BasePart") and obj.Name == "PaintPlayerPart" then
+				task.defer(function()
+					if obj and obj.Parent then
+						local clone = obj:Clone()
+						clone.Archivable = true
+						paintPartsBackup[obj:GetDebugId()] = { clone = clone, parent = obj.Parent }
+						obj:Destroy()
+					end
+				end)
+			end
+		end))
+	end
+	local function disconnectWatchers()
+		for _, conn in ipairs(paintConnections) do if conn.Connected then conn:Disconnect() end end
+		paintConnections = {}
+	end
+	local function setTouchQuery(state)
+		local char = Workspace:FindFirstChild(Player.Name)
+		if not char then return end
+		for _, v in ipairs(char:GetChildren()) do
+			if v:IsA("Part") or v:IsA("BasePart") then v.CanTouch = state v.CanQuery = state end
+		end
+	end
+
+DF:AddToggle("AntiPaint", {
+		Text = "Anti Paint",
+		Default = false,
+		Callback = function(state)
+			if state then deleteAllPaintParts() watchNewPaintParts() setTouchQuery(false)
+			else restorePaintParts() disconnectWatchers() setTouchQuery(true) end
+		end
+	})
+
 DF:AddToggle("AntiKick", {
 	Text = "Anti Kick",
 	Default = false,
