@@ -16,7 +16,9 @@ local Debris = game:GetService("Debris")
 local group = game.workspace
 local spaw = game.workspace.SpawnLocation
 local hue = 0
-
+local posX = 0
+local posY = 15
+local posZ = 0
 game.Workspace.Map.MapNoises.NoisePart1.Sound1.Volume = 0
 game.Workspace.Map.MapNoises.NoisePart2.Sound1.Volume = 0
 game.Workspace.Map.MapNoises.NoisePart3.Sound1.Volume = 0
@@ -1235,9 +1237,7 @@ CTR:AddToggle("LoopGrab", {
 	task.spawn(function()
 	while LockB do
 	grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
-	--grabB:FireServer(rightDet, tar.Character.HumanoidRootPart, rightWeld)
 	task.wait()
-	--dropB:FireServer(rightWeld, tar.Character.HumanoidRootPart)
 	dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
 	end
 	end)
@@ -1281,7 +1281,7 @@ CTR:AddToggle("LoopGrab", {
 	bodypos.Position = Vector3.new(0, 1000000, 0)
 	bodypos.Parent = toysFolder:FindFirstChild("FoodPlate").SoundPart
     local bop = Instance.new("BodyPosition")
-	bop.Position = char.HumanoidRootPart.Position + Vector3.new(0, 15, 0)
+	bop.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
 	bop.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
 	bop.D = 100
 	bop.Parent = tar.Character.HumanoidRootPart
@@ -1309,6 +1309,7 @@ CTR:AddToggle("LoopGrab", {
 	end
 	end)
 	task.spawn(function()
+	--tar.Character.HumanoidRootPart.BodyPosition.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
 	ragdoll()
 	end)
 	end
@@ -1356,7 +1357,7 @@ CTR:AddToggle("LoopGrab", {
 	bodypos.Position = Vector3.new(0, 1000000, 0)
 	bodypos.Parent = toysFolder:FindFirstChild("FoodPlate").SoundPart
     local bop = Instance.new("BodyPosition")
-	bop.Position = char.HumanoidRootPart.Position + Vector3.new(0, 15, 0)
+	bop.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
 	bop.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
 	bop.D = 100
 	bop.Parent = tar.Character.HumanoidRootPart
@@ -1387,6 +1388,7 @@ CTR:AddToggle("LoopGrab", {
 	end
 	end)
 	task.spawn(function()
+	--tar.Character.HumanoidRootPart.BodyPosition.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
 	ragdoll()
 	end)
 	end
@@ -1638,6 +1640,42 @@ local MyButton = TR:AddButton({
 			char.HumanoidRootPart.CFrame = pos
 			char.HumanoidRootPart.Velocity = Vector3.zero
 		end
+	end,
+})
+
+TR:AddSlider("TargetPosX", {
+	Text = "Target Pos X",
+	Default = 0,
+	Min = -20,
+	Max = 20,
+	Rounding = 1,
+	Compact = false,
+	Callback = function(Value)
+		posX = Value
+	end,
+})
+
+TR:AddSlider("TargetPosY", {
+	Text = "Target Pos Y",
+	Default = 15,
+	Min = -20,
+	Max = 20,
+	Rounding = 1,
+	Compact = false,
+	Callback = function(Value)
+		posY = Value
+	end,
+})
+
+TR:AddSlider("TargetPosZ", {
+	Text = "Target Pos Z",
+	Default = 0,
+	Min = -20,
+	Max = 20,
+	Rounding = 1,
+	Compact = false,
+	Callback = function(Value)
+		posZ = Value
 	end,
 })
 
