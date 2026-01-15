@@ -1442,7 +1442,7 @@ TR:AddToggle("LoopBlobKick", {
     seatParent.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
 	task.wait(0.25)
 	--dropB:FireServer(rightWeld, tar.Character.HumanoidRootPart)
-	--task.wait(0.25)
+	task.wait(0.25)
 	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or LgrabB == false
 	if LgrabB == false then
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
