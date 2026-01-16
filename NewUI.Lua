@@ -419,16 +419,28 @@ GB:AddToggle("FartherReach", {
     end,
 })
 
-GB:AddSlider("LagInterval", {
-        Text = "Lag Interval",
-        Default = 1,
-        Min = 0,
-        Max = 1,
+GB:AddSlider("LinesAmount", {
+        Text = "Lines Amount",
+        Default = 100,
+        Min = 100,
+        Max = 1000,
         Rounding = 1,
         Callback = function(Value)
-        LagIntervalsec = Value
+        LagLinesAmount = Value
         end
 })
+
+local function LagAmount(times)
+    for i = 1, times do
+        GrabEvents.CreateGrabLine:FireServer(spaw, spaw.CFrame)
+		GrabEvents.DestroyGrabLine:FireServer(char.Torso, char.Torso.CFrame)
+		GrabEvents.CreateGrabLine:FireServer(spaw, spaw.CFrame)
+		GrabEvents.DestroyGrabLine:FireServer(char.Torso, char.Torso.CFrame)
+		GrabEvents.CreateGrabLine:FireServer(spaw, spaw.CFrame)
+		GrabEvents.DestroyGrabLine:FireServer(char.Torso, char.Torso.CFrame)
+        task.wait()
+    end
+end
 
 GB:AddToggle("Lag", {
         Text = "Lag",
@@ -438,9 +450,8 @@ GB:AddToggle("Lag", {
 		Lagline = true
         task.spawn(function()
             while Lagline do
-			GrabEvents.CreateGrabLine:FireServer(char.HumanoidRootPart, char.HumanoidRootPart.CFrame, false)
-			GrabEvents.DestroyGrabLine:FireServer(char.HumanoidRootPart, char.HumanoidRootPart.CFrame, false)
-			task.wait()  
+			LagAmount(LagLinesAmount)
+			task.wait(5)  
             end
         end)
         else
@@ -1399,8 +1410,8 @@ CTR:AddToggle("LoopGrab", {
 	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
-	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or LgrabkS == false
-    if LgrabS == false then
+	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or LgrabkF == false
+    if LgrabkF == false then
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
 	tar.Character.HumanoidRootPart.BodyGyro:Destroy()
 	else
@@ -1905,6 +1916,7 @@ Toggles.Strength:SetValue(false)
 Toggles.PacketLag:SetValue(false)
 Toggles.FartherReach:SetValue(false)
 Toggles.AntiInputLag:SetValue(false)
+Toggles.Lag:SetValue(false)
 jerkoffanimation = false
 task.wait()
 Library:Unload()
