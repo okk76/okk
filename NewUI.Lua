@@ -419,6 +419,36 @@ GB:AddToggle("FartherReach", {
     end,
 })
 
+GB:AddSlider("LagInterval", {
+        Text = "Lag Interval",
+        Default = 1,
+        Min = 0,
+        Max = 1,
+        Rounding = 1,
+        Callback = function(Value)
+        LagIntervalsec = Value
+        end
+})
+
+GB:AddToggle("Lag", {
+        Text = "Lag",
+        Default = false,
+        Callback = function(Value)
+		if Value then
+		Lagline = true
+        task.spawn(function()
+            while Lagline do
+			GrabEvents.CreateGrabLine:FireServer(char.HumanoidRootPart, char.HumanoidRootPart.CFrame, false)
+			GrabEvents.DestroyGrabLine:FireServer(char.HumanoidRootPart, char.HumanoidRootPart.CFrame, false)
+			task.wait()  
+            end
+        end)
+        else
+            Lagline = false
+        end
+	end,
+})
+
 GB:AddSlider("PacketStrength", {
         Text = "Packet Lag Strength",
         Default = 500,
@@ -1302,9 +1332,9 @@ CTR:AddToggle("LoopGrab", {
 	task.wait()
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
-	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)
-	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
-	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)
+	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame, false)
+	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame, false)
+	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame, false)
 	end
 	end)
 	task.spawn(function()
@@ -1384,8 +1414,10 @@ CTR:AddToggle("LoopGrab", {
 	task.spawn(function()
 	while LgrabkF do
 	task.wait()
-	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)
-	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
+	--GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)
+	--GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
+	GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame, false)
+	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame, false)
 	end
 	end)
 	task.spawn(function()
@@ -1451,8 +1483,8 @@ TR:AddToggle("LoopBlobKick", {
     seatParent.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
     seatParent.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
     seatParent.HumanoidRootPart.CFrame = posB
-    GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
-	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
+    GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame, false)
+	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame, false)
 	task.wait(0.25)
 	task.spawn(function()
 	while LgrabB do
