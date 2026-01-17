@@ -364,6 +364,25 @@ GB:AddToggle("Strength", {
     end,
 })
 
+GB:AddToggle("KillGrabLine", {
+    Text = "Kill GrabLine",
+	Default = false,
+	Callback = function(on)
+        if on then
+            killCon = game.workspace.ChildAdded:Connect(function(model)
+                if model.Name == "GrabParts" then
+                    local partTokill = model.GrabPart.WeldConstraint.Part1.Parent
+                    if partTokill then
+					partTokill.Humanoid:ChangeState(Enum.HumanoidStateType.Dead)
+                    end
+                end
+            end)
+        elseif killCon then
+        killCon:Disconnect()
+        end
+    end,
+})
+
 GB:AddToggle("Strong", {
 	Text = "Massless Grab",
 	Default = false,
@@ -694,21 +713,15 @@ DF:AddToggle("LoopTp", {
 	Default = false,
 	Callback = function(Value)
 	LoopTP = Value
-        if Value then
-            task.spawn(function()
-                while LoopTP do
+        task.spawn(function()
+            while LoopTP do
             local x = math.random(-500, 500)
 			local y = math.random(30, 480)
 			local z = math.random(-500, 500)
 			LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(x, y, z)
 			task.wait(0.03)
-				end
-			end)
-		else
-		task.wait(0.3)
-		LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 0, 0)
-        end
-		
+			end
+		end)
 	end,
 })
 
@@ -721,7 +734,6 @@ DF:AddToggle("DisableBarrierCollisions", {
             local plot = game.Workspace.Plots[plotName]
             
             if plot then
-                -- Обработка Barrier
                 local group = plot:FindFirstChild("Barrier")
                 if group then
                     for _, part in ipairs(group:GetChildren()) do
@@ -732,7 +744,6 @@ DF:AddToggle("DisableBarrierCollisions", {
                     end
                 end
                 
-                -- Обработка PlotArea
                 local plotArea = plot:FindFirstChild("PlotArea")
                 if plotArea and plotArea:IsA("BasePart") then
                     plotArea.CanQuery = not Value
@@ -954,50 +965,44 @@ DF:AddToggle("AntiInputLag", {
 	Default = false,
 	Callback = function(Value)
 	local Item = selectedItem
-	local hrpp = char:FindFirstChild("HumanoidRootPart").Position
-	local toy = toysFolder:FindFirstChild(Item)
-
-	local function checkantiunput()
-		if toysFolder:FindFirstChild(Item) then
-		task.wait()
-		else
+	local toy = nil
+	local holdPart = nil
+	local function chekinput()
+	if not toysFolder:FindFirstChild(Item) then
+		repeat 
+        task.wait()
+        until LocalPlayer.CanSpawnToy.Value == true or Value == false
+		pcall(function()
 		spawnItem(Item, spaw.Position + Vector3.new(0, 100, 0))
-		local startWait = tick()
-        repeat 
-        RunService.Heartbeat:Wait()
+		end)
+		repeat 
+    	task.wait()
 		toy = toysFolder:FindFirstChild(Item)
-        until toy or tick() - startWait > 1 or Value == false
-
-		local holdPart = toy:FindFirstChild("HoldPart")
+    	until toy or Value == false
+		holdPart = toy:WaitForChild("HoldPart")
+		task.wait()
 		end
 	end
-
 	if Value then
 	antiinput = true
-		spawnItem(Item, spaw.Position + Vector3.new(0, 100, 0))
-		local startWait = tick()
-        repeat 
-        RunService.Heartbeat:Wait()
-		toy = toysFolder:FindFirstChild(Item)
-        until toy or tick() - startWait > 1 or Value == false
-		toy = toysFolder:WaitForChild(Item, 5)
-		task.spawn(function()
-		while antiinput do
-		pcall(function()
-		toy = toysFolder:FindFirstChild(Item)
-		local holdPart = toy:FindFirstChild("HoldPart")
-		holdPart.DropItemRemoteFunction:InvokeServer(toy, spaw.CFrame * CFrame.new(0, 500000, 0), Vector3.new(0, 0, 0))
-		holdPart.HoldItemRemoteFunction:InvokeServer(toy, char)
-		end)
-		task.wait()
-		end
-		end)
+	task.spawn(function()
+	while antiinput do
+	chekinput()
+	task.wait()
+	pcall(function()
+	toy = toysFolder:FindFirstChild(Item)
+	holdPart = toy:WaitForChild("HoldPart")
+	end)
+	pcall(function()
+	holdPart.DropItemRemoteFunction:InvokeServer(toy, spaw.CFrame * CFrame.new(0, 500000, 0), Vector3.new(0, 0, 0))
+	holdPart.HoldItemRemoteFunction:InvokeServer(toy, char)
+	end)
+	end
+	end)
 	else
 		antiinput = false
 		if toysFolder:FindFirstChild(Item) then
-		DestroyT(toy)
-		else
-		task.wait()
+		DestroyT(toysFolder:FindFirstChild(Item))
 		end
       end
     end,
@@ -1198,6 +1203,20 @@ CTR:AddToggle("LoopGrab", {
 	task.spawn(function()
 	ragdoll()
 	end)
+	task.spawn(function()
+    while Lgrab do
+	local distance = (char.HumanoidRootPart.Position - tar.Character:FindFirstChild("HumanoidRootPart").Position).Magnitude 
+    if tar and tar.Character and tar.Character:FindFirstChild("HumanoidRootPart") then
+	if distance > 20 then
+    char.HumanoidRootPart.CFrame = tar.Character:FindFirstChild("HumanoidRootPart").CFrame * CFrame.new(0, 0, 5)
+	char.HumanoidRootPart.Velocity = Vector3.zero
+    char.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
+    char.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
+    end
+    end
+	task.wait(0.75)  
+    end
+	end)
 	else
 	Lgrab = false
 	DestroyT(pallet)
@@ -1262,7 +1281,7 @@ CTR:AddToggle("LoopGrab", {
 	end
 	end
 	if Value then
-	LgrabkS = true
+	Lgrabk = true
 	ragdoS = true
 	spawnItem("PalletLightBrown", hrp.Position + Vector3.new(0, 5, 20))
 	local startWait = tick()
@@ -1296,21 +1315,20 @@ CTR:AddToggle("LoopGrab", {
 	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
-	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or LgrabkS == false
+	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or Lgrabk == false
     if LgrabS == false then
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
 	tar.Character.HumanoidRootPart.BodyGyro:Destroy()
 	else
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-    char.HumanoidRootPart.CFrame = pos
 	task.spawn(function()
-	while LgrabkS do
+	while Lgrabk do
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()	
 	end
 	end)
 	task.spawn(function()
-	while LgrabkS do
+	while Lgrabk do
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
@@ -1320,7 +1338,7 @@ CTR:AddToggle("LoopGrab", {
 	ragdoll()
 	end)
 	task.spawn(function()
-    while LgrabkS do
+    while Lgrabk do
 	local distance = (char.HumanoidRootPart.Position - tar.Character:FindFirstChild("HumanoidRootPart").Position).Magnitude 
     if tar and tar.Character and tar.Character:FindFirstChild("HumanoidRootPart") then
 	if distance > 17.5 then
@@ -1340,7 +1358,7 @@ CTR:AddToggle("LoopGrab", {
 	end)
 	end
 	else
-	LgrabkS = false
+	Lgrabk = false
 	ragdoS = false
 	DestroyT(pallet)
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
@@ -1733,6 +1751,7 @@ Toggles.PacketLag:SetValue(false)
 Toggles.FartherReach:SetValue(false)
 Toggles.AntiInputLag:SetValue(false)
 Toggles.AntiGrabGucci:SetValue(false)
+Toggles.KillGrabLine:SetValue(false)
 jerkoffanimation = false
 task.wait()
 Library:Unload()
