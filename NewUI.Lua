@@ -37,6 +37,24 @@ spaw.Orientation = spaw.Orientation + Vector3.new(0, math.rad(10) * 0.1, 0)
 task.wait(0.1)
 end)
 
+RunService.Heartbeat:Connect(function()
+for _, cross in ipairs(LocalPlayer.PlayerGui.Crosshairs.CrosshairsFrame:GetChildren()) do
+        if cross.Name == "Frame" and cross:IsA("Frame") then
+		hue = (hue + 0.00005) % 1
+            cross.BackgroundColor3 = Color3.fromHSV(hue, 1, 1)
+        end
+    end
+end)
+
+RunService.Heartbeat:Connect(function()
+for _, cross in ipairs(LocalPlayer.PlayerGui.Crosshairs.Dot:GetChildren()) do
+        if cross.Name == "Frame" and cross:IsA("Frame") then
+		hue = (hue + 0.00005) % 1
+            cross.BackgroundColor3 = Color3.fromHSV(hue, 1, 1)
+        end
+    end
+end)
+
 local function spawnItem(itemName, position, orientation)
     task.spawn(function()
         local cframe = CFrame.new(position)
@@ -1287,6 +1305,11 @@ CTR:AddToggle("LoopGrab", {
 	while LgrabkS do
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
+	end
+	end)
+	task.spawn(function()
+	while LgrabkS do
+	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
 	end
@@ -1437,7 +1460,7 @@ TR:AddToggle("LoopBlobKick", {
     seatParent.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
     seatParent.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
     seatParent.HumanoidRootPart.CFrame = posB
-    GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame, false)
+    SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame, false)
 	task.wait(0.25)
 	task.spawn(function()
@@ -1487,9 +1510,8 @@ TR:AddToggle("LoopBlobKick", {
 	task.wait()
 	holdPart.DropItemRemoteFunction:InvokeServer(banan, hrp.CFrame * CFrame.new(-3, 5, 0), Vector3.new(0, 0, 0))
 	task.wait(0.05)
-	SetNetworkOwner:FireServer(toysFolder.FoodBanana.SoundPart, toysFolder.FoodBanana.SoundPart.CFrame)
-	GrabEvents.CreateGrabLine:FireServer(toysFolder.FoodBanana.SoundPart, Vector3.zero, toysFolder.FoodBanana.SoundPart.Position, false)   
-	GrabEvents.DestroyGrabLine:FireServer(toysFolder.FoodBanana.SoundPart)
+	SetNetworkOwner:FireServer(toysFolder.FoodBanana.SoundPart, toysFolder.FoodBanana.SoundPart.CFrame)  
+	GrabEvents.DestroyGrabLine:FireServer(toysFolder.FoodBanana.SoundPart, toysFolder.FoodBanana.SoundPart.CFrame)
 	task.spawn(function()
 	while Lbanana do
 	task.wait(0.05)
@@ -1515,49 +1537,6 @@ TR:AddToggle("LoopBlobKick", {
 		else
 		task.wait()
 		end
-	end
-	end,
-})
-
-	CTR:AddToggle("LoopSnowball", {
-	Text = "Loop Snowball",
-	Default = false,
-	Callback = function(Value)
-	local hrp = char:FindFirstChild("HumanoidRootPart")
-	local tar = selectedTarget
-	local pos = char.HumanoidRootPart.CFrame
-	if Value then
-	Lsnowball = true
-    spawnItem("BallSnowball", hrp.Position + Vector3.new(0, 5, 15))
-	local startWait = tick()
-    repeat 
-    RunService.Heartbeat:Wait()
-	bal = toysFolder:FindFirstChild("BallSnowball")
-    until bal or tick() - startWait > 1
-	task.wait()
-	SetNetworkOwner:FireServer(toysFolder.BallSnowball.SoundPart, toysFolder.BallSnowball.SoundPart.CFrame)
-	GrabEvents.CreateGrabLine:FireServer(toysFolder.BallSnowball.SoundPart, Vector3.zero, toysFolder.BallSnowball.SoundPart.Position, false)   
-	GrabEvents.DestroyGrabLine:FireServer(toysFolder.BallSnowball.SoundPart)
-	task.wait(0.5)
-	task.spawn(function()
-	while Lsnowball do
-	pcall(function()
-	spawnItem("BallSnowball", hrp.Position + Vector3.new(0, 5, 15))
-    toysFolder:WaitForChild("BallSnowball", 5)
-	task.wait(0.05)
-	bal = toysFolder:FindFirstChild("BallSnowball")
-	task.wait(0.05)
-	SetNetworkOwner:FireServer(toysFolder.BallSnowball.SoundPart, toysFolder.BallSnowball.SoundPart.CFrame)
-	GrabEvents.CreateGrabLine:FireServer(toysFolder.BallSnowball.SoundPart, Vector3.zero, toysFolder.BallSnowball.SoundPart.Position, false)   
-	GrabEvents.DestroyGrabLine:FireServer(toysFolder.BallSnowball.SoundPart)
-	task.wait(0.25)
-	bal.SoundPart.CFrame = tar.Character,HumanoidRootPart.CFrame
-	task.wait(0.1)
-	end)
-	end
-	end)
-	else
-	Lsnowball = false
 	end
 	end,
 })
@@ -1594,7 +1573,7 @@ local MyButton = TR:AddButton({
 		until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or LgrabB == false
 		seatParent.HumanoidRootPart.Anchored = true
 		task.wait(0.25)
-		GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
+		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)  
 		GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
 		tar.Character.HumanoidRootPart.BodyPosition:Destroy()
 		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
