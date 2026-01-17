@@ -508,13 +508,11 @@ DF:AddToggle("AntiGrab", {
                     local head = character.Head
                     local partOwner = head:FindFirstChild("PartOwner")
                     if partOwner then
-					ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 0)
                     Struggle:FireServer()
+					ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
 					ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 0)
-                    ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
 					task.wait()
 					char.Humanoid.Sit = false
-					ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 0)
                     end
                 end
             end)
@@ -581,6 +579,8 @@ DF:AddToggle("AntiGrabGucci", {
 							stopAntiGucci() 
 							spawnBlobman() 
 							notify("Anti Gucci", "Broken", 3)
+							char.GrabbingScript.Enabled = false
+    						char.GrabbingScript.Enabled = true
 
 							local retries = 0
 							repeat
@@ -592,6 +592,8 @@ DF:AddToggle("AntiGrabGucci", {
 							if autoGucciActive and toysFolder and toysFolder:FindFirstChild("CreatureBlobman") then
 								startAntiGucci()
 								notify("Anti Gucci", "Fixed", 3)
+								char.GrabbingScript.Enabled = false
+    							char.GrabbingScript.Enabled = true
 							end
 						end
 						task.wait(0.5) 
@@ -1056,7 +1058,7 @@ local MyButton = CTR:AddButton({
 		task.wait()
 		until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name
 		tar.Character.Humanoid.Health = 0
-		GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
+		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame) 
 		GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
     	task.wait(0.1)
     	char.HumanoidRootPart.CFrame = pos
@@ -1244,8 +1246,8 @@ CTR:AddToggle("LoopGrab", {
 	end,
 })
 
-	TR:AddToggle("LoopGrabKickStable", {
-	Text = "Loop Grab Kick Stable",
+	TR:AddToggle("LoopGrabKick", {
+	Text = "Loop Grab Kick",
 	Default = false,
 	Callback = function(Value)
 	local tar = selectedTarget
@@ -1254,7 +1256,7 @@ CTR:AddToggle("LoopGrab", {
 	local function ragdoll()
 	while ragdoS do
 	task.wait(0.05)
-	pallet.SoundPart.CFrame = tar.Character.HumanoidRootPart.CFrame
+	pallet.SoundPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 1, 0)
 	task.wait()
 	pallet.SoundPart.CFrame = CFrame.new(0, 1000000, 0)
 	end
@@ -1304,7 +1306,7 @@ CTR:AddToggle("LoopGrab", {
 	task.spawn(function()
 	while LgrabkS do
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	task.wait()
+	task.wait()	
 	end
 	end)
 	task.spawn(function()
@@ -1317,93 +1319,28 @@ CTR:AddToggle("LoopGrab", {
 	task.spawn(function()
 	ragdoll()
 	end)
+	task.spawn(function()
+    while LgrabkS do
+	local distance = (char.HumanoidRootPart.Position - tar.Character:FindFirstChild("HumanoidRootPart").Position).Magnitude 
+    if tar and tar.Character and tar.Character:FindFirstChild("HumanoidRootPart") then
+	if distance > 17.5 then
+    char.HumanoidRootPart.CFrame = tar.Character:FindFirstChild("HumanoidRootPart").CFrame * CFrame.new(0, 0, 5)
+	char.HumanoidRootPart.Velocity = Vector3.zero
+    char.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
+    char.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
+	task.wait(0.25)
+	char.HumanoidRootPart.CFrame = pos
+    char.HumanoidRootPart.Velocity = Vector3.zero
+    char.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
+    char.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
+    end
+    end
+	task.wait(0.75)  
+    end
+	end)
 	end
 	else
 	LgrabkS = false
-	ragdoS = false
-	DestroyT(pallet)
-	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
-	tar.Character.HumanoidRootPart.BodyGyro:Destroy()
-	end
-	end,
-})
-
-	TR:AddToggle("LoopGrabKickFast", {
-	Text = "Loop Grab Kick Fast",
-	Default = false,
-	Callback = function(Value)
-	local tar = selectedTarget
-	local pos = char.HumanoidRootPart.CFrame
-	local hrp = char:FindFirstChild("HumanoidRootPart")
-	local function ragdoll()
-	while ragdoS do
-	task.wait(0.05)
-	pallet.SoundPart.CFrame = tar.Character.HumanoidRootPart.CFrame
-	task.wait()
-	pallet.SoundPart.CFrame = CFrame.new(0, 1000000, 0)
-	end
-	end
-	if Value then
-	LgrabkF = true
-	ragdoS = true
-	spawnItem("PalletLightBrown", hrp.Position + Vector3.new(0, 5, 20))
-	local startWait = tick()
-	repeat 
-    RunService.Heartbeat:Wait()
-	pallet = toysFolder:FindFirstChild("PalletLightBrown")
-    until pallet or tick() - startWait > 3
-	task.wait(0.03)
-	SetNetworkOwner:FireServer(pallet.SoundPart, pallet.SoundPart.CFrame)
-	GrabEvents.DestroyGrabLine:FireServer(pallet.SoundPart, pallet.SoundPart.CFrame)
-	pallet.SoundPart.CanCollide = false
-	for _, part in ipairs(pallet:GetChildren()) do
-        if part.Name == "Part" and part:IsA("Part") then
-            part.Transparency = 1
-        end
-    end
-	local bodypos = Instance.new("BodyPosition")
-	bodypos.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-	bodypos.D = 12500
-	bodypos.Position = Vector3.new(0, 1000000, 0)
-	bodypos.Parent = toysFolder:FindFirstChild("PalletLightBrown").SoundPart
-    local bop = Instance.new("BodyPosition")
-	bop.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
-	bop.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-	bop.D = 100
-	bop.Parent = tar.Character.HumanoidRootPart
-	local bog = Instance.new("BodyGyro")
-	bog.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-	bog.Parent = tar.Character.HumanoidRootPart
-	repeat
-	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
-	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	task.wait()
-	until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or LgrabkF == false
-    if LgrabkF == false then
-	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
-	tar.Character.HumanoidRootPart.BodyGyro:Destroy()
-	else
-    char.HumanoidRootPart.CFrame = pos
-	task.spawn(function()
-	while LgrabkF do
-	task.wait()
-	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	end
-	end)
-	task.spawn(function()
-	while LgrabkF do
-	task.wait()
-	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	end
-	end)
-	task.spawn(function()
-	--tar.Character.HumanoidRootPart.BodyPosition.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
-	ragdoll()
-	end)
-	end
-	else
-	LgrabkF = false
 	ragdoS = false
 	DestroyT(pallet)
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
@@ -1506,7 +1443,7 @@ TR:AddToggle("LoopBlobKick", {
 	local parts = toysFolder:FindFirstChild("FoodBanana").EdiblePart
     repeat 
     RunService.Heartbeat:Wait()
-    until not parts or tick() - startWait > 5
+    until not parts or tick() - startWait > 3
 	task.wait()
 	holdPart.DropItemRemoteFunction:InvokeServer(banan, hrp.CFrame * CFrame.new(-3, 5, 0), Vector3.new(0, 0, 0))
 	task.wait(0.05)
@@ -1665,8 +1602,8 @@ local MyButton = TR:AddButton({
 TR:AddSlider("TargetPosX", {
 	Text = "Target Pos X",
 	Default = 0,
-	Min = -20,
-	Max = 20,
+	Min = 0,
+	Max = 15,
 	Rounding = 1,
 	Compact = false,
 	Callback = function(Value)
@@ -1677,8 +1614,8 @@ TR:AddSlider("TargetPosX", {
 TR:AddSlider("TargetPosY", {
 	Text = "Target Pos Y",
 	Default = 15,
-	Min = -20,
-	Max = 20,
+	Min = 0,
+	Max = 15,
 	Rounding = 1,
 	Compact = false,
 	Callback = function(Value)
@@ -1689,8 +1626,8 @@ TR:AddSlider("TargetPosY", {
 TR:AddSlider("TargetPosZ", {
 	Text = "Target Pos Z",
 	Default = 0,
-	Min = -20,
-	Max = 20,
+	Min = 0,
+	Max = 15,
 	Rounding = 1,
 	Compact = false,
 	Callback = function(Value)
@@ -1786,7 +1723,7 @@ Toggles.Trd:SetValue(false)
 Toggles.PLCD:SetValue(false)
 Toggles.Strong:SetValue(false)
 Toggles.DisableBarrierCollisions:SetValue(false)
-Toggles.LoopGrabKickStable:SetValue(false)
+Toggles.LoopGrabKick:SetValue(false)
 Toggles.LoopBlobKick:SetValue(false)
 Toggles.LoopGrab:SetValue(false)
 Toggles.LoopBanana:SetValue(false)
@@ -1795,6 +1732,7 @@ Toggles.Strength:SetValue(false)
 Toggles.PacketLag:SetValue(false)
 Toggles.FartherReach:SetValue(false)
 Toggles.AntiInputLag:SetValue(false)
+Toggles.AntiGrabGucci:SetValue(false)
 jerkoffanimation = false
 task.wait()
 Library:Unload()
