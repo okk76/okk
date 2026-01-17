@@ -1334,8 +1334,30 @@ CTR:AddToggle("LoopGrab", {
 	ragdoll()
 	end)
 	task.spawn(function()
+	while Lgrabk do
+	if tar and tar.Character and tar.Character:FindFirstChild("HumanoidRootPart") then
+	local tRoot = tar.Character:FindFirstChild("HumanoidRootPart")
+	if not tRoot.BodyPosition then
+	local bop = Instance.new("BodyPosition")
+	bop.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
+	bop.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+	bop.D = 100
+	bop.Parent = tRoot
+	end
+	if not tRoot.BodyGyro then
+	local bog = Instance.new("BodyGyro")
+	bog.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
+	bog.Parent = tRoot
+	end
+	else
+	task.wait()
+	end
+	task.wait()
+	end
+	end)
+	task.spawn(function()
     while Lgrabk do
-	local distance = (char.HumanoidRootPart.Position - tar.Character:FindFirstChild("HumanoidRootPart").Position).Magnitude 
+	local distance = (char.HumanoidRootPart.Position - tar.Character:FindFirstChild("HumanoidRootPart").Position).Magnitude
     if tar and tar.Character and tar.Character:FindFirstChild("HumanoidRootPart") then
 	if distance > 17.5 then
     char.HumanoidRootPart.CFrame = tar.Character:FindFirstChild("HumanoidRootPart").CFrame * CFrame.new(0, 0, 5)
