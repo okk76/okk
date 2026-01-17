@@ -97,8 +97,8 @@ local Toggles = Library.Toggles
 Library.ForceCheckbox = false
 Library.ShowToggleFrameInKeybinds = true
 local Window = Library:CreateWindow({
-	Title = "Happy Mod",
-	Footer = "это красти краб? нет это патрик",
+	Title = "изи бриджи",
+	Footer = "бэм бэм бэм",
 	NotifySide = "Right",
 	ShowCustomCursor = false,
 })
@@ -598,8 +598,6 @@ DF:AddToggle("AntiGrabGucci", {
 							stopAntiGucci() 
 							spawnBlobman() 
 							notify("Anti Gucci", "Broken", 3)
-							char.GrabbingScript.Enabled = false
-    						char.GrabbingScript.Enabled = true
 
 							local retries = 0
 							repeat
@@ -611,8 +609,6 @@ DF:AddToggle("AntiGrabGucci", {
 							if autoGucciActive and toysFolder and toysFolder:FindFirstChild("CreatureBlobman") then
 								startAntiGucci()
 								notify("Anti Gucci", "Fixed", 3)
-								char.GrabbingScript.Enabled = false
-    							char.GrabbingScript.Enabled = true
 							end
 						end
 						task.wait(0.5) 
