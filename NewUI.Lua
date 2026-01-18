@@ -1431,10 +1431,10 @@ TR:AddToggle("LoopBlobKick", {
     seatParent.HumanoidRootPart.CFrame = posB
 	task.wait(0.25)
 	task.spawn(function()
-	while LgrabB do      
+	while LgrabB do
+	task.wait()      
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame, false)
-	task.wait()
 	end
 	end)
 	task.spawn(function()
@@ -1616,6 +1616,24 @@ local MyButton = TR:AddButton({
 		else
 		GrabAntiKick = false
 		end
+	end,
+})
+
+BL:AddToggle("AutoSit", {
+	Text = "Auto Sit",
+	Default = false,
+	Callback = function(Value)
+	local blob = toysFolder:FindFirstChild("CreatureBlobman")
+	if Value then
+	autosit = true
+	task.spawn(function()
+	while autosit do
+	if not blob then
+	
+	end
+	end
+	end)
+	end
 	end,
 })
 
