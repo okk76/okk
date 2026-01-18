@@ -1268,6 +1268,7 @@ CTR:AddToggle("LoopGrab", {
 	local tar = selectedTarget
 	local pos = char.HumanoidRootPart.CFrame
 	local hrp = char:FindFirstChild("HumanoidRootPart")
+	local tRoot = tar.Character:FindFirstChild("HumanoidRootPart")
 	local function ragdoll()
 	while ragdoS do
 	task.wait(0.05)
@@ -1334,28 +1335,6 @@ CTR:AddToggle("LoopGrab", {
 	ragdoll()
 	end)
 	task.spawn(function()
-	while Lgrabk do
-	if tar and tar.Character and tar.Character:FindFirstChild("HumanoidRootPart") then
-	local tRoot = tar.Character:FindFirstChild("HumanoidRootPart")
-	if not tRoot.BodyPosition then
-	local bop = Instance.new("BodyPosition")
-	bop.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
-	bop.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-	bop.D = 100
-	bop.Parent = tRoot
-	end
-	if not tRoot.BodyGyro then
-	local bog = Instance.new("BodyGyro")
-	bog.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-	bog.Parent = tRoot
-	end
-	else
-	task.wait()
-	end
-	task.wait()
-	end
-	end)
-	task.spawn(function()
     while Lgrabk do
 	local distance = (char.HumanoidRootPart.Position - tar.Character:FindFirstChild("HumanoidRootPart").Position).Magnitude
     if tar and tar.Character and tar.Character:FindFirstChild("HumanoidRootPart") then
@@ -1373,6 +1352,30 @@ CTR:AddToggle("LoopGrab", {
     end
 	task.wait(0.75)  
     end
+	end)
+	task.spawn(function()
+	
+	local function setup(character)
+    if not character or not character:FindFirstChild("HumanoidRootPart") then
+    return nil, nil
+    end
+    tRoot = character.HumanoidRootPart
+    local bop = Instance.new("BodyPosition")
+    bop.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
+    bop.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+    bop.D = 100
+    bop.Parent = tRoot
+    local bog = Instance.new("BodyGyro")
+    bog.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
+    bog.Parent = tRoot
+    return bop, bog
+	end
+
+	tar.CharacterAdded:Connect(function(character)
+	character:WaitForChild("HumanoidRootPart")
+	setup(character)
+	end)
+
 	end)
 	end
 	else
