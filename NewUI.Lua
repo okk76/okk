@@ -1267,6 +1267,7 @@ CTR:AddToggle("LoopGrab", {
 	Callback = function(Value)
 	local tar = selectedTarget
 	local pos = char.HumanoidRootPart.CFrame
+	local posP = char.HumanoidRootPart.Position
 	local hrp = char:FindFirstChild("HumanoidRootPart")
 	local tRoot = tar.Character:FindFirstChild("HumanoidRootPart")
 	local function ragdoll()
@@ -1361,7 +1362,7 @@ CTR:AddToggle("LoopGrab", {
     end
     tRoot = character.HumanoidRootPart
     local bop = Instance.new("BodyPosition")
-    bop.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
+    bop.Position = posP + Vector3.new(posX, posY, posZ)
     bop.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
     bop.D = 100
     bop.Parent = tRoot
