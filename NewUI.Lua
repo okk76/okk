@@ -1499,13 +1499,13 @@ TR:AddToggle("LoopBlobKick", {
 	task.spawn(function()
 	while Lbanana do
 	task.wait(0.05)
-	banan.SoundPart.Velocity = Vector3.new(250, 0, 250)
+	banan.SoundPart.Velocity = Vector3.new(300, 0, 300)
 	task.wait(0.05)
-	banan.SoundPart.Velocity = Vector3.new(-250, 0, 250)
+	banan.SoundPart.Velocity = Vector3.new(-300, 0, 300)
 	task.wait(0.05)
-	banan.SoundPart.Velocity = Vector3.new(-250, 0, -250)
+	banan.SoundPart.Velocity = Vector3.new(-300, 0, -300)
 	task.wait(0.05)
-	banan.SoundPart.Velocity = Vector3.new(250, 0, -250)
+	banan.SoundPart.Velocity = Vector3.new(300, 0, -300)
 	end
 	end)
 	else
@@ -1647,12 +1647,7 @@ BL:AddToggle("AutoSit", {
 	Default = false,
 	Callback = function(Value)
 	local blob = toysFolder:FindFirstChild("CreatureBlobman")
-	if Value then
-	autosit = true
-	task.spawn(function()
-	while autosit do
-	task.wait()
-	if not blob then
+	local function spawnblobman()
 	repeat 
     task.wait()
     until LocalPlayer.CanSpawnToy.Value == true or Value == false
@@ -1663,9 +1658,25 @@ BL:AddToggle("AutoSit", {
     task.wait()
 	blob = toysFolder:FindFirstChild("CreatureBlobman")
     until blob or Value == false
+	
 	end
+	if Value then
+	autosit = true
+	task.spawn(function()
+	while autosit do
+	if not blob then
+	spawnblobman()
 	blob:WaitForChild("VehicleSeat")
 	blob.VehicleSeat:Sit(char.Humanoid)
+	end
+	task.wait()
+	if blob:FindFirstChild("VehicleSeat") then
+	blob.VehicleSeat:Sit(char.Humanoid)
+	else
+	spawnblobman()
+	blob:WaitForChild("VehicleSeat")
+	blob.VehicleSeat:Sit(char.Humanoid)
+	end
 	end
 	end)
 	else
