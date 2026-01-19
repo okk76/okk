@@ -326,7 +326,7 @@ GB:AddSlider("StrengthPower", {
 	Text = "Strength Power",
 	Default = 300,
 	Min = 300,
-	Max = 40000,
+	Max = 10000000,
 	Rounding = 1,
 	Compact = false,
 	Callback = function(Value)
@@ -544,6 +544,54 @@ DF:AddToggle("AntiGrab", {
 	end,
 })
 
+DF:AddDropdown("Type Of Counterattack", {
+	Values = { "Kill", "Fling" },
+	Default = nil, -- number index of the value / string
+	Multi = false, -- true / false, allows multiple choices to be selected
+	Callback = function(Value)
+		TypeOfCounterattack = Value
+	end,
+})
+
+DF:AddToggle("Counterattack", {
+	Text = "Counterattack",
+	Default = false,
+	Callback = function(Value)
+	if Value then
+    CA = RunService.Heartbeat:Connect(function()
+    if char and char:FindFirstChild("Head") then
+    local head = char.Head
+    local partOwner = head:FindFirstChild("PartOwner")
+    if partOwner then 
+	local targeted = P:FindFirstChild(partOwner.Value)
+	if targeted and targeted.Character then
+	if TypeOfCounterattack == "Kill" then
+	SetNetworkOwner:FireServer(targeted.Character.HumanoidRootPart, targeted.Character.HumanoidRootPart.CFrame)
+	targeted.Character.Humanoid.Health = 0
+	SetNetworkOwner:FireServer(targeted.Character.HumanoidRootPart, targeted.Character.HumanoidRootPart.CFrame)
+	GrabEvents.DestroyGrabLine:FireServer(targeted.Character.HumanoidRootPart)
+	elseif TypeOfCounterattack == "Fling" then
+	SetNetworkOwner:FireServer(targeted.Character.HumanoidRootPart, targeted.Character.HumanoidRootPart.CFrame)
+	local VEL = Instance.new("BodyVelocity", targeted.Character.HumanoidRootPart)
+	VEL.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+   	VEL.Velocity = Vector3.new(1000000, 1000000, 10000000)
+	task.wait(1)
+	targeted.Character.HumanoidRootPart.BodyVelocity:Destroy()
+	end
+	end
+    end
+    end
+	task.wait()
+    end)
+    else
+	if CA then
+	CA:Disconnect()
+	CA = nil
+    end
+    end
+	end,
+})
+
 local antiGucciConnection
 	local safePosition
 	local restoreFrames = 0
@@ -619,152 +667,6 @@ DF:AddToggle("AntiGrabGucci", {
 				stopAntiGucci()
 				notify("Anti Gucci", "Disabled", 3)
 		end
-	end,
-})
-
-DF:AddToggle("AntiVoid", {
-	Text = "Anti Void",
-	Default = false,
-	Callback = function(Value)
-	if Value then
-	game.Workspace.FallenPartsDestroyHeight = -10e+37
-   	else
-	game.Workspace.FallenPartsDestroyHeight = -100
-	end
-	end,
-})
-
-local MyButton = DF:AddButton({
-	Text = "Anti Banana (Delete Legs)",
-	Func = function()
-	repeat
-	ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 3)
-	task.wait()
-	until char.Humanoid.Ragdolled.Value == true or char.Humanoid.Health == 0
-	char["Left Leg"].CFrame = CFrame.new(100000, -100000, 100000)
-	char["Right Leg"].CFrame = CFrame.new(100000, -100000, 100000)
-	task.wait(0.1)
-	SetNetworkOwner:FireServer(char.HumanoidRootPart, char.HumanoidRootPart.CFrame)
-	task.wait(0.1)
-	task.spawn(function()
-    while char.Humanoid.Health > 0 do
-	char.Humanoid.HipHeight = 2
-	task.wait()
-	end
-	end)
-	Toggles.Trd:SetValue(false)
-	Toggles.Trd:SetValue(true)
-	end,
-})
-
-
-DF:AddToggle("AntiLag", {
-	Text = "Anti Lag",
-	Default = false,
-	Callback = function(Value)
-	if Value then
-LocalPlayer.PlayerScripts.CharacterAndBeamMove.Disabled = true
-   	else
-LocalPlayer.PlayerScripts.CharacterAndBeamMove.Disabled = false
-	end
-	end,
-})
-
-DF:AddToggle("WaterWalk", {
-	Text = "WaterWalk",
-	Default = false,
-	Callback = function(Value)
-	local water = game.Workspace.Map.AlwaysHereTweenedObjects.Ocean.Object:FindFirstChild("ObjectModel")
-if water then
-    for _, part in ipairs(water:GetChildren()) do
-        if part.Name == "Ocean" and part:IsA("Part") then
-            part.CanCollide = Value
-        end
-    end
-end
-	end,
-})
-
-DF:AddSlider("WaterTransparency", {
-	Text = "Water Transparency",
-	Default = 0,
-	Min = 0,
-	Max = 1,
-	Rounding = 1,
-	Compact = false,
-	Callback = function(Num)
-	local water = game.Workspace.Map.AlwaysHereTweenedObjects.Ocean.Object:FindFirstChild("ObjectModel")
-if water then
-    for _, part in ipairs(water:GetChildren()) do
-        if part.Name == "Ocean" and part:IsA("Part") then
-            part.Transparency = Num
-        end
-    end
-end
-	end,
-})
-
-DF:AddToggle("LoopTp", {
-	Text = "Loop TP",
-	Default = false,
-	Callback = function(Value)
-	LoopTP = Value
-        task.spawn(function()
-            while LoopTP do
-            local x = math.random(-500, 500)
-			local y = math.random(30, 480)
-			local z = math.random(-500, 500)
-			LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(x, y, z)
-			task.wait(0.03)
-			end
-		end)
-	end,
-})
-
-DF:AddToggle("DisableBarrierCollisions", {
-	Text = "Disable Barrier Collisions",
-	Default = false,
-	Callback = function(Value)
-	for plotNumber = 1, 5 do
-            local plotName = "Plot" .. plotNumber
-            local plot = game.Workspace.Plots[plotName]
-            
-            if plot then
-                local group = plot:FindFirstChild("Barrier")
-                if group then
-                    for _, part in ipairs(group:GetChildren()) do
-                        if part.Name == "PlotBarrier" and part:IsA("Part") then
-                            part.CanCollide = not Value
-                            part.CanQuery = not Value
-                        end
-                    end
-                end
-                
-                local plotArea = plot:FindFirstChild("PlotArea")
-                if plotArea and plotArea:IsA("BasePart") then
-                    plotArea.CanQuery = not Value
-                end
-            end
-        end
-	end,
-})
-
-local MyButton = DF:AddButton({
-	Text = "Break Barrier",
-	Func = function()
-	local hrp = char:FindFirstChild("HumanoidRootPart")
-		spawnItem("FoodHamburger", spaw.Position + Vector3.new(0, 100, 0))
-		local startWait = tick()
-        repeat 
-        RunService.Heartbeat:Wait()
-		breaker = toysFolder:FindFirstChild("FoodHamburger")
-        until breaker or tick() - startWait > 1
-		task.wait(0.05)
-		breaker.HoldPart.HoldItemRemoteFunction:InvokeServer(breaker, char)
-		task.wait()
-		ReplicatedStorage.HoldEvents.Use:FireServer(breaker)
-		task.wait(1.88)
-		hrp.CFrame = CFrame.new(250, 1, 460)
 	end,
 })
 
@@ -947,6 +849,18 @@ DF:AddToggle("AntiKick", {
 	end,
 })
 
+DF:AddToggle("AntiLag", {
+	Text = "Anti Lag",
+	Default = false,
+	Callback = function(Value)
+	if Value then
+LocalPlayer.PlayerScripts.CharacterAndBeamMove.Disabled = true
+   	else
+LocalPlayer.PlayerScripts.CharacterAndBeamMove.Disabled = false
+	end
+	end,
+})
+
 DF:AddDropdown("Anti Input Lag Item", {
 	Values = { "PoopPileSparkle", "FoodHamburger", "CupMugWhite", "FoodBanana", "FoodCoconut", "FoodSodaCan", "CupMugBrown", "FoodBread", "FoodBroccoli", "FoodDippyEgg", "FoodDonut", "FoodHotdog", "FoodMayonnaise", "FoodMeatStick", "FoodMushroomPoison", "FoodPizzaCheese", "PoopPile", "FoodPizzaPepperoni", "FoodFrenchFries", "FoodCakePink", "InstrumentBrassBugle", "InstrumentBrassTrumpet", "InstrumentBrassVuvuzela", "InstrumentDrumBongos", "InstrumentDrumSnare", "InstrumentGuitarAcoustic", "InstrumentGuitarBanjo", "InstrumentGuitarLyre", "InstrumentGuitarUkulele", "InstrumentGuitarViolin", "InstrumentPianoKeyboard", "InstrumentPianoMelodica", "InstrumentVoiceMicrophone", "InstrumentWoodwindOcarina", "InstrumentWoodwindSaxophone" },
 	Default = nil, -- number index of the value / string
@@ -1002,6 +916,140 @@ DF:AddToggle("AntiInputLag", {
 		end
       end
     end,
+})
+
+local MyButton = DF:AddButton({
+	Text = "Anti Banana (Delete Legs)",
+	Func = function()
+	repeat
+	ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 3)
+	task.wait()
+	until char.Humanoid.Ragdolled.Value == true or char.Humanoid.Health == 0
+	char["Left Leg"].CFrame = CFrame.new(100000, -100000, 100000)
+	char["Right Leg"].CFrame = CFrame.new(100000, -100000, 100000)
+	task.wait(0.1)
+	SetNetworkOwner:FireServer(char.HumanoidRootPart, char.HumanoidRootPart.CFrame)
+	task.wait(0.1)
+	task.spawn(function()
+    while char.Humanoid.Health > 0 do
+	char.Humanoid.HipHeight = 2
+	task.wait()
+	end
+	end)
+	Toggles.Trd:SetValue(false)
+	Toggles.Trd:SetValue(true)
+	end,
+})
+
+DF:AddToggle("DisableBarrierCollisions", {
+	Text = "Disable Barrier Collisions",
+	Default = false,
+	Callback = function(Value)
+	for plotNumber = 1, 5 do
+            local plotName = "Plot" .. plotNumber
+            local plot = game.Workspace.Plots[plotName]
+            
+            if plot then
+                local group = plot:FindFirstChild("Barrier")
+                if group then
+                    for _, part in ipairs(group:GetChildren()) do
+                        if part.Name == "PlotBarrier" and part:IsA("Part") then
+                            part.CanCollide = not Value
+                            part.CanQuery = not Value
+                        end
+                    end
+                end
+                
+                local plotArea = plot:FindFirstChild("PlotArea")
+                if plotArea and plotArea:IsA("BasePart") then
+                    plotArea.CanQuery = not Value
+                end
+            end
+        end
+	end,
+})
+
+local MyButton = DF:AddButton({
+	Text = "Break Barrier",
+	Func = function()
+	local hrp = char:FindFirstChild("HumanoidRootPart")
+	local breaker
+	repeat 
+    task.wait()
+    until LocalPlayer.CanSpawnToy.Value == true
+	pcall(function()
+	spawnItem("FoodHamburger", spaw.Position + Vector3.new(0, 100, 0))	
+	end)
+	local breaker = toysFolder:WaitForChild("FoodHamburger")
+	local holdpart = breaker:WaitForChild("HoldPart")
+	holdpart.HoldItemRemoteFunction:InvokeServer(breaker, char)
+	ReplicatedStorage.HoldEvents.Use:FireServer(breaker)
+	task.wait(1.8)
+	hrp.CFrame = CFrame.new(250, 1, 460)
+	end,
+})
+
+DF:AddToggle("WaterWalk", {
+	Text = "WaterWalk",
+	Default = false,
+	Callback = function(Value)
+	local water = game.Workspace.Map.AlwaysHereTweenedObjects.Ocean.Object:FindFirstChild("ObjectModel")
+if water then
+    for _, part in ipairs(water:GetChildren()) do
+        if part.Name == "Ocean" and part:IsA("Part") then
+            part.CanCollide = Value
+        end
+    end
+end
+	end,
+})
+
+DF:AddSlider("WaterTransparency", {
+	Text = "Water Transparency",
+	Default = 0,
+	Min = 0,
+	Max = 1,
+	Rounding = 1,
+	Compact = false,
+	Callback = function(Num)
+	local water = game.Workspace.Map.AlwaysHereTweenedObjects.Ocean.Object:FindFirstChild("ObjectModel")
+if water then
+    for _, part in ipairs(water:GetChildren()) do
+        if part.Name == "Ocean" and part:IsA("Part") then
+            part.Transparency = Num
+        end
+    end
+end
+	end,
+})
+
+DF:AddToggle("AntiVoid", {
+	Text = "Anti Void",
+	Default = false,
+	Callback = function(Value)
+	if Value then
+	game.Workspace.FallenPartsDestroyHeight = -10e+37
+   	else
+	game.Workspace.FallenPartsDestroyHeight = -100
+	end
+	end,
+})
+
+DF:AddToggle("LoopTp", {
+	Text = "Loop TP",
+	Default = false,
+	Callback = function(Value)
+	LoopTP = Value
+        task.spawn(function()
+            while LoopTP do
+            local x = math.random(-500, 500)
+			local y = math.random(30, 480)
+			local z = math.random(-500, 500)
+			LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(x, y, z)
+			task.wait(0.03)
+			end
+		end)
+	end,
 })
 
 local function getPlayerList()
@@ -1470,6 +1518,9 @@ TR:AddToggle("LoopBlobKick", {
 	local pos = char.HumanoidRootPart.CFrame
 	if Value then
 	Lbanana = true
+	repeat 
+    task.wait()
+    until LocalPlayer.CanSpawnToy.Value == true or Value == false
     spawnItem("FoodBanana", hrp.Position + Vector3.new(0, 5, 20))
 	local startWait = tick()
     repeat 
