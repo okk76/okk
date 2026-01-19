@@ -1620,6 +1620,28 @@ local MyButton = TR:AddButton({
 	end,
 })
 
+BL:AddLabel("Spawn And Sit Blobman"):AddKeyPicker("KeyPicker", {
+	Default = "X",
+	Callback = function()
+	local blobm
+	task.wait()
+	if not blob then
+	repeat 
+    task.wait()
+    until LocalPlayer.CanSpawnToy.Value == true
+	pcall(function()
+	spawnItem("CreatureBlobman", char.HumanoidRootPart.Position + Vector3.new(0, 5, 20))
+	end)
+	repeat 
+    task.wait()
+	blobm = toysFolder:FindFirstChild("CreatureBlobman")
+    until blobm
+	end
+	blobm:WaitForChild("VehicleSeat")
+	blobm.VehicleSeat:Sit(char.Humanoid)
+	end,
+})
+
 BL:AddToggle("AutoSit", {
 	Text = "Auto Sit",
 	Default = false,
@@ -1629,11 +1651,25 @@ BL:AddToggle("AutoSit", {
 	autosit = true
 	task.spawn(function()
 	while autosit do
+	task.wait()
 	if not blob then
-	
+	repeat 
+    task.wait()
+    until LocalPlayer.CanSpawnToy.Value == true or Value == false
+	pcall(function()
+	spawnItem("CreatureBlobman", char.HumanoidRootPart.Position + Vector3.new(0, 5, 20))
+	end)
+	repeat 
+    task.wait()
+	blob = toysFolder:FindFirstChild("CreatureBlobman")
+    until blob or Value == false
 	end
+	blob:WaitForChild("VehicleSeat")
+	blob.VehicleSeat:Sit(char.Humanoid)
 	end
 	end)
+	else
+	autosit = false
 	end
 	end,
 })
