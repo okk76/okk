@@ -1399,7 +1399,7 @@ CTR:AddToggle("LoopGrab", {
     char.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
     end
     end
-	task.wait(0.75)  
+	task.wait(0.25)  
     end
 	end)
 	task.spawn(function()
