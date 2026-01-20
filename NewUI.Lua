@@ -541,8 +541,8 @@ DF:AddToggle("AntiGrab", {
                     local partOwner = head:FindFirstChild("PartOwner")
                     if partOwner then
                     Struggle:FireServer()
+					ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 0.1)
 					ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
-					ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 0)
 					task.wait()
 					char.Humanoid.Sit = false
                     end
@@ -935,7 +935,7 @@ local MyButton = DF:AddButton({
 	Text = "Anti Banana (Delete Legs)",
 	Func = function()
 	repeat
-	ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 3)
+	ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 0.2)
 	task.wait()
 	until char.Humanoid.Ragdolled.Value == true or char.Humanoid.Health == 0
 	char["Left Leg"].CFrame = CFrame.new(100000, -100000, 100000)
@@ -1094,7 +1094,7 @@ local function getPlayerFromSelection(selection)
 
 TR:AddDropdown("TargetPlayer", {
 		Values = getPlayerList(),
-		Default = 1,
+		Default = nil,
 		Multi = false,
 		Callback = function(Selected)
 		selectedTarget = getPlayerFromSelection(Selected)
@@ -1817,7 +1817,7 @@ TR:AddSlider("TargetPosZ", {
 
 WL:AddDropdown("SelectPlayer", {
 		Values = getPlayerList(),
-		Default = 1,
+		Default = nil,
 		Multi = false,
 		Callback = function(Selected)
 		selectedPlayer = getPlayerFromSelection(Selected)
