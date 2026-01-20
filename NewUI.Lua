@@ -118,7 +118,8 @@ local KB = Tabs.Keybinds:AddLeftGroupbox("Teleports")
 local FKB = Tabs.Keybinds:AddRightGroupbox("Functions")
 local TR = Tabs.Target:AddLeftGroupbox("Target")
 local CTR = Tabs.Target:AddRightGroupbox("Control")
-local BL = Tabs.Target:AddLeftGroupbox("Blobman Settings")
+local WL = Tabs.Target:AddLeftGroupbox("Whitelist")
+local BL = Tabs.Target:AddRightGroupbox("Blobman Settings")
 local FN = Tabs.Fun:AddLeftGroupbox("Functions")
 
 LP:AddSlider("WalkSpeed", {
@@ -312,6 +313,18 @@ LP:AddLabel("Jerk Off"):AddKeyPicker("KeyPicker", {
 	task.wait(0.075)
 	end
 	end)
+	end,
+})
+
+LP:AddToggle("Shaders", {
+	Text = "Shaders",
+	Default = false,
+	Callback = function(Value)
+	local Lighting = game:GetService("Lighting")
+	if Value then
+	
+   	else
+	end
 	end,
 })
 
@@ -1084,9 +1097,9 @@ TR:AddDropdown("TargetPlayer", {
 		Default = 1,
 		Multi = false,
 		Callback = function(Selected)
-			selectedTarget = getPlayerFromSelection(Selected)
-		end,
-	})
+		selectedTarget = getPlayerFromSelection(Selected)
+	end,
+})
 
 Options.TargetPlayer:OnChanged(function()
 Toggles.GrabAntiKick:SetValue(false)
@@ -1148,10 +1161,21 @@ local MyButton = CTR:AddButton({
 		char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 		task.wait(0.25)
 		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
-		task.wait(0.25)
+		task.wait()
+		dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
+		task.wait()
+		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
+		task.wait(0.1)
     	char.HumanoidRootPart.CFrame = pos
-		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-		task.wait(0.75)
+		task.wait(0.5)
+		dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
+		task.wait()
+		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
+		task.wait()
+		dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
+		task.wait(0.1)
+		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
+		task.wait()
 		dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
 	end,
 })
@@ -1788,6 +1812,50 @@ TR:AddSlider("TargetPosZ", {
 	Compact = false,
 	Callback = function(Value)
 		posZ = Value
+	end,
+})
+
+WL:AddDropdown("SelectPlayer", {
+		Values = getPlayerList(),
+		Default = 1,
+		Multi = false,
+		Callback = function(Selected)
+		selectedPlayer = getPlayerFromSelection(Selected)
+	end,
+})
+
+WL:AddToggle("AntiGrabPlayer", {
+	Text = "Anti Grab Player",
+	Default = false,
+	Callback = function(Value)
+	local player = selectedPlayer
+	if Value then
+            antigrabplayer = RunService.Heartbeat:Connect(function()
+			if player then
+                local character = player.Character
+                if character and character:FindFirstChild("Head") then
+                    local head = character.Head
+                    local partOwner = head:FindFirstChild("PartOwner")
+                    if partOwner then
+					local oldposition = char.HumanoidRootPart.CFrame
+                    char.HumanoidRootPart.CFrame = character.HumanoidRootPart.CFrame * CFrame.new(0, 7.5, 0)
+					task.wait()
+					SetNetworkOwner:FireServer(character.HumanoidRootPart.CFrame, character.HumanoidRootPart.CFrame)  
+					GrabEvents.DestroyGrabLine:FireServer(character.HumanoidRootPart.CFrame)
+					if partOwner and partOwner.Value == LocalPlayer.Name then
+					task.wait(0.1)
+					char.HumanoidRootPart.CFrame = oldposition
+					end
+                    end
+                end
+			end
+        end)
+    else
+        if antigrabplayer then
+            antigrabplayer:Disconnect()
+            antigrabplayer = nil
+            end
+        end
 	end,
 })
 
