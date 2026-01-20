@@ -326,7 +326,7 @@ GB:AddSlider("StrengthPower", {
 	Text = "Strength Power",
 	Default = 300,
 	Min = 300,
-	Max = 10000000,
+	Max = 100000,
 	Rounding = 1,
 	Compact = false,
 	Callback = function(Value)
@@ -545,7 +545,7 @@ DF:AddToggle("AntiGrab", {
 })
 
 DF:AddDropdown("Type Of Counterattack", {
-	Values = { "Kill", "Fling" },
+	Values = { "Fling" , "Kill" },
 	Default = nil, -- number index of the value / string
 	Multi = false, -- true / false, allows multiple choices to be selected
 	Callback = function(Value)
@@ -1403,7 +1403,7 @@ CTR:AddToggle("LoopGrab", {
     end
 	end)
 	task.spawn(function()
-	
+	if Lgrabk then
 	local function setup(character)
     if not character or not character:FindFirstChild("HumanoidRootPart") then
     return nil, nil
@@ -1419,12 +1419,11 @@ CTR:AddToggle("LoopGrab", {
     bog.Parent = tRoot
     return bop, bog
 	end
-
 	tar.CharacterAdded:Connect(function(character)
 	character:WaitForChild("HumanoidRootPart")
 	setup(character)
 	end)
-
+	end
 	end)
 	end
 	else
@@ -1891,6 +1890,7 @@ Toggles.FartherReach:SetValue(false)
 Toggles.AntiInputLag:SetValue(false)
 Toggles.AntiGrabGucci:SetValue(false)
 Toggles.KillGrabLine:SetValue(false)
+Toggles.Counterattack:SetValue(false)
 jerkoffanimation = false
 task.wait()
 Library:Unload()
