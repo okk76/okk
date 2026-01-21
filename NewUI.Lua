@@ -1081,6 +1081,14 @@ P.PlayerRemoving:Connect(function()
     Options.TargetPlayer:SetValues(getPlayerList())
 end)
 
+P.PlayerAdded:Connect(function()
+    Options.SelectPlayer:SetValues(getPlayerList())
+end)
+
+P.PlayerRemoving:Connect(function()
+    Options.SelectPlayer:SetValues(getPlayerList())
+end)
+
 local function getPlayerFromSelection(selection)
 		if not selection then return nil end
 		local username = selection:match("%((.-)%)")
@@ -1825,25 +1833,25 @@ WL:AddToggle("AntiGrabPlayer", {
                 if character and character:FindFirstChild("Head") then
                     local head = character.Head
                     local partOwner = head:FindFirstChild("PartOwner")
-                    if partOwner then
 					local oldposition = char.HumanoidRootPart.CFrame
-                    char.HumanoidRootPart.CFrame = character.HumanoidRootPart.CFrame * CFrame.new(0, 7.5, 0)
+                    if partOwner then
+					if partOwner.Value == LocalPlayer.Name then
 					task.wait()
-					SetNetworkOwner:FireServer(character.HumanoidRootPart.CFrame, character.HumanoidRootPart.CFrame)  
-					GrabEvents.DestroyGrabLine:FireServer(character.HumanoidRootPart.CFrame)
-					if partOwner and partOwner.Value == LocalPlayer.Name then
-					task.wait(0.1)
+					else
+					char.HumanoidRootPart.CFrame = character.HumanoidRootPart.CFrame * CFrame.new(0, -7.5, 0)
+					char.HumanoidRootPart.Velocity = Vector3.zero
+					task.wait()
+					SetNetworkOwner:FireServer(character.HumanoidRootPart, character.HumanoidRootPart.CFrame)
+					GrabEvents.DestroyGrabLine:FireServer(character.HumanoidRootPart, character.HumanoidRootPart.CFrame)
 					char.HumanoidRootPart.CFrame = oldposition
 					end
                     end
                 end
 			end
         end)
-    else
-        if antigrabplayer then
+    elseif antigrabplayer then
             antigrabplayer:Disconnect()
             antigrabplayer = nil
-            end
         end
 	end,
 })
@@ -1948,6 +1956,7 @@ Toggles.AntiInputLag:SetValue(false)
 Toggles.AntiGrabGucci:SetValue(false)
 Toggles.KillGrabLine:SetValue(false)
 Toggles.Counterattack:SetValue(false)
+Toggles.AntiGrabPlayer:SetValue(false)
 jerkoffanimation = false
 task.wait()
 Library:Unload()
