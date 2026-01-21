@@ -1498,14 +1498,6 @@ TR:AddToggle("LoopBlobKick", {
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame, false)
 	task.wait(0.05)
 	task.spawn(function()
-	while LgrabB do
-	task.wait()
-	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	task.wait()
-	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame, false)
-	end
-	end)
-	task.spawn(function()
 	while LgrabB do    
 	grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
 	task.wait()
