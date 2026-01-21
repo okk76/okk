@@ -1132,17 +1132,17 @@ local MyButton = CTR:AddButton({
 	Func = function()
 		local tar = selectedTarget
 		local pos = char.HumanoidRootPart.CFrame
-		char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
-		task.wait(0.25)
+		local startWait = tick()
 		repeat
 		char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
-		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 		task.wait()
-		until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or Value == false
+		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+		until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or tick() - startWait > 3
 		tar.Character.HumanoidRootPart.CFrame = pos
-    	char.HumanoidRootPart.CFrame = pos
-		GrabEvents.CreateGrabLine:FireServer(tar.Character.HumanoidRootPart, Vector3.zero, tar.Character.HumanoidRootPart.Position, false)   
-		GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
+    	char.HumanoidRootPart.CFrame = pos  
+		GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+		GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	end,
 })
 
@@ -1168,14 +1168,6 @@ local MyButton = CTR:AddButton({
 		task.wait(0.1)
     	char.HumanoidRootPart.CFrame = pos
 		task.wait(0.5)
-		dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
-		task.wait()
-		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
-		task.wait()
-		dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
-		task.wait(0.1)
-		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
-		task.wait()
 		dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
 	end,
 })
@@ -1316,15 +1308,19 @@ CTR:AddToggle("LoopGrab", {
 	seatParent.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 	task.wait(0.25)
 	grabB:FireServer(rightDet, tar.Character.HumanoidRootPart, rightWeld)
-	task.wait(0.5)
+	task.wait(0.25)
 	char.HumanoidRootPart.CFrame = pos
-	task.wait(0.5)
+	task.wait(0.25)
+	dropB:FireServer(rightWeld, tar.Character.HumanoidRootPart)
+	grabB:FireServer(rightDet, tar.Character.HumanoidRootPart, rightWeld)
+	task.wait()
 	dropB:FireServer(rightWeld, tar.Character.HumanoidRootPart)
 	task.spawn(function()
 	while LockB do
 	grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
 	task.wait()
 	dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
+	task.wait()
 	end
 	end)
 	else
@@ -1489,29 +1485,30 @@ TR:AddToggle("LoopBlobKick", {
     seatParent.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
     seatParent.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
 	grabB:FireServer(rightDet, tar.Character.HumanoidRootPart, rightWeld)
-	task.wait(0.5)
+	task.wait()
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	task.wait(0.25)
 	until tar.Character.Humanoid.Sit or LgrabB == false
 	if LgrabB == false then
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
 	else
-	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
     seatParent.HumanoidRootPart.Velocity = Vector3.zero
     seatParent.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
     seatParent.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
     seatParent.HumanoidRootPart.CFrame = posB
-	task.wait(0.25)
+	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame, false)
+	task.wait(0.05)
 	task.spawn(function()
 	while LgrabB do
-	task.wait()      
+	task.wait()
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	task.wait()
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame, false)
 	end
 	end)
 	task.spawn(function()
 	while LgrabB do    
 	grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
+	task.wait()
 	dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
 	task.wait()
 	end
