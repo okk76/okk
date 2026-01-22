@@ -605,6 +605,32 @@ DF:AddToggle("Counterattack", {
 	end,
 })
 
+DF:AddToggle("AntiBurn", {
+	Text = "Anti Burn",
+	Default = false,
+	Callback = function(Value)
+	local plotbar = game.workspace.Plots.Plot3.Barrier.PlotBarrier
+	local oldplotpos = plotbar.CFrame
+		if Value then
+            antiburn = RunService.Heartbeat:Connect(function()
+                if char and char:FindFirstChild("HumanoidRootPart") then
+                    local hrp = char.HumanoidRootPart
+                    if hrp.FirePlayerPart.CanBurn.Value then
+                    plotbar.CFrame = hrp.CFrame
+					task.wait()
+					plotbar.CFrame = oldplotpos
+                    end
+                end
+            end)
+        else
+            if antiburn then
+                antiburn:Disconnect()
+                antiburn = nil
+            end
+        end
+	end,
+})
+
 local antiGucciConnection
 	local safePosition
 	local restoreFrames = 0
@@ -1079,14 +1105,6 @@ end)
 
 P.PlayerRemoving:Connect(function()
     Options.TargetPlayer:SetValues(getPlayerList())
-end)
-
-P.PlayerAdded:Connect(function()
-    Options.SelectPlayer:SetValues(getPlayerList())
-end)
-
-P.PlayerRemoving:Connect(function()
-    Options.SelectPlayer:SetValues(getPlayerList())
 end)
 
 local function getPlayerFromSelection(selection)
@@ -1833,25 +1851,25 @@ WL:AddToggle("AntiGrabPlayer", {
                 if character and character:FindFirstChild("Head") then
                     local head = character.Head
                     local partOwner = head:FindFirstChild("PartOwner")
-					local oldposition = char.HumanoidRootPart.CFrame
                     if partOwner then
-					if partOwner.Value == LocalPlayer.Name then
+					local oldposition = char.HumanoidRootPart.CFrame
+                    char.HumanoidRootPart.CFrame = character.HumanoidRootPart.CFrame * CFrame.new(0, 7.5, 0)
 					task.wait()
-					else
-					char.HumanoidRootPart.CFrame = character.HumanoidRootPart.CFrame * CFrame.new(0, -7.5, 0)
-					char.HumanoidRootPart.Velocity = Vector3.zero
-					task.wait()
-					SetNetworkOwner:FireServer(character.HumanoidRootPart, character.HumanoidRootPart.CFrame)
-					GrabEvents.DestroyGrabLine:FireServer(character.HumanoidRootPart, character.HumanoidRootPart.CFrame)
+					SetNetworkOwner:FireServer(character.HumanoidRootPart.CFrame, character.HumanoidRootPart.CFrame)  
+					GrabEvents.DestroyGrabLine:FireServer(character.HumanoidRootPart.CFrame)
+					if partOwner and partOwner.Value == LocalPlayer.Name then
+					task.wait(0.1)
 					char.HumanoidRootPart.CFrame = oldposition
 					end
                     end
                 end
 			end
         end)
-    elseif antigrabplayer then
+    else
+        if antigrabplayer then
             antigrabplayer:Disconnect()
             antigrabplayer = nil
+            end
         end
 	end,
 })
@@ -1956,7 +1974,7 @@ Toggles.AntiInputLag:SetValue(false)
 Toggles.AntiGrabGucci:SetValue(false)
 Toggles.KillGrabLine:SetValue(false)
 Toggles.Counterattack:SetValue(false)
-Toggles.AntiGrabPlayer:SetValue(false)
+Toggles.AntiBurn:SetValue(false)
 jerkoffanimation = false
 task.wait()
 Library:Unload()
