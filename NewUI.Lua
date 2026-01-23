@@ -106,7 +106,7 @@ local Window = Library:CreateWindow({
 local Tabs = {
 	Main = Window:AddTab("Main"),
 	Target = Window:AddTab("Target"),
-	Fun = Window:AddTab("Fun"),
+	Misc = Window:AddTab("Misc"),
 	Keybinds = Window:AddTab("Keybinds"),
 	["UI Settings"] = Window:AddTab("UI Settings"),
 }
@@ -120,7 +120,7 @@ local TR = Tabs.Target:AddLeftGroupbox("Target")
 local CTR = Tabs.Target:AddRightGroupbox("Control")
 local WL = Tabs.Target:AddLeftGroupbox("Whitelist")
 local BL = Tabs.Target:AddRightGroupbox("Blobman Settings")
-local FN = Tabs.Fun:AddLeftGroupbox("Functions")
+local MC = Tabs.Misc:AddLeftGroupbox("Functions")
 
 LP:AddSlider("WalkSpeed", {
 	Text = "WalkSpeed",
@@ -961,7 +961,7 @@ local MyButton = DF:AddButton({
 	Text = "Anti Banana (Delete Legs)",
 	Func = function()
 	repeat
-	ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 0.2)
+	ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 0.5)
 	task.wait()
 	until char.Humanoid.Ragdolled.Value == true or char.Humanoid.Health == 0
 	char["Left Leg"].CFrame = CFrame.new(100000, -100000, 100000)
@@ -1115,8 +1115,6 @@ local function getPlayerFromSelection(selection)
 		end
 		return nil
 	end
-
-
 
 TR:AddDropdown("TargetPlayer", {
 		Values = getPlayerList(),
@@ -1830,6 +1828,14 @@ TR:AddSlider("TargetPosZ", {
 	end,
 })
 
+P.PlayerAdded:Connect(function()
+    Options.SelectPlayerr:SetValues(getPlayerList())
+end)
+
+P.PlayerRemoving:Connect(function()
+    Options.SelectPlayer:SetValues(getPlayerList())
+end)
+
 WL:AddDropdown("SelectPlayer", {
 		Values = getPlayerList(),
 		Default = nil,
@@ -1853,15 +1859,17 @@ WL:AddToggle("AntiGrabPlayer", {
                     local partOwner = head:FindFirstChild("PartOwner")
                     if partOwner then
 					local oldposition = char.HumanoidRootPart.CFrame
-                    char.HumanoidRootPart.CFrame = character.HumanoidRootPart.CFrame * CFrame.new(0, 7.5, 0)
-					task.wait()
-					SetNetworkOwner:FireServer(character.HumanoidRootPart.CFrame, character.HumanoidRootPart.CFrame)  
-					GrabEvents.DestroyGrabLine:FireServer(character.HumanoidRootPart.CFrame)
 					if partOwner and partOwner.Value == LocalPlayer.Name then
+					task.wait()
+					else
+					char.HumanoidRootPart.CFrame = character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+					task.wait()
+					SetNetworkOwner:FireServer(character.HumanoidRootPart, character.HumanoidRootPart.CFrame)  
+					GrabEvents.DestroyGrabLine:FireServer(character.HumanoidRootPart, character.HumanoidRootPart.CFrame)
 					task.wait(0.1)
 					char.HumanoidRootPart.CFrame = oldposition
 					end
-                    end
+					end
                 end
 			end
         end)
@@ -1946,6 +1954,26 @@ KB:AddLabel("Island"):AddKeyPicker("KeyPicker", {
 	end,
 })
 
+grabitems = false
+local function grabitems()
+grabitems = true
+	workspace.DescendantAdded:Connect(function(toy)
+		if toy.Name == "PoopPileSparkle" or "FoodHamburger" or "CupMugWhite" or "FoodBanana" or "FoodCoconut" or "FoodSodaCan" or "CupMugBrown" or "FoodBread" or "FoodBroccoli" or "FoodDippyEgg" or "FoodDonut" or "FoodHotdog" or "FoodMayonnaise" or "FoodMeatStick" or "FoodMushroomPoison" or "FoodPizzaCheese" or "PoopPile" or "FoodPizzaPepperoni" or "FoodFrenchFries" or "FoodCakePink" or "InstrumentBrassBugle" or "InstrumentBrassTrumpet" or "InstrumentBrassVuvuzela" or "InstrumentDrumBongos" or "InstrumentDrumSnare" or "InstrumentGuitarAcoustic" or "InstrumentGuitarBanjo" or "InstrumentGuitarLyre" or "InstrumentGuitarUkulele" or "InstrumentGuitarViolin" or "InstrumentPianoKeyboard" or "InstrumentPianoMelodica" or "InstrumentVoiceMicrophone" or "InstrumentWoodwindOcarina" or "InstrumentWoodwindSaxophone" then
+		toy.HoldPart.HoldItemRemoteFunction:InvokeServer(toy, char)
+        task.wait()
+        toy.HoldPart.DropItemRemoteFunction:InvokeServer(toy, char)
+		end
+	end)
+end
+
+MC:AddToggle("GrabAllItems", {
+Text = "Grab All Items", 
+Default = false,
+Callback = function(on)
+if on then grabitems() else grabitems = false end
+end
+})
+
 -- UI Settings
 local MenuGroup = Tabs["UI Settings"]:AddLeftGroupbox("Menu")
 
@@ -1975,6 +2003,8 @@ Toggles.AntiGrabGucci:SetValue(false)
 Toggles.KillGrabLine:SetValue(false)
 Toggles.Counterattack:SetValue(false)
 Toggles.AntiBurn:SetValue(false)
+Toggles.AntiGrabPlayer:SetValue(false)
+Toggles.LineLag:SetValue(false)
 jerkoffanimation = false
 task.wait()
 Library:Unload()
