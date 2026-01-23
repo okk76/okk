@@ -1995,10 +1995,12 @@ grabitems = false
 local function grabitems()
 grabitems = true
 	workspace.DescendantAdded:Connect(function(toy)
-		if toy.Name == "PoopPileSparkle" or "FoodHamburger" or "CupMugWhite" or "FoodBanana" or "FoodCoconut" or "FoodSodaCan" or "CupMugBrown" or "FoodBread" or "FoodBroccoli" or "FoodDippyEgg" or "FoodDonut" or "FoodHotdog" or "FoodMayonnaise" or "FoodMeatStick" or "FoodMushroomPoison" or "FoodPizzaCheese" or "PoopPile" or "FoodPizzaPepperoni" or "FoodFrenchFries" or "FoodCakePink" or "InstrumentBrassBugle" or "InstrumentBrassTrumpet" or "InstrumentBrassVuvuzela" or "InstrumentDrumBongos" or "InstrumentDrumSnare" or "InstrumentGuitarAcoustic" or "InstrumentGuitarBanjo" or "InstrumentGuitarLyre" or "InstrumentGuitarUkulele" or "InstrumentGuitarViolin" or "InstrumentPianoKeyboard" or "InstrumentPianoMelodica" or "InstrumentVoiceMicrophone" or "InstrumentWoodwindOcarina" or "InstrumentWoodwindSaxophone" then
+		if toy:FindFirstChild("HoldPart") and grabitems then
+		pcall(function()
 		toy.HoldPart.HoldItemRemoteFunction:InvokeServer(toy, char)
         task.wait()
         toy.HoldPart.DropItemRemoteFunction:InvokeServer(toy, char)
+		end)
 		end
 	end)
 end
