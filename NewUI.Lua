@@ -506,9 +506,17 @@ GB:AddSlider("PacketStrength", {
         Max = 50000,
         Rounding = 0,
         Callback = function(Value)
-            PacketAmount = Value
-        end
-    })
+        PacketAmount = Value
+    end
+})
+
+GB:AddButton("PacketLagButton", {
+        Text = "Packet Lag",
+        Func = function()
+		local extGrabLineEvent = GrabEvents:WaitForChild("ExtendGrabLine")
+		extGrabLineEvent:FireServer(string.rep("🤣🤣🤣🤣🤣", PacketAmount))
+	end,
+})
 
 GB:AddToggle("PacketLag", {
         Text = "Packet Lag",
@@ -2004,7 +2012,6 @@ Toggles.KillGrabLine:SetValue(false)
 Toggles.Counterattack:SetValue(false)
 Toggles.AntiBurn:SetValue(false)
 Toggles.AntiGrabPlayer:SetValue(false)
-Toggles.LineLag:SetValue(false)
 jerkoffanimation = false
 task.wait()
 Library:Unload()
