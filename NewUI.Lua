@@ -89,7 +89,7 @@ local function notify(title, content, duration)
 			Description = content or "",
 			Time = duration or 5,
 		})
-	end
+end
 
 local Options = Library.Options
 local Toggles = Library.Toggles
@@ -270,7 +270,7 @@ else
 	end,
 })
 
-LP:AddLabel("TP Mouse"):AddKeyPicker("KeyPicker", {
+LP:AddLabel("TP Mouse"):AddKeyPicker("Tpbind", {
 	Default = "Z",
 	Callback = function()
 	local mouse = LocalPlayer:GetMouse()
@@ -299,7 +299,7 @@ LP:AddToggle("LoopRagdoll", {
 	end,
 })
 
-LP:AddLabel("Jerk Off"):AddKeyPicker("KeyPicker", {
+LP:AddLabel("Jerk Off"):AddKeyPicker("jerkoffbind", {
 	Default = "G",
 	Callback = function(Value)
 	animator = char:WaitForChild("Humanoid"):WaitForChild("Animator")
@@ -1320,6 +1320,17 @@ CTR:AddToggle("LoopGrab", {
 	end,
 })
 
+selectedVariant = "OneHand"
+
+CTR:AddDropdown("Lock Variant", {
+	Values = { "OneHand", "TwoHands" },
+	Default = 1, -- number index of the value / string
+	Multi = false, -- true / false, allows multiple choices to be selected
+	Callback = function(Value)
+		selectedVariant = Value
+	end,
+})
+
 	CTR:AddToggle("Lock Target", {
 	Text = "Lock Target",
 	Default = false,
@@ -1349,9 +1360,21 @@ CTR:AddToggle("LoopGrab", {
 	dropB:FireServer(rightWeld, tar.Character.HumanoidRootPart)
 	task.spawn(function()
 	while LockB do
+	if selectedVariant == "OneHand" then
 	grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
 	task.wait()
 	dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
+	task.wait()
+	elseif selectedVariant == "TwoHands" then
+	grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
+	task.wait()
+	dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
+	task.wait()
+	grabB:FireServer(rightDet, tar.Character.HumanoidRootPart, rightWeld)
+	task.wait()
+	dropB:FireServer(rightWeld, tar.Character.HumanoidRootPart)
+	task.wait()
+	end
 	task.wait()
 	end
 	end)
@@ -1419,15 +1442,23 @@ CTR:AddToggle("LoopGrab", {
 	tar.Character.HumanoidRootPart.BodyGyro:Destroy()
 	else
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	task.wait()
+	char.HumanoidRootPart.CFrame = pos
 	task.spawn(function()
 	while Lgrabk do
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	task.wait()	
+	task.wait()
 	end
 	end)
 	task.spawn(function()
 	while Lgrabk do
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	if tar.Character.HumanoidRootPart.BodyPosition then
+	tar.Character.HumanoidRootPart.BodyPosition.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
+	end
+	if tar.Character.Head:FindFirstChild("PartOwner") then
+	tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
+	end
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
 	end
@@ -1444,7 +1475,7 @@ CTR:AddToggle("LoopGrab", {
 	char.HumanoidRootPart.Velocity = Vector3.zero
     char.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
     char.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
-	task.wait(0.25)
+	task.wait(0.1)
 	char.HumanoidRootPart.CFrame = pos
     char.HumanoidRootPart.Velocity = Vector3.zero
     char.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
@@ -1715,7 +1746,7 @@ local MyButton = TR:AddButton({
 	end,
 })
 
-BL:AddLabel("Spawn And Sit Blobman"):AddKeyPicker("KeyPicker", {
+BL:AddLabel("Spawn And Sit Blobman"):AddKeyPicker("seatblobbind", {
 	Default = "X",
 	Callback = function()
 	local blobm
@@ -1865,8 +1896,8 @@ WL:AddToggle("AntiGrabPlayer", {
                 if character and character:FindFirstChild("Head") then
                     local head = character.Head
                     local partOwner = head:FindFirstChild("PartOwner")
-                    if partOwner then
 					local oldposition = char.HumanoidRootPart.CFrame
+                    if partOwner then
 					if partOwner and partOwner.Value == LocalPlayer.Name then
 					task.wait()
 					else
@@ -1890,7 +1921,7 @@ WL:AddToggle("AntiGrabPlayer", {
 	end,
 })
 
-KB:AddLabel("Spawn"):AddKeyPicker("KeyPicker", {
+KB:AddLabel("Spawn"):AddKeyPicker("KeyPicker1", {
 	Default = "One",
 	Callback = function()
 	char.HumanoidRootPart.CFrame = CFrame.new(0, 5, 0)
@@ -1898,7 +1929,7 @@ KB:AddLabel("Spawn"):AddKeyPicker("KeyPicker", {
 	end,
 })
 
-KB:AddLabel("Plot 1"):AddKeyPicker("KeyPicker", {
+KB:AddLabel("Plot 1"):AddKeyPicker("KeyPicker2", {
 	Default = "Two",
 	Callback = function()
 	char.HumanoidRootPart.CFrame = CFrame.new(-492, 5, -167)
@@ -1906,7 +1937,7 @@ KB:AddLabel("Plot 1"):AddKeyPicker("KeyPicker", {
 	end,
 })
 
-KB:AddLabel("Plot 2"):AddKeyPicker("KeyPicker", {
+KB:AddLabel("Plot 2"):AddKeyPicker("KeyPicker3", {
 	Default = "Three",
 	Callback = function()
 	char.HumanoidRootPart.CFrame = CFrame.new(-535, 5, 90)
@@ -1914,7 +1945,7 @@ KB:AddLabel("Plot 2"):AddKeyPicker("KeyPicker", {
 	end,
 })
 
-KB:AddLabel("Plot 3"):AddKeyPicker("KeyPicker", {
+KB:AddLabel("Plot 3"):AddKeyPicker("KeyPicker4", {
 	Default = "Four",
 	Callback = function()
 	char.HumanoidRootPart.CFrame = CFrame.new(250, 1, 460)
@@ -1922,7 +1953,7 @@ KB:AddLabel("Plot 3"):AddKeyPicker("KeyPicker", {
 	end,
 })
 
-KB:AddLabel("Plot 4"):AddKeyPicker("KeyPicker", {
+KB:AddLabel("Plot 4"):AddKeyPicker("KeyPicker5", {
 	Default = "Five",
 	Callback = function()
 	char.HumanoidRootPart.CFrame = CFrame.new(512, 89, -340)
@@ -1930,7 +1961,7 @@ KB:AddLabel("Plot 4"):AddKeyPicker("KeyPicker", {
 	end,
 })
 
-KB:AddLabel("Plot 5"):AddKeyPicker("KeyPicker", {
+KB:AddLabel("Plot 5"):AddKeyPicker("KeyPicker6", {
 	Default = "Six",
 	Callback = function()
 	char.HumanoidRootPart.CFrame = CFrame.new(553, 129, -75)
@@ -1938,7 +1969,7 @@ KB:AddLabel("Plot 5"):AddKeyPicker("KeyPicker", {
 	end,
 })
 
-KB:AddLabel("Barn"):AddKeyPicker("KeyPicker", {
+KB:AddLabel("Barn"):AddKeyPicker("KeyPicker7", {
 	Default = "Seven",
 	Callback = function()
 	char.HumanoidRootPart.CFrame = CFrame.new(-195, 69, -285)
@@ -1946,7 +1977,7 @@ KB:AddLabel("Barn"):AddKeyPicker("KeyPicker", {
 	end,
 })
 
-KB:AddLabel("House"):AddKeyPicker("KeyPicker", {
+KB:AddLabel("House"):AddKeyPicker("KeyPicker8", {
 	Default = "Eight",
 	Callback = function()
 	char.HumanoidRootPart.CFrame = CFrame.new(-282, 84, 313)
@@ -1954,7 +1985,7 @@ KB:AddLabel("House"):AddKeyPicker("KeyPicker", {
 	end,
 })
 
-KB:AddLabel("Island"):AddKeyPicker("KeyPicker", {
+KB:AddLabel("Island"):AddKeyPicker("KeyPicker9", {
 	Default = "Nine",
 	Callback = function()
 	char.HumanoidRootPart.CFrame = CFrame.new(72, 352, 341)
@@ -1980,6 +2011,19 @@ Default = false,
 Callback = function(on)
 if on then grabitems() else grabitems = false end
 end
+})
+
+FKB:AddLabel("PacketLag"):AddKeyPicker("LagBind", {
+	Default = "T",
+	Callback = function()
+	local extGrabLineEvent = GrabEvents:WaitForChild("ExtendGrabLine")
+	extGrabLineEvent:FireServer(string.rep("🤣🤣🤣🤣🤣", PacketAmount))
+	Library:Notify({
+	Title = "Keybind",
+	Description = "Packet Lag",
+	Time = 3,
+	})
+	end,
 })
 
 -- UI Settings
