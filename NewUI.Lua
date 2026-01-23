@@ -1447,12 +1447,6 @@ CTR:AddDropdown("Lock Variant", {
 	task.spawn(function()
 	while Lgrabk do
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	task.wait()
-	end
-	end)
-	task.spawn(function()
-	while Lgrabk do
-	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	if tar.Character.HumanoidRootPart.BodyPosition then
 	tar.Character.HumanoidRootPart.BodyPosition.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
 	end
@@ -1464,6 +1458,7 @@ CTR:AddDropdown("Lock Variant", {
 	end
 	end)
 	task.spawn(function()
+	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	ragdoll()
 	end)
 	task.spawn(function()
@@ -1471,11 +1466,12 @@ CTR:AddDropdown("Lock Variant", {
 	local distance = (char.HumanoidRootPart.Position - tar.Character:FindFirstChild("HumanoidRootPart").Position).Magnitude
     if tar and tar.Character and tar.Character:FindFirstChild("HumanoidRootPart") then
 	if distance > 17.5 then
+	pos = char.HumanoidRootPart.CFrame
     char.HumanoidRootPart.CFrame = tar.Character:FindFirstChild("HumanoidRootPart").CFrame * CFrame.new(0, 0, 5)
 	char.HumanoidRootPart.Velocity = Vector3.zero
     char.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
     char.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
-	task.wait(0.1)
+	task.wait(0.25)
 	char.HumanoidRootPart.CFrame = pos
     char.HumanoidRootPart.Velocity = Vector3.zero
     char.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
@@ -1834,7 +1830,7 @@ local MyButton = TR:AddButton({
 TR:AddSlider("TargetPosX", {
 	Text = "Target Pos X",
 	Default = 0,
-	Min = 0,
+	Min = -15,
 	Max = 15,
 	Rounding = 1,
 	Compact = false,
@@ -1846,7 +1842,7 @@ TR:AddSlider("TargetPosX", {
 TR:AddSlider("TargetPosY", {
 	Text = "Target Pos Y",
 	Default = 15,
-	Min = 0,
+	Min = -15,
 	Max = 15,
 	Rounding = 1,
 	Compact = false,
@@ -1858,7 +1854,7 @@ TR:AddSlider("TargetPosY", {
 TR:AddSlider("TargetPosZ", {
 	Text = "Target Pos Z",
 	Default = 0,
-	Min = 0,
+	Min = -15,
 	Max = 15,
 	Rounding = 1,
 	Compact = false,
