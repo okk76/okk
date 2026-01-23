@@ -1508,7 +1508,9 @@ CTR:AddDropdown("Lock Variant", {
 	else
 	Lgrabk = false
 	ragdoS = false
+	if pallet then
 	DestroyT(pallet)
+	end
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
 	tar.Character.HumanoidRootPart.BodyGyro:Destroy()
 	end
