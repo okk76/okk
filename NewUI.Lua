@@ -982,7 +982,7 @@ LocalPlayer.PlayerScripts.CharacterAndBeamMove.Disabled = false
 	end,
 })
 
-DF:AddDropdown("Anti Input Lag Item", {
+DF:AddDropdown("AntiInputLagItem", {
 	Values = { "PoopPileSparkle", "FoodHamburger", "CupMugWhite", "FoodBanana", "FoodCoconut", "FoodSodaCan", "CupMugBrown", "FoodBread", "FoodBroccoli", "FoodDippyEgg", "FoodDonut", "FoodHotdog", "FoodMayonnaise", "FoodMeatStick", "FoodMushroomPoison", "FoodPizzaCheese", "PoopPile", "FoodPizzaPepperoni", "FoodFrenchFries", "FoodCakePink", "InstrumentBrassBugle", "InstrumentBrassTrumpet", "InstrumentBrassVuvuzela", "InstrumentDrumBongos", "InstrumentDrumSnare", "InstrumentGuitarAcoustic", "InstrumentGuitarBanjo", "InstrumentGuitarLyre", "InstrumentGuitarUkulele", "InstrumentGuitarViolin", "InstrumentPianoKeyboard", "InstrumentPianoMelodica", "InstrumentVoiceMicrophone", "InstrumentWoodwindOcarina", "InstrumentWoodwindSaxophone" },
 	Default = nil, -- number index of the value / string
 	Multi = false, -- true / false, allows multiple choices to be selected
@@ -991,8 +991,14 @@ DF:AddDropdown("Anti Input Lag Item", {
 	end,
 })
 
-DF:AddToggle("AntiInputLag", {
-	Text = "Anti Input Lag",
+Options.AntiInputLagItem:OnChanged(function()
+Toggles.AntiNetwork:SetValue(false)
+Toggles.AntiNetwork:SetValue(true)
+end)
+
+
+DF:AddToggle("AntiNetwork", {
+	Text = "Anti Network",
 	Default = false,
 	Callback = function(Value)
 	local Item = selectedItem
@@ -1020,7 +1026,7 @@ DF:AddToggle("AntiInputLag", {
 	end)
 	task.wait()
 	pcall(function()
-	holdPart.DropItemRemoteFunction:InvokeServer(toy, char.Torso.CFrame * CFrame.new(0, 10, 0), Vector3.zero)
+	holdPart.DropItemRemoteFunction:InvokeServer(toy, spaw.CFrame * CFrame.new(0, 1000, 0), Vector3.zero)
 	end)
 	end
 	else
@@ -1580,6 +1586,7 @@ CTR:AddDropdown("Lock Variant", {
 	end,
 })
 
+
 TR:AddToggle("LoopBlobKick", {
 	Text = "Loop Blob Kick",
 	Default = false,
@@ -2095,7 +2102,7 @@ Toggles.GrabAntiKick:SetValue(false)
 Toggles.Strength:SetValue(false)
 Toggles.PacketLag:SetValue(false)
 Toggles.FartherReach:SetValue(false)
-Toggles.AntiInputLag:SetValue(false)
+Toggles.AntiNetwork:SetValue(false)
 Toggles.AntiGrabGucci:SetValue(false)
 Toggles.KillGrabLine:SetValue(false)
 Toggles.Counterattack:SetValue(false)
@@ -2147,4 +2154,3 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
-
