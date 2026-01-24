@@ -1704,19 +1704,19 @@ local MyButton = TR:AddButton({
 		repeat
 		pcall(function()
 		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 		end)
 		seatParent.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 		seatParent.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
 		task.wait()
-		until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or LgrabB == false
+		until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name
+		task.wait()
 		seatParent.HumanoidRootPart.Anchored = true
 		task.wait(0.25)
 		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)  
 		GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
 		tar.Character.HumanoidRootPart.BodyPosition:Destroy()
 		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
-		task.wait(1.25)
+		task.wait(1)
 		DestroyT(seatParent)
 	end,
 })
@@ -1726,55 +1726,23 @@ CTR:AddToggle("GrabAntiKick", {
 		Default = false,
 		Callback = function(Value)
 		local tar = selectedTarget
-		local function GrabToy(toy)
-		local part = toy:FindFirstChild("SoundPart")
-		if part then
-		SetNetworkOwner:FireServer(part, part.CFrame)
-		if part:FindFirstChild("PartOwner") and part.PartOwner.Value == LocalPlayer.Name then
-		part.CFrame = CFrame.new(0, 1000, 0)
-				end
-			end
-		end
-
 		if Value then
 		GrabAntiKick = true
-			task.spawn(function()
-				while GrabAntiKick do
-				if tar then
-					local toysFolderTarget = workspace:FindFirstChild(tar.Name.."SpawnedInToys")
-					if toysFolderTarget then
-						if toysFolderTarget:FindFirstChild("NinjaKunai") then
-							GrabToy(toysFolderTarget.NinjaKunai)
-						end
-
-						if toysFolderTarget:FindFirstChild("NinjaShuriken") then
-							GrabToy(toysFolderTarget.NinjaShuriken)
-						end
-
-						--if toysFolderTarget:FindFirstChild("ToolCleaver") then
-						--	GrabToy(toysFolderTarget.ToolCleaver)
-						--end
-
-						--if toysFolderTarget:FindFirstChild("ToolPencil") then
-						--	GrabToy(toysFolderTarget.ToolPencil)
-						--end
-
-						--if toysFolderTarget:FindFirstChild("ToolDiggingForkRusty") then
-						--	GrabToy(toysFolderTarget.ToolDiggingForkRusty)
-						--end
-
-						--if toysFolderTarget:FindFirstChild("ToolPickaxe") then
-						--	GrabToy(toysFolderTarget.ToolPickaxe)
-						--end
-
-						--if toysFolderTarget:FindFirstChild("NinjaKatana") then
-							--GrabToy(toysFolderTarget.NinjaKatana)
-						--end
-					end
-				end
-			task.wait()
+		while GrabAntiKick do
+		if tar then
+		local toysFolderTarget = workspace:FindFirstChild(tar.Name.."SpawnedInToys")
+		for _, obj in ipairs(toysFolderTarget:GetChildren()) do
+		pcall(function()
+		if obj:FindFirstChild("StickyPart") then
+		SetNetworkOwner:FireServer(obj.SoundPart, obj.SoundPart.CFrame)
+		SetNetworkOwner:FireServer(obj.Hitbox, obj.Hitbox.CFrame)
+		SetNetworkOwner:FireServer(obj.MeshPart, obj.MeshPart.CFrame)
 		end
-		end)
+		end)	
+		end
+		end
+		task.wait()
+		end
 		else
 		GrabAntiKick = false
 		end
@@ -2109,6 +2077,7 @@ Toggles.AntiBurn:SetValue(false)
 Toggles.AntiGrabPlayer:SetValue(false)
 Toggles.InfiniteJump:SetValue(false)
 Toggles.AntiExplode:SetValue(false)
+Toggles.Shaders:SetValue(false)
 jerkoffanimation = false
 task.wait()
 Library:Unload()
