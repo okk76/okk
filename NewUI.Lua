@@ -166,6 +166,22 @@ LP:AddSlider("JumpPower", {
 	end,
 })
 
+local InfJump = false
+
+LP:AddToggle("InfiniteJump", {
+	Text = "Infinite Jump",
+	Default = false,
+	Callback = function(Value)
+	InfJump = Value
+	end,
+})
+
+UserInputService.JumpRequest:Connect(function()
+if InfJump and char:FindFirstChild("Humanoid") then
+char:FindFirstChild("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
+end
+end)
+
 LP:AddSlider("Gravity", {
 	Text = "Gravity",
 	Default = 100,
@@ -1353,11 +1369,7 @@ CTR:AddDropdown("Lock Variant", {
 	grabB:FireServer(rightDet, tar.Character.HumanoidRootPart, rightWeld)
 	task.wait(0.25)
 	char.HumanoidRootPart.CFrame = pos
-	task.wait(0.25)
-	dropB:FireServer(rightWeld, tar.Character.HumanoidRootPart)
-	grabB:FireServer(rightDet, tar.Character.HumanoidRootPart, rightWeld)
-	task.wait()
-	dropB:FireServer(rightWeld, tar.Character.HumanoidRootPart)
+	task.wait(0.5)
 	task.spawn(function()
 	while LockB do
 	if selectedVariant == "OneHand" then
@@ -1894,17 +1906,19 @@ WL:AddToggle("AntiGrabPlayer", {
                 if character and character:FindFirstChild("Head") then
                     local head = character.Head
                     local partOwner = head:FindFirstChild("PartOwner")
-					local oldposition = char.HumanoidRootPart.CFrame
                     if partOwner then
 					if partOwner and partOwner.Value == LocalPlayer.Name then
 					task.wait()
 					else
+					task.wait()
+					local oldposition = char.HumanoidRootPart.CFrame
 					char.HumanoidRootPart.CFrame = character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 					task.wait()
 					SetNetworkOwner:FireServer(character.HumanoidRootPart, character.HumanoidRootPart.CFrame)  
 					GrabEvents.DestroyGrabLine:FireServer(character.HumanoidRootPart, character.HumanoidRootPart.CFrame)
-					task.wait(0.1)
+					task.wait()
 					char.HumanoidRootPart.CFrame = oldposition
+					task.wait(0.25)
 					end
 					end
                 end
@@ -1991,26 +2005,27 @@ KB:AddLabel("Island"):AddKeyPicker("KeyPicker9", {
 	end,
 })
 
-grabitems = false
-local function grabitems()
-grabitems = true
-	workspace.DescendantAdded:Connect(function(toy)
-		if toy:FindFirstChild("HoldPart") and grabitems then
-		pcall(function()
-		toy.HoldPart.HoldItemRemoteFunction:InvokeServer(toy, char)
-        task.wait()
-        toy.HoldPart.DropItemRemoteFunction:InvokeServer(toy, char)
-		end)
-		end
-	end)
-end
-
 MC:AddToggle("GrabAllItems", {
-Text = "Grab All Items", 
-Default = false,
-Callback = function(on)
-if on then grabitems() else grabitems = false end
-end
+	Text = "Grab All Items",
+	Default = false,
+	Callback = function(Value)
+	if Value then
+	pick = true
+	while pick do
+    for _, obj in ipairs(game.Workspace:GetDescendants()) do
+	pcall(function()
+    if obj:FindFirstChild("HoldPart") then
+    obj.HoldPart.HoldItemRemoteFunction:InvokeServer(obj, char)
+    obj.HoldPart.DropItemRemoteFunction:InvokeServer(obj, char)
+    end
+    end)
+    end
+	task.wait()
+	end
+	else
+	pick = false
+	end
+	end,
 })
 
 FKB:AddLabel("PacketLag"):AddKeyPicker("LagBind", {
@@ -2056,6 +2071,8 @@ Toggles.KillGrabLine:SetValue(false)
 Toggles.Counterattack:SetValue(false)
 Toggles.AntiBurn:SetValue(false)
 Toggles.AntiGrabPlayer:SetValue(false)
+Toggles.GrabAllItems:SetValue(false)
+Toggles.InfiniteJump:SetValue(false)
 jerkoffanimation = false
 task.wait()
 Library:Unload()
