@@ -926,12 +926,14 @@ LocalPlayer.PlayerScripts.CharacterAndBeamMove.Disabled = false
 
 DF:AddDropdown("Anti Input Lag Item", {
 	Values = { "PoopPileSparkle", "FoodHamburger", "CupMugWhite", "FoodBanana", "FoodCoconut", "FoodSodaCan", "CupMugBrown", "FoodBread", "FoodBroccoli", "FoodDippyEgg", "FoodDonut", "FoodHotdog", "FoodMayonnaise", "FoodMeatStick", "FoodMushroomPoison", "FoodPizzaCheese", "PoopPile", "FoodPizzaPepperoni", "FoodFrenchFries", "FoodCakePink", "InstrumentBrassBugle", "InstrumentBrassTrumpet", "InstrumentBrassVuvuzela", "InstrumentDrumBongos", "InstrumentDrumSnare", "InstrumentGuitarAcoustic", "InstrumentGuitarBanjo", "InstrumentGuitarLyre", "InstrumentGuitarUkulele", "InstrumentGuitarViolin", "InstrumentPianoKeyboard", "InstrumentPianoMelodica", "InstrumentVoiceMicrophone", "InstrumentWoodwindOcarina", "InstrumentWoodwindSaxophone" },
-	Default = nil, -- number index of the value / string
+	Default = 2, -- number index of the value / string
 	Multi = false, -- true / false, allows multiple choices to be selected
 	Callback = function(Value)
 		selectedItem = Value
 	end,
 })
+
+selectedItem = "FoodHamburger"
 
 DF:AddToggle("AntiInputLag", {
 	Text = "Anti Input Lag",
@@ -940,44 +942,37 @@ DF:AddToggle("AntiInputLag", {
 	local Item = selectedItem
 	local toy = nil
 	local holdPart = nil
-	local function chekinput()
-	if not toysFolder:FindFirstChild(Item) then
-		repeat 
-        task.wait()
-        until LocalPlayer.CanSpawnToy.Value == true or Value == false
-		pcall(function()
-		spawnItem(Item, spaw.Position + Vector3.new(0, 100, 0))
-		end)
-		repeat 
-    	task.wait()
-		toy = toysFolder:FindFirstChild(Item)
-    	until toy or Value == false
-		holdPart = toy:WaitForChild("HoldPart")
-		task.wait()
-		end
-	end
 	if Value then
 	antiinput = true
+	if not toysFolder:FindFirstChild(Item) then
+	repeat 
+    task.wait()
+    until LocalPlayer.CanSpawnToy.Value == true or Value == false
+	pcall(function()
+	spawnItem(Item, spaw.Position + Vector3.new(0, 100, 0))
+	end)
+	repeat 
+    task.wait()
+	toy = toysFolder:FindFirstChild(Item)
+    until toy or Value == false
+	holdPart = toy:WaitForChild("HoldPart")
+	task.wait()
+	end
 	task.spawn(function()
 	while antiinput do
-	chekinput()
 	task.wait()
 	pcall(function()
-	toy = toysFolder:FindFirstChild(Item)
-	holdPart = toy:WaitForChild("HoldPart")
-	end)
-	pcall(function()
-	holdPart.DropItemRemoteFunction:InvokeServer(toy, spaw.CFrame * CFrame.new(0, 500000, 0), Vector3.new(0, 0, 0))
+	holdPart.DropItemRemoteFunction:InvokeServer(toy, char.Torso.CFrame * CFrame.new(0, 10, 0), Vector3.zero)
 	holdPart.HoldItemRemoteFunction:InvokeServer(toy, char)
 	end)
 	end
 	end)
 	else
-		antiinput = false
-		if toysFolder:FindFirstChild(Item) then
-		DestroyT(toysFolder:FindFirstChild(Item))
-		end
-      end
+	antiinput = false
+	if toysFolder:FindFirstChild(Item) then
+	DestroyT(toysFolder:FindFirstChild(Item))
+	end
+    end
     end,
 })
 
@@ -1696,7 +1691,7 @@ local MyButton = TR:AddButton({
 	end,
 })
 
-		CTR:AddToggle("GrabAntiKick", {
+CTR:AddToggle("GrabAntiKick", {
 		Text = "Grab Anti Kick",
 		Default = false,
 		Callback = function(Value)
@@ -1756,6 +1751,27 @@ local MyButton = TR:AddButton({
 	end,
 })
 
+CTR:AddButton({
+	Text = "Steal Anti InputLag",
+	Func = function()
+	local tar = selectedTarget
+	local toysFolderTarget = workspace:FindFirstChild(tar.Name.."SpawnedInToys")
+		for _, obj in ipairs(toysFolderTarget:GetChildren()) do
+			pcall(function()
+				if obj:FindFirstChild("HoldPart") then
+					obj.HoldPart.HoldItemRemoteFunction:InvokeServer(obj, char)
+					obj.HoldPart.HoldItemRemoteFunction:InvokeServer(obj, char)
+					obj.HoldPart.HoldItemRemoteFunction:InvokeServer(obj, char)
+					obj.HoldPart.HoldItemRemoteFunction:InvokeServer(obj, char)
+					obj.HoldPart.HoldItemRemoteFunction:InvokeServer(obj, char)
+					task.wait()
+					obj.HoldPart.DropItemRemoteFunction:InvokeServer(obj, char)
+				end
+			end)	
+		end
+	end,
+})
+
 BL:AddLabel("Spawn And Sit Blobman"):AddKeyPicker("seatblobbind", {
 	Default = "X",
 	Callback = function()
@@ -1794,7 +1810,6 @@ BL:AddToggle("AutoSit", {
     task.wait()
 	blob = toysFolder:FindFirstChild("CreatureBlobman")
     until blob or Value == false
-	
 	end
 	if Value then
 	autosit = true
