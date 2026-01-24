@@ -9,6 +9,8 @@ local RunService = game:GetService("RunService")
 local CharacterEvents = ReplicatedStorage:WaitForChild("CharacterEvents")
 local Struggle = CharacterEvents:WaitForChild("Struggle")
 local GrabEvents = ReplicatedStorage:WaitForChild("GrabEvents")
+local PlayerEvents = ReplicatedStorage:WaitForChild("PlayerEvents")
+local StickyPartEvent = PlayerEvents:WaitForChild("StickyPartEvent")
 local SetNetworkOwner = GrabEvents:WaitForChild("SetNetworkOwner")
 local toysFolder = game.workspace:FindFirstChild(LocalPlayer.Name.."SpawnedInToys")
 local UserInputService = game:GetService("UserInputService")
@@ -2062,6 +2064,37 @@ MC:AddButton({
     end
     end)
     end
+	end,
+})
+
+local function spawnShurikens()
+    repeat
+		task.wait()
+	until LocalPlayer.CanSpawnToy.Value == true
+    pcall(function()
+        spawnItem("NinjaShuriken", char.HumanoidRootPart.Position + Vector3.new(0, 5, 25))
+    end)
+end
+  
+MC:AddButton("DettachInnerUFO", {
+        Text = "Dettach Inner UFO",
+        Func = function()
+		local UFO = workspace.Map.AlwaysHereTweenedObjects.InnerUFO.Object.ObjectModel.Part
+		local count = 0
+        spawnShurikens()
+		task.wait()
+		for _, del in ipairs(toysFolder:GetChildren()) do
+			pcall(function()
+    			if del:FindFirstChild("StickyPart") and del.Name == "NinjaShuriken" then
+					SetNetworkOwner:FireServer(del.SoundPart, del.SoundPart.CFrame)
+				task.wait()
+					StickyPartEvent:FireServer(del.StickyPart, UFO, CFrame.new(0, 0, 0))
+    			end
+    		end)
+    	end
+		if UFO:FindFirstChild("ObjectModelAttachment") then
+		UFO.ObjectModelAttachment:Destroy()
+		end
 	end,
 })
 
