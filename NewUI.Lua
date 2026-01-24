@@ -571,8 +571,8 @@ DF:AddToggle("AntiGrab", {
                     local head = character.Head
                     local partOwner = head:FindFirstChild("PartOwner")
                     if partOwner then
-                    Struggle:FireServer()
 					ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 0.1)
+                    Struggle:FireServer()
 					ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
 					task.wait()
 					char.Humanoid.Sit = false
@@ -658,6 +658,31 @@ DF:AddToggle("AntiBurn", {
                 antiburn:Disconnect()
                 antiburn = nil
             end
+        end
+	end,
+})
+
+function antiExplode()
+    workspace.ChildAdded:Connect(function(boom)
+        if boom:IsA("Part") and boom.Name == "Part" then
+            if (boom.Position - char.HumanoidRootPart.Position).Magnitude <= 20 then
+                char.HumanoidRootPart.Anchored = true
+                task.wait()
+                while char["Left Arm"]:FindFirstChild("RagdollLimbPart") and char["Left Arm"].RagdollLimbPart.CanCollide do
+                    task.wait()
+                end
+                char.HumanoidRootPart.Anchored = false -- Снимаем фиксацию
+            end
+        end
+    end)
+end
+
+DF:AddToggle("AntiExplode", {
+	Text = "Anti Explode",
+	Default = false,
+	Callback = function(Value)
+		if Value then
+		task.spawn(antiExplode)
         end
 	end,
 })
@@ -2083,6 +2108,7 @@ Toggles.Counterattack:SetValue(false)
 Toggles.AntiBurn:SetValue(false)
 Toggles.AntiGrabPlayer:SetValue(false)
 Toggles.InfiniteJump:SetValue(false)
+Toggles.AntiExplode:SetValue(false)
 jerkoffanimation = false
 task.wait()
 Library:Unload()
