@@ -30,10 +30,10 @@ game.Workspace.Map.MapNoises.NoisePart7.Sound1.Volume = 0
 game.Workspace.Map.MapNoises.NoisePart8.Sound1.Volume = 0
 game.Workspace.Map.MapNoises.NoisePart9.Sound1.Volume = 0
 game.Workspace.Map.MapNoises.NoisePart10.Sound1.Volume = 0
-local newgrab = ReplicatedFirst.GrabParts.GrabPart.AttachSound
-local oldgrab = ReplicatedFirst.GrabParts.GrabPart.AttachSound1
-local newhold = ReplicatedFirst.GrabParts.GrabPart.BeamSound
-local oldhold = ReplicatedFirst.GrabParts.GrabPart.BeamSound1
+local newgrab = game.ReplicatedFirst.GrabParts.GrabPart.AttachSound
+local oldgrab = game.ReplicatedFirst.GrabParts.GrabPart.AttachSound1
+local newhold = game.ReplicatedFirst.GrabParts.GrabPart.BeamSound
+local oldhold = game.ReplicatedFirst.GrabParts.GrabPart.BeamSound1
 newgrab.Name = "AttachSound1"
 oldgrab.Name = "AttachSound"
 newhold.Name = "BeamSound1"
@@ -2147,3 +2147,4 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
+
