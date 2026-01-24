@@ -19,6 +19,7 @@ local hue = 0
 local posX = 0
 local posY = 15
 local posZ = 0
+
 game.Workspace.Map.MapNoises.NoisePart1.Sound1.Volume = 0
 game.Workspace.Map.MapNoises.NoisePart2.Sound1.Volume = 0
 game.Workspace.Map.MapNoises.NoisePart3.Sound1.Volume = 0
@@ -29,6 +30,14 @@ game.Workspace.Map.MapNoises.NoisePart7.Sound1.Volume = 0
 game.Workspace.Map.MapNoises.NoisePart8.Sound1.Volume = 0
 game.Workspace.Map.MapNoises.NoisePart9.Sound1.Volume = 0
 game.Workspace.Map.MapNoises.NoisePart10.Sound1.Volume = 0
+local newgrab = ReplicatedFirst.GrabParts.GrabPart.AttachSound
+local oldgrab = ReplicatedFirst.GrabParts.GrabPart.AttachSound1
+local newhold = ReplicatedFirst.GrabParts.GrabPart.BeamSound
+local oldhold = ReplicatedFirst.GrabParts.GrabPart.BeamSound1
+newgrab.Name = "AttachSound1"
+oldgrab.Name = "AttachSound"
+newhold.Name = "BeamSound1"
+oldhold.Name = "BeamSound"
 
 spaw.Position = Vector3.new(spaw.Position, -10.85, spaw.Position)
 spaw.Decal.Transparency = 0.8
@@ -765,31 +774,41 @@ DF:AddToggle("AntiGrabGucci", {
 	end,
 })
 
+DF:AddDropdown("AntiKickItem", {
+	Values = { "NinjaShuriken", "NinjaKunai", "ToolCleaver", "ToolDiggingForkRusty", "ToolPickaxe" },
+	Default = nil, -- number index of the value / string
+	Multi = false, -- true / false, allows multiple choices to be selected
+	Callback = function(Value)
+		antikick = Value
+	end,
+})
+
+local function ClearKunai()
+local plr = game.Players.LocalPlayer
+local inv = workspace:FindFirstChild(plr.Name.."SpawnedInToys")
+local destroyrem = game.ReplicatedStorage:FindFirstChild("MenuToys") and game.ReplicatedStorage.MenuToys:FindFirstChild("DestroyToy")			
+	if inv and destroyrem then
+		for _, v in pairs(inv:GetChildren()) do
+			if v.Name == "AntiKick" or v.Name == antikick then
+				pcall(function() destroyrem:FireServer(v) end)
+			end
+		end
+	end
+end
+
+Options.AntiKickItem:OnChanged(function()
+ClearKunai()
+end)
+
 DF:AddToggle("AntiKick", {
 	Text = "Anti Kick",
 	Default = false,
 	Callback = function(Value)
 		_G.ShurikenAntiKick = Value
-
-			local function ClearKunai()
-				local plr = game.Players.LocalPlayer
-				local inv = workspace:FindFirstChild(plr.Name.."SpawnedInToys")
-				local destroyrem = game.ReplicatedStorage:FindFirstChild("MenuToys") and game.ReplicatedStorage.MenuToys:FindFirstChild("DestroyToy")
-				
-				if inv and destroyrem then
-					for _, v in pairs(inv:GetChildren()) do
-						if v.Name == "AntiKick" or v.Name == "NinjaShuriken" then
-							pcall(function() destroyrem:FireServer(v) end)
-						end
-					end
-				end
-			end
-
 			if Value then
 				task.spawn(function()
 					local plr = game.Players.LocalPlayer
 					local ReplicatedStorage = game:GetService("ReplicatedStorage")
-					
 					local setOwner = ReplicatedStorage:WaitForChild("GrabEvents"):WaitForChild("SetNetworkOwner")
 					local stickyEvent = ReplicatedStorage:WaitForChild("PlayerEvents"):WaitForChild("StickyPartEvent")
 					local spawnRemote = ReplicatedStorage.MenuToys.SpawnToyRemoteFunction
@@ -837,19 +856,26 @@ DF:AddToggle("AntiKick", {
 						
 						local firePart = currentHRP:FindFirstChild("FirePlayerPart") or currentHRP:WaitForChild("FirePlayerPart", 5)
 						if firePart then
-							stickyEvent:FireServer(kunai.StickyPart, firePart, CFrame.new(0, 0, 0) * CFrame.Angles(0,math.rad(90),math.rad(90)))
+						if antikick == "NinjaShuriken" then
+						stickyEvent:FireServer(kunai.StickyPart, firePart, CFrame.new(0, 0, 0.025) * CFrame.Angles(0, math.rad(90), math.rad(90)))
+						elseif antikick == "NinjaKunai" then
+						stickyEvent:FireServer(kunai.StickyPart, firePart, CFrame.new(0, -1, 0.075) * CFrame.Angles(0, math.rad(90), math.rad(90)))
+						elseif antikick == "ToolCleaver" then
+						stickyEvent:FireServer(kunai.StickyPart, firePart, CFrame.new(-0.5, 0, 0) * CFrame.Angles(math.rad(90), math.rad(180), 0))
+						elseif antikick == "ToolDiggingForkRusty" then
+						stickyEvent:FireServer(kunai.StickyPart, firePart, CFrame.new(0, 0.75, 0.2) * CFrame.Angles(math.rad(-60), math.rad(180), math.rad(180)))
+						elseif antikick == "ToolPickaxe" then
+						stickyEvent:FireServer(kunai.StickyPart, firePart, CFrame.new(0, -2.25, 0) * CFrame.Angles(math.rad(-90), math.rad(180), math.rad(90)))
+						end
 						end
 						
 						for _, obj in pairs(kunai:GetChildren()) do
-							if obj.Name == "Pyramid" then
-								obj.CanTouch = false; obj.CanCollide = false; obj.CanQuery = false;
 								if not obj:FindFirstChild("Highlight") then
 									local high = Instance.new("Highlight", kunai)
 									high.FillTransparency = 1
 								end
 							end
 						end
-					end
 
 					local function SpawnToy(name)
 						local t = tick()
@@ -886,14 +912,14 @@ DF:AddToggle("AntiKick", {
 						end
 						
 						local inv = workspace:FindFirstChild(plr.Name.."SpawnedInToys")
-						local kunai = inv and inv:FindFirstChild("NinjaShuriken")
+						local kunai = inv and inv:FindFirstChild(antikick)
 						
 						if workspace.PlotItems.PlayersInPlots:FindFirstChild(plr.Name) then 
 							local boolik, house = CheckForHome()
 							if boolik and house and workspace.Plots:FindFirstChild(house.Name) then
 								local sign = workspace.Plots[house.Name]:FindFirstChild("PlotSign")
 								if sign and sign.ThisPlotsOwners.Value.TimeRemainingNum.Value > 89 then 
-									kunai = SpawnToy("NinjaShuriken")
+									kunai = SpawnToy(antikick)
 									if kunai == nil then continue end
 									kunai.Name = "AntiKick" 
 									StickKunai(kunai)
@@ -903,7 +929,7 @@ DF:AddToggle("AntiKick", {
 						
 						if not kunai then
 							if workspace.PlotItems.PlayersInPlots:FindFirstChild(plr.Name) then continue end 
-							kunai = SpawnToy("NinjaShuriken")
+							kunai = SpawnToy(antikick)
 							if kunai == nil then continue end 
 							kunai.Name = "AntiKick"
 							if not kunai then continue end 
