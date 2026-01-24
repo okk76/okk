@@ -338,8 +338,15 @@ LP:AddToggle("Shaders", {
 	Callback = function(Value)
 	local Lighting = game:GetService("Lighting")
 	if Value then
-	
+	Lighting.ClockTime = 7.5
+	local blur = Instance.new("BlurEffect", Lighting)
+	blur.Size = 3
+	local sunrays = Instance.new("SunRaysEffect", Lighting)
+	sunrays.Intensity = 0.1
    	else
+	Lighting.ClockTime = 14
+	Lighting.Blur:Destroy()
+	Lighting.SunRays:Destroy()
 	end
 	end,
 })
@@ -926,14 +933,12 @@ LocalPlayer.PlayerScripts.CharacterAndBeamMove.Disabled = false
 
 DF:AddDropdown("Anti Input Lag Item", {
 	Values = { "PoopPileSparkle", "FoodHamburger", "CupMugWhite", "FoodBanana", "FoodCoconut", "FoodSodaCan", "CupMugBrown", "FoodBread", "FoodBroccoli", "FoodDippyEgg", "FoodDonut", "FoodHotdog", "FoodMayonnaise", "FoodMeatStick", "FoodMushroomPoison", "FoodPizzaCheese", "PoopPile", "FoodPizzaPepperoni", "FoodFrenchFries", "FoodCakePink", "InstrumentBrassBugle", "InstrumentBrassTrumpet", "InstrumentBrassVuvuzela", "InstrumentDrumBongos", "InstrumentDrumSnare", "InstrumentGuitarAcoustic", "InstrumentGuitarBanjo", "InstrumentGuitarLyre", "InstrumentGuitarUkulele", "InstrumentGuitarViolin", "InstrumentPianoKeyboard", "InstrumentPianoMelodica", "InstrumentVoiceMicrophone", "InstrumentWoodwindOcarina", "InstrumentWoodwindSaxophone" },
-	Default = 2, -- number index of the value / string
+	Default = nil, -- number index of the value / string
 	Multi = false, -- true / false, allows multiple choices to be selected
 	Callback = function(Value)
 		selectedItem = Value
 	end,
 })
-
-selectedItem = "FoodHamburger"
 
 DF:AddToggle("AntiInputLag", {
 	Text = "Anti Input Lag",
@@ -958,15 +963,15 @@ DF:AddToggle("AntiInputLag", {
 	holdPart = toy:WaitForChild("HoldPart")
 	task.wait()
 	end
-	task.spawn(function()
 	while antiinput do
+	pcall(function()
+	holdPart.HoldItemRemoteFunction:InvokeServer(toy, char)
+	end)
 	task.wait()
 	pcall(function()
 	holdPart.DropItemRemoteFunction:InvokeServer(toy, char.Torso.CFrame * CFrame.new(0, 10, 0), Vector3.zero)
-	holdPart.HoldItemRemoteFunction:InvokeServer(toy, char)
 	end)
 	end
-	end)
 	else
 	antiinput = false
 	if toysFolder:FindFirstChild(Item) then
@@ -2020,14 +2025,10 @@ KB:AddLabel("Island"):AddKeyPicker("KeyPicker9", {
 	end,
 })
 
-MC:AddToggle("GrabAllItems", {
+MC:AddButton({
 	Text = "Grab All Items",
-	Default = false,
-	Callback = function(Value)
-	if Value then
-	pick = true
-	while pick do
-    for _, obj in ipairs(game.Workspace:GetDescendants()) do
+	Func = function()
+	for _, obj in ipairs(game.Workspace:GetDescendants()) do
 	pcall(function()
     if obj:FindFirstChild("HoldPart") then
     obj.HoldPart.HoldItemRemoteFunction:InvokeServer(obj, char)
@@ -2035,11 +2036,6 @@ MC:AddToggle("GrabAllItems", {
     end
     end)
     end
-	task.wait()
-	end
-	else
-	pick = false
-	end
 	end,
 })
 
@@ -2086,7 +2082,6 @@ Toggles.KillGrabLine:SetValue(false)
 Toggles.Counterattack:SetValue(false)
 Toggles.AntiBurn:SetValue(false)
 Toggles.AntiGrabPlayer:SetValue(false)
-Toggles.GrabAllItems:SetValue(false)
 Toggles.InfiniteJump:SetValue(false)
 jerkoffanimation = false
 task.wait()
