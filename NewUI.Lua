@@ -2079,7 +2079,7 @@ end
 MC:AddButton("DettachInnerUFO", {
         Text = "Dettach Inner UFO",
         Func = function()
-		local UFO = workspace.Map.AlwaysHereTweenedObjects.InnerUFO.Object.ObjectModel.Part
+		local UFO = workspace.Map.AlwaysHereTweenedObjects.InnerUFO.Object.ObjectModel.Body
 		local count = 0
         spawnShurikens()
 		task.wait()
@@ -2088,7 +2088,7 @@ MC:AddButton("DettachInnerUFO", {
     			if del:FindFirstChild("StickyPart") and del.Name == "NinjaShuriken" then
 					SetNetworkOwner:FireServer(del.SoundPart, del.SoundPart.CFrame)
 				task.wait()
-					StickyPartEvent:FireServer(del.StickyPart, UFO, CFrame.new(0, 0, 0))
+					StickyPartEvent:FireServer(del.StickyPart, workspace.Map.AlwaysHereTweenedObjects.InnerUFO.Object.ObjectModel.Part, CFrame.new(0, 0, 0))
     			end
     		end)
     	end
