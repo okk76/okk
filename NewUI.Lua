@@ -195,18 +195,6 @@ char:FindFirstChild("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
 end
 end)
 
-LP:AddSlider("Gravity", {
-	Text = "Gravity",
-	Default = 100,
-	Min = 0,
-	Max = 100,
-	Rounding = 1,
-	Compact = false,
-	Callback = function(Value)
-		game.workspace.Gravity = Value
-	end,
-})
-
 LP:AddSlider("FOV", {
 	Text = "FOV",
 	Default = 70,
@@ -271,7 +259,7 @@ end)
 })
 
 LP:AddToggle("PLCD", {
-	Text = "PLCD",
+	Text = "PLCD View",
 	Default = false,
 	Callback = function(Value)
 	if Value then
@@ -299,56 +287,11 @@ else
 	end,
 })
 
-LP:AddLabel("TP Mouse"):AddKeyPicker("Tpbind", {
-	Default = "Z",
-	Callback = function()
-	local mouse = LocalPlayer:GetMouse()
-	local char = LocalPlayer.Character
-	if char and char:FindFirstChild("HumanoidRootPart") then
-	char.HumanoidRootPart.CFrame = CFrame.new(mouse.Hit.Position + Vector3.new(0, 3, 0))  
-	end
-	end,
-})
-
-LP:AddToggle("LoopRagdoll", {
-	Text = "Loop Ragdoll",
-	Default = false,
-	Callback = function(Value)
-	if Value then
-	rag = true
-	task.spawn(function()
-    while rag do
-    ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart)
-    task.wait()
-	end
-    end)
-   	else
-	rag = false
-	end
-	end,
-})
-
-LP:AddLabel("Jerk Off"):AddKeyPicker("jerkoffbind", {
-	Default = "G",
-	Callback = function(Value)
-	animator = char:WaitForChild("Humanoid"):WaitForChild("Animator")
-	local anim = Instance.new("Animation", char.Humanoid)
-	anim.AnimationId = "rbxassetid://168268306"
-	jerkoff = animator:LoadAnimation(anim)
-	jerkoffanimation = Value; jerkoff:Play()
-	task.spawn(function()
-	while jerkoffanimation do
-	jerkoff.TimePosition = 0.3
-	task.wait(0.075)
-	end
-	end)
-	end,
-})
-
 LP:AddToggle("Shaders", {
 	Text = "Shaders",
 	Default = false,
 	Callback = function(Value)
+	local water = game.Workspace.Map.AlwaysHereTweenedObjects.Ocean.Object:FindFirstChild("ObjectModel")
 	local Lighting = game:GetService("Lighting")
 	if Value then
 	Lighting.ClockTime = 7.5
@@ -356,10 +299,20 @@ LP:AddToggle("Shaders", {
 	blur.Size = 3
 	local sunrays = Instance.new("SunRaysEffect", Lighting)
 	sunrays.Intensity = 0.1
+    for _, part in ipairs(water:GetChildren()) do
+        if part.Name == "Ocean" and part:IsA("Part") then
+            part.Transparency = 1
+        end
+    end
    	else
 	Lighting.ClockTime = 14
 	Lighting.Blur:Destroy()
 	Lighting.SunRays:Destroy()
+    for _, part in ipairs(water:GetChildren()) do
+        if part.Name == "Ocean" and part:IsA("Part") then
+            part.Transparency = 0
+        end
+    end
 	end
 	end,
 })
@@ -1090,60 +1043,6 @@ DF:AddToggle("DisableBarrierCollisions", {
 	end,
 })
 
-local MyButton = DF:AddButton({
-	Text = "Break Barrier",
-	Func = function()
-	local hrp = char:FindFirstChild("HumanoidRootPart")
-	local breaker
-	repeat 
-    task.wait()
-    until LocalPlayer.CanSpawnToy.Value == true
-	pcall(function()
-	spawnItem("FoodHamburger", spaw.Position + Vector3.new(0, 100, 0))	
-	end)
-	local breaker = toysFolder:WaitForChild("FoodHamburger")
-	local holdpart = breaker:WaitForChild("HoldPart")
-	holdpart.HoldItemRemoteFunction:InvokeServer(breaker, char)
-	ReplicatedStorage.HoldEvents.Use:FireServer(breaker)
-	task.wait(1.8)
-	hrp.CFrame = CFrame.new(250, 1, 460)
-	end,
-})
-
-DF:AddToggle("WaterWalk", {
-	Text = "WaterWalk",
-	Default = false,
-	Callback = function(Value)
-	local water = game.Workspace.Map.AlwaysHereTweenedObjects.Ocean.Object:FindFirstChild("ObjectModel")
-if water then
-    for _, part in ipairs(water:GetChildren()) do
-        if part.Name == "Ocean" and part:IsA("Part") then
-            part.CanCollide = Value
-        end
-    end
-end
-	end,
-})
-
-DF:AddSlider("WaterTransparency", {
-	Text = "Water Transparency",
-	Default = 0,
-	Min = 0,
-	Max = 1,
-	Rounding = 1,
-	Compact = false,
-	Callback = function(Num)
-	local water = game.Workspace.Map.AlwaysHereTweenedObjects.Ocean.Object:FindFirstChild("ObjectModel")
-if water then
-    for _, part in ipairs(water:GetChildren()) do
-        if part.Name == "Ocean" and part:IsA("Part") then
-            part.Transparency = Num
-        end
-    end
-end
-	end,
-})
-
 DF:AddToggle("AntiVoid", {
 	Text = "Anti Void",
 	Default = false,
@@ -1170,6 +1069,21 @@ DF:AddToggle("LoopTp", {
 			task.wait(0.03)
 			end
 		end)
+	end,
+})
+
+DF:AddToggle("WaterWalk", {
+	Text = "WaterWalk",
+	Default = false,
+	Callback = function(Value)
+	local water = game.Workspace.Map.AlwaysHereTweenedObjects.Ocean.Object:FindFirstChild("ObjectModel")
+if water then
+    for _, part in ipairs(water:GetChildren()) do
+        if part.Name == "Ocean" and part:IsA("Part") then
+            part.CanCollide = Value
+        end
+    end
+end
 	end,
 })
 
@@ -2053,6 +1967,26 @@ KB:AddLabel("Island"):AddKeyPicker("KeyPicker9", {
 })
 
 MC:AddButton({
+	Text = "Break Barrier",
+	Func = function()
+	local hrp = char:FindFirstChild("HumanoidRootPart")
+	local breaker
+	repeat 
+    task.wait()
+    until LocalPlayer.CanSpawnToy.Value == true
+	pcall(function()
+	spawnItem("FoodHamburger", spaw.Position + Vector3.new(0, 100, 0))	
+	end)
+	local breaker = toysFolder:WaitForChild("FoodHamburger")
+	local holdpart = breaker:WaitForChild("HoldPart")
+	holdpart.HoldItemRemoteFunction:InvokeServer(breaker, char)
+	ReplicatedStorage.HoldEvents.Use:FireServer(breaker)
+	task.wait(1.8)
+	hrp.CFrame = CFrame.new(250, 1, 460)
+	end,
+})
+
+MC:AddButton({
 	Text = "Grab All Items",
 	Func = function()
 	for _, obj in ipairs(game.Workspace:GetDescendants()) do
@@ -2063,6 +1997,24 @@ MC:AddButton({
     end
     end)
     end
+	end,
+})
+
+MC:AddToggle("LoopRagdoll", {
+	Text = "Loop Ragdoll",
+	Default = false,
+	Callback = function(Value)
+	if Value then
+	rag = true
+	task.spawn(function()
+    while rag do
+    ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart)
+    task.wait()
+	end
+    end)
+   	else
+	rag = false
+	end
 	end,
 })
 
@@ -2164,6 +2116,34 @@ MC:AddButton("DettachTrain", {
     	end
 		workspace.Map.AlwaysHereTweenedObjects.Train.Object.FollowThisPart.AlignOrientation.Enabled = false
 		workspace.Map.AlwaysHereTweenedObjects.Train.Object.FollowThisPart.AlignPosition.Enabled = false
+	end,
+})
+
+FKB:AddLabel("TP Mouse"):AddKeyPicker("Tpbind", {
+	Default = "Z",
+	Callback = function()
+	local mouse = LocalPlayer:GetMouse()
+	local char = LocalPlayer.Character
+	if char and char:FindFirstChild("HumanoidRootPart") then
+	char.HumanoidRootPart.CFrame = CFrame.new(mouse.Hit.Position + Vector3.new(0, 3, 0))  
+	end
+	end,
+})
+
+FKB:AddLabel("Jerk Off"):AddKeyPicker("jerkoffbind", {
+	Default = "G",
+	Callback = function(Value)
+	animator = char:WaitForChild("Humanoid"):WaitForChild("Animator")
+	local anim = Instance.new("Animation", char.Humanoid)
+	anim.AnimationId = "rbxassetid://168268306"
+	jerkoff = animator:LoadAnimation(anim)
+	jerkoffanimation = Value; jerkoff:Play()
+	task.spawn(function()
+	while jerkoffanimation do
+	jerkoff.TimePosition = 0.3
+	task.wait(0.075)
+	end
+	end)
 	end,
 })
 
