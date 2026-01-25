@@ -2080,21 +2080,91 @@ MC:AddButton("DettachInnerUFO", {
         Text = "Dettach Inner UFO",
         Func = function()
 		local UFO = workspace.Map.AlwaysHereTweenedObjects.InnerUFO.Object.ObjectModel.Body
-		local count = 0
+		for i = 1, 11 do
         spawnShurikens()
-		task.wait()
+		task.wait(0.1)
+		end
+		task.wait(0.1)
 		for _, del in ipairs(toysFolder:GetChildren()) do
 			pcall(function()
     			if del:FindFirstChild("StickyPart") and del.Name == "NinjaShuriken" then
 					SetNetworkOwner:FireServer(del.SoundPart, del.SoundPart.CFrame)
 				task.wait()
-					StickyPartEvent:FireServer(del.StickyPart, workspace.Map.AlwaysHereTweenedObjects.InnerUFO.Object.ObjectModel.Part, CFrame.new(0, 0, 0))
+					StickyPartEvent:FireServer(del.StickyPart, UFO, CFrame.new(0, 0, 0))
     			end
     		end)
     	end
-		if UFO:FindFirstChild("ObjectModelAttachment") then
-		UFO.ObjectModelAttachment:Destroy()
+		workspace.Map.AlwaysHereTweenedObjects.InnerUFO.Object.FollowThisPart.AlignOrientation.Enabled = false
+		workspace.Map.AlwaysHereTweenedObjects.InnerUFO.Object.FollowThisPart.AlignPosition.Enabled = false
+	end,
+})
+
+MC:AddButton("DettachOuterUFO", {
+        Text = "Dettach Outer UFO",
+        Func = function()
+		local UFO = workspace.Map.AlwaysHereTweenedObjects.OuterUFO.Object.ObjectModel.Body
+		for i = 1, 11 do
+        spawnShurikens()
+		task.wait(0.1)
 		end
+		task.wait(0.1)
+		for _, del in ipairs(toysFolder:GetChildren()) do
+			pcall(function()
+    			if del:FindFirstChild("StickyPart") and del.Name == "NinjaShuriken" then
+					SetNetworkOwner:FireServer(del.SoundPart, del.SoundPart.CFrame)
+				task.wait()
+					StickyPartEvent:FireServer(del.StickyPart, UFO, CFrame.new(0, 0, 0))
+    			end
+    		end)
+    	end
+		workspace.Map.AlwaysHereTweenedObjects.OuterUFO.Object.FollowThisPart.AlignOrientation.Enabled = false
+		workspace.Map.AlwaysHereTweenedObjects.OuterUFO.Object.FollowThisPart.AlignPosition.Enabled = false
+	end,
+})
+
+MC:AddButton("DettachCaveCart", {
+        Text = "Dettach Cave Cart",
+        Func = function()
+		local Cart = workspace.Map.AlwaysHereTweenedObjects.CaveCart.Object.ObjectModel:FindFirstChild("Part")
+		for i = 1, 11 do
+        spawnShurikens()
+		task.wait(0.1)
+		end
+		task.wait(0.1)
+		for _, del in ipairs(toysFolder:GetChildren()) do
+			pcall(function()
+    			if del:FindFirstChild("StickyPart") and del.Name == "NinjaShuriken" then
+					SetNetworkOwner:FireServer(del.SoundPart, del.SoundPart.CFrame)
+				task.wait()
+					StickyPartEvent:FireServer(del.StickyPart, Cart, CFrame.new(0, 0, 0))
+    			end
+    		end)
+    	end
+		workspace.Map.AlwaysHereTweenedObjects.CaveCart.Object.FollowThisPart.AlignOrientation.Enabled = false
+		workspace.Map.AlwaysHereTweenedObjects.CaveCart.Object.FollowThisPart.AlignPosition.Enabled = false
+	end,
+})
+
+MC:AddButton("DettachTrain", {
+        Text = "Dettach Train",
+        Func = function()
+		local Train = workspace.Map.AlwaysHereTweenedObjects.Train.Object.ObjectModel.BallOctagon
+		for i = 1, 11 do
+        spawnShurikens()
+		task.wait(0.1)
+		end
+		task.wait(0.1)
+		for _, del in ipairs(toysFolder:GetChildren()) do
+			pcall(function()
+    			if del:FindFirstChild("StickyPart") and del.Name == "NinjaShuriken" then
+					SetNetworkOwner:FireServer(del.SoundPart, del.SoundPart.CFrame)
+				task.wait()
+					StickyPartEvent:FireServer(del.StickyPart, Train, CFrame.new(0, 0, 0))
+    			end
+    		end)
+    	end
+		workspace.Map.AlwaysHereTweenedObjects.Train.Object.FollowThisPart.AlignOrientation.Enabled = false
+		workspace.Map.AlwaysHereTweenedObjects.Train.Object.FollowThisPart.AlignPosition.Enabled = false
 	end,
 })
 
