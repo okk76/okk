@@ -117,6 +117,7 @@ local Window = Library:CreateWindow({
 local Tabs = {
 	Main = Window:AddTab("Main"),
 	Target = Window:AddTab("Target"),
+	Auras = Window:AddTab("Auras"),
 	Misc = Window:AddTab("Misc"),
 	Keybinds = Window:AddTab("Keybinds"),
 	["UI Settings"] = Window:AddTab("UI Settings"),
@@ -132,6 +133,7 @@ local CTR = Tabs.Target:AddRightGroupbox("Control")
 local WL = Tabs.Target:AddLeftGroupbox("Whitelist")
 local BL = Tabs.Target:AddRightGroupbox("Blobman Settings")
 local MC = Tabs.Misc:AddLeftGroupbox("Functions")
+local AU = Tabs.Auras:AddLeftGroupbox("Auras")
 
 LP:AddSlider("WalkSpeed", {
 	Text = "WalkSpeed",
@@ -560,10 +562,7 @@ GB:AddToggle("PacketLag", {
 		if Value then
 		PacketLag = true
             task.spawn(function()
-                while PacketLag do
-                        extGrabLineEvent:FireServer(string.rep("🤣🤣🤣🤣🤣", PacketAmount))
-                    task.wait(0.5)
-                end
+               extGrabLineEvent:FireServer(string.rep("🤣🤣🤣🤣🤣", PacketAmount))
             end)
         else
             PacketLag = false
@@ -2084,7 +2083,7 @@ MC:AddButton("DettachInnerUFO", {
         spawnShurikens()
 		task.wait(0.1)
 		end
-		task.wait(0.1)
+		task.wait(0.5)
 		for _, del in ipairs(toysFolder:GetChildren()) do
 			pcall(function()
     			if del:FindFirstChild("StickyPart") and del.Name == "NinjaShuriken" then
@@ -2178,6 +2177,130 @@ FKB:AddLabel("PacketLag"):AddKeyPicker("LagBind", {
 	Description = "Packet Lag",
 	Time = 3,
 	})
+	end,
+})
+
+AU:AddDropdown("GrabAuraType", {
+		Values = { "Players", "Toys", "Both" },
+		Default = nil,
+		Multi = false,
+		Callback = function(Selected)
+		GrabAuraType = Selected
+	end,
+})
+
+AU:AddSlider("GrabAuraRadius", {
+	Text = "Grab Aura Radius",
+	Default = 15,
+	Min = 5,
+	Max = 20,
+	Rounding = 1,
+	Compact = false,
+	Callback = function(Value)
+	GrabAuraRadius = Value
+	end,
+})
+
+AU:AddToggle("GrabAura", {
+	Text = "Grab Aura",
+	Default = false,
+	Callback = function(Value)
+	if Value then
+	GrabAura = RunService.Heartbeat:Connect(function()
+	if GrabAuraType == "Players" then
+		for _, plrsnearby in ipairs(P:GetPlayers()) do
+			if plrsnearby ~= LocalPlayer and plrsnearby.Character then
+				local plrsnearbyRoot = plrsnearby.Character:FindFirstChild("HumanoidRootPart")
+				local plrsnearbyHum = char:FindFirstChildOfClass("Humanoid")
+					if plrsnearbyRoot and plrsnearbyHum and plrsnearbyHum.Health > 0 then
+						local distance = (plrsnearbyRoot.Position - char:FindFirstChild("HumanoidRootPart").Position).Magnitude
+						if distance <= GrabAuraRadius then
+							SetNetworkOwner:FireServer(plrsnearbyRoot, plrsnearbyRoot.CFrame)
+						end
+					end
+				end
+			end
+		end
+	end)
+	elseif GrabAura then
+	GrabAura:Disconnect()
+	GrabAura = nil
+	end
+	end,
+})
+
+AU:AddDropdown("BlobGrabAuraType", {
+		Values = { "LeftHand", "RightHand", "BothHands" },
+		Default = nil,
+		Multi = false,
+		Callback = function(Selected)
+		BlobGrabAuraType = Selected
+	end,
+})
+
+AU:AddSlider("BlobGrabAuraRadius", {
+	Text = "Blob Grab Aura Radius",
+	Default = 25,
+	Min = 5,
+	Max = 50,
+	Rounding = 1,
+	Compact = false,
+	Callback = function(Value)
+	BlobGrabAuraRadius = Value
+	end,
+})
+
+AU:AddToggle("BlobGrabAura", {
+	Text = "Blob Grab Aura",
+	Default = false,
+	Callback = function(Value)
+	local hum = char and char:FindFirstChild("Humanoid")
+	local seat = hum and hum.SeatPart
+	local seatParent = seat.Parent
+	local grabB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureGrab")
+	local dropB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureDrop")
+	local leftDet = seatParent:FindFirstChild("LeftDetector")
+	local rightDet = seatParent:FindFirstChild("RightDetector")
+	local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
+	local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
+	if Value then
+	BlobGrabAura = RunService.Heartbeat:Connect(function()
+		for _, plrsnearby in ipairs(P:GetPlayers()) do
+			if plrsnearby ~= LocalPlayer and plrsnearby.Character then
+				local plrsnearbyRoot = plrsnearby.Character:FindFirstChild("HumanoidRootPart")
+				local plrsnearbyHum = char:FindFirstChildOfClass("Humanoid")
+				if plrsnearbyRoot and plrsnearbyHum and plrsnearbyHum.Health > 0 then
+					local distance = (plrsnearbyRoot.Position - char:FindFirstChild("HumanoidRootPart").Position).Magnitude
+					if distance <= BlobGrabAuraRadius then
+					if BlobGrabAuraType == "LeftHand" then
+						task.wait(0.01)
+						grabB:FireServer(leftDet, plrsnearbyRoot, leftWeld)
+						task.wait(0.01)
+						dropB:FireServer(leftWeld, plrsnearbyRoot)
+					elseif BlobGrabAuraType == "RightHand" then
+						task.wait(0.01)
+						grabB:FireServer(rightDet, plrsnearbyRoot, rightWeld)
+						task.wait(0.01)
+						dropB:FireServer(rightWeld, plrsnearbyRoot)
+					elseif BlobGrabAuraType == "BothHands" then
+						task.wait(0.05)
+						grabB:FireServer(leftDet, plrsnearbyRoot, leftWeld)
+						task.wait(0.05)
+						dropB:FireServer(leftWeld, plrsnearbyRoot)
+						task.wait(0.05)
+						grabB:FireServer(rightDet, plrsnearbyRoot, rightWeld)
+						task.wait(0.05)
+						dropB:FireServer(rightWeld, plrsnearbyRoot)	
+					end
+					end
+				end
+			end
+		end
+	end)
+	elseif BlobGrabAura then
+	BlobGrabAura:Disconnect()
+	BlobGrabAura = nil
+	end
 	end,
 })
 
