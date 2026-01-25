@@ -133,6 +133,7 @@ local CTR = Tabs.Target:AddRightGroupbox("Control")
 local WL = Tabs.Target:AddLeftGroupbox("Whitelist")
 local BL = Tabs.Target:AddRightGroupbox("Blobman Settings")
 local MC = Tabs.Misc:AddLeftGroupbox("Functions")
+local SRV = Tabs.Misc:AddRightGroupbox("Server")
 local AU = Tabs.Auras:AddLeftGroupbox("Auras")
 
 LP:AddSlider("WalkSpeed", {
@@ -257,66 +258,6 @@ end)
 	end
 	end,
 })
-
-LP:AddToggle("PLCD", {
-	Text = "PLCD View",
-	Default = false,
-	Callback = function(Value)
-	if Value then
-	plcd = RunService.Heartbeat:Connect(function()
-    for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "PlayerCharacterLocationDetector" and part:IsA("Part") then
-            part.Transparency = 0.85
-			part.Material = Enum.Material.Neon
- 			hue = (hue + 0.00005) % 1
- 			part.Color = Color3.fromHSV(hue, 1, 1)
-		end
-	end
-end)
-else
-	if plcd then
-	plcd:Disconnect()
-	plcd = nil
-	for _, part in ipairs(group:GetChildren()) do
-        if part.Name == "PlayerCharacterLocationDetector" and part:IsA("Part") then
-            part.Transparency = 1
-			end
-		end
-	end
-	end
-	end,
-})
-
-LP:AddToggle("Shaders", {
-	Text = "Shaders",
-	Default = false,
-	Callback = function(Value)
-	local water = game.Workspace.Map.AlwaysHereTweenedObjects.Ocean.Object:FindFirstChild("ObjectModel")
-	local Lighting = game:GetService("Lighting")
-	if Value then
-	Lighting.ClockTime = 7.5
-	local blur = Instance.new("BlurEffect", Lighting)
-	blur.Size = 3
-	local sunrays = Instance.new("SunRaysEffect", Lighting)
-	sunrays.Intensity = 0.1
-    for _, part in ipairs(water:GetChildren()) do
-        if part.Name == "Ocean" and part:IsA("Part") then
-            part.Transparency = 1
-        end
-    end
-   	else
-	Lighting.ClockTime = 14
-	Lighting.Blur:Destroy()
-	Lighting.SunRays:Destroy()
-    for _, part in ipairs(water:GetChildren()) do
-        if part.Name == "Ocean" and part:IsA("Part") then
-            part.Transparency = 0
-        end
-    end
-	end
-	end,
-})
-
 --local MyButton = LP:AddButton({
 	--Text = "R",
 	--Func = function()
@@ -418,46 +359,6 @@ GB:AddToggle("Strong", {
 --	end,
 --})
 
-GB:AddToggle("FartherReach", {
-    Text = "FartherReach",
-	Default = false,
-	Callback = function(on)
-	local Activator = game.ReplicatedStorage.MenuToys.LimitedTimeToyEvent
-	local dead
-	if on then
-	local LineTexture = LocalPlayer:FindFirstChild("FartherReach")
-    if LineTexture then
-    LineTexture:Destroy()
-	end
-    local LineTexture = Instance.new("BoolValue")
-    LineTexture.Name = "FartherReach"
-    LineTexture.Value = true
-    LineTexture.Parent = LocalPlayer
-	char.GrabbingScript.Enabled = false
-    char.GrabbingScript.Enabled = true
-	task.delay(0.1, function()
-    Activator:FireServer()
-    end)
-	dead = LocalPlayer.CharacterAdded:Connect(function(Character)
-            Character:WaitForChild("GrabbingScript")
-            Toggles.FartherReach:SetValue(false)
-            Toggles.FartherReach:SetValue(true)
-        end)
-	else
-	local LineTexture = LocalPlayer:FindFirstChild("FartherReach")
-	if LineTexture then
-	LineTexture:Destroy()
-	end
-	char.GrabbingScript.Enabled = false
-    char.GrabbingScript.Enabled = true
-	if dead then
-	dead:Disconnect()
-	dead = nil
-	end
-	end
-    end,
-})
-
 GB:AddSlider("LinesAmount", {
         Text = "Lines Amount",
         Default = 1,
@@ -484,41 +385,6 @@ GB:AddButton("LagServer", {
 		GrabEvents.CreateGrabLine:FireServer(spaw, spaw.CFrame)
 		GrabEvents.DestroyGrabLine:FireServer(char.Torso, char.Torso.CFrame)
 		task.wait()
-        end
-	end,
-})
-
-GB:AddSlider("PacketStrength", {
-        Text = "Packet Lag Strength",
-        Default = 500,
-        Min = 500,
-        Max = 50000,
-        Rounding = 0,
-        Callback = function(Value)
-        PacketAmount = Value
-    end
-})
-
-GB:AddButton("PacketLagButton", {
-        Text = "Packet Lag",
-        Func = function()
-		local extGrabLineEvent = GrabEvents:WaitForChild("ExtendGrabLine")
-		extGrabLineEvent:FireServer(string.rep("🤣🤣🤣🤣🤣", PacketAmount))
-	end,
-})
-
-GB:AddToggle("PacketLag", {
-        Text = "Packet Lag",
-        Default = false,
-        Callback = function(Value)
-		local extGrabLineEvent = GrabEvents:WaitForChild("ExtendGrabLine")
-		if Value then
-		PacketLag = true
-            task.spawn(function()
-               extGrabLineEvent:FireServer(string.rep("🤣🤣🤣🤣🤣", PacketAmount))
-            end)
-        else
-            PacketLag = false
         end
 	end,
 })
@@ -728,6 +594,30 @@ DF:AddToggle("AntiGrabGucci", {
 	end,
 })
 
+DF:AddToggle("AntiLag", {
+	Text = "Anti Lag",
+	Default = false,
+	Callback = function(Value)
+	if Value then
+LocalPlayer.PlayerScripts.CharacterAndBeamMove.Disabled = true
+   	else
+LocalPlayer.PlayerScripts.CharacterAndBeamMove.Disabled = false
+	end
+	end,
+})
+
+DF:AddToggle("AntiVoid", {
+	Text = "Anti Void",
+	Default = false,
+	Callback = function(Value)
+	if Value then
+	game.Workspace.FallenPartsDestroyHeight = -10e+37
+   	else
+	game.Workspace.FallenPartsDestroyHeight = -100
+	end
+	end,
+})
+
 DF:AddDropdown("AntiKickItem", {
 	Values = { "NinjaShuriken", "NinjaKunai", "ToolCleaver", "ToolDiggingForkRusty", "ToolPickaxe" },
 	Default = nil, -- number index of the value / string
@@ -924,18 +814,6 @@ DF:AddToggle("AntiKick", {
 	end,
 })
 
-DF:AddToggle("AntiLag", {
-	Text = "Anti Lag",
-	Default = false,
-	Callback = function(Value)
-	if Value then
-LocalPlayer.PlayerScripts.CharacterAndBeamMove.Disabled = true
-   	else
-LocalPlayer.PlayerScripts.CharacterAndBeamMove.Disabled = false
-	end
-	end,
-})
-
 DF:AddDropdown("AntiInputLagItem", {
 	Values = { "PoopPileSparkle", "FoodHamburger", "CupMugWhite", "FoodBanana", "FoodCoconut", "FoodSodaCan", "CupMugBrown", "FoodBread", "FoodBroccoli", "FoodDippyEgg", "FoodDonut", "FoodHotdog", "FoodMayonnaise", "FoodMeatStick", "FoodMushroomPoison", "FoodPizzaCheese", "PoopPile", "FoodPizzaPepperoni", "FoodFrenchFries", "FoodCakePink", "InstrumentBrassBugle", "InstrumentBrassTrumpet", "InstrumentBrassVuvuzela", "InstrumentDrumBongos", "InstrumentDrumSnare", "InstrumentGuitarAcoustic", "InstrumentGuitarBanjo", "InstrumentGuitarLyre", "InstrumentGuitarUkulele", "InstrumentGuitarViolin", "InstrumentPianoKeyboard", "InstrumentPianoMelodica", "InstrumentVoiceMicrophone", "InstrumentWoodwindOcarina", "InstrumentWoodwindSaxophone" },
 	Default = nil, -- number index of the value / string
@@ -992,7 +870,7 @@ DF:AddToggle("AntiNetwork", {
     end,
 })
 
-local MyButton = DF:AddButton({
+DF:AddButton({
 	Text = "Anti Banana (Delete Legs)",
 	Func = function()
 	repeat
@@ -1010,48 +888,9 @@ local MyButton = DF:AddButton({
 	task.wait()
 	end
 	end)
+	task.wait(0.1)
 	Toggles.Trd:SetValue(false)
 	Toggles.Trd:SetValue(true)
-	end,
-})
-
-DF:AddToggle("DisableBarrierCollisions", {
-	Text = "Disable Barrier Collisions",
-	Default = false,
-	Callback = function(Value)
-	for plotNumber = 1, 5 do
-            local plotName = "Plot" .. plotNumber
-            local plot = game.Workspace.Plots[plotName]
-            
-            if plot then
-                local group = plot:FindFirstChild("Barrier")
-                if group then
-                    for _, part in ipairs(group:GetChildren()) do
-                        if part.Name == "PlotBarrier" and part:IsA("Part") then
-                            part.CanCollide = not Value
-                            part.CanQuery = not Value
-                        end
-                    end
-                end
-                
-                local plotArea = plot:FindFirstChild("PlotArea")
-                if plotArea and plotArea:IsA("BasePart") then
-                    plotArea.CanQuery = not Value
-                end
-            end
-        end
-	end,
-})
-
-DF:AddToggle("AntiVoid", {
-	Text = "Anti Void",
-	Default = false,
-	Callback = function(Value)
-	if Value then
-	game.Workspace.FallenPartsDestroyHeight = -10e+37
-   	else
-	game.Workspace.FallenPartsDestroyHeight = -100
-	end
 	end,
 })
 
@@ -1069,21 +908,6 @@ DF:AddToggle("LoopTp", {
 			task.wait(0.03)
 			end
 		end)
-	end,
-})
-
-DF:AddToggle("WaterWalk", {
-	Text = "WaterWalk",
-	Default = false,
-	Callback = function(Value)
-	local water = game.Workspace.Map.AlwaysHereTweenedObjects.Ocean.Object:FindFirstChild("ObjectModel")
-if water then
-    for _, part in ipairs(water:GetChildren()) do
-        if part.Name == "Ocean" and part:IsA("Part") then
-            part.CanCollide = Value
-        end
-    end
-end
 	end,
 })
 
@@ -1620,10 +1444,8 @@ TR:AddToggle("LoopBlobKick", {
 	else
 	Lbanana = false
 	if toysFolder:FindFirstChild("FoodBanana") then
-		DestroyT(toysFolder:FindFirstChild("FoodBanana"))
-		else
-		task.wait()
-		end
+	DestroyT(toysFolder:FindFirstChild("FoodBanana"))
+	end
 	end
 	end,
 })
@@ -1966,37 +1788,105 @@ KB:AddLabel("Island"):AddKeyPicker("KeyPicker9", {
 	end,
 })
 
-MC:AddButton({
-	Text = "Break Barrier",
-	Func = function()
-	local hrp = char:FindFirstChild("HumanoidRootPart")
-	local breaker
-	repeat 
-    task.wait()
-    until LocalPlayer.CanSpawnToy.Value == true
-	pcall(function()
-	spawnItem("FoodHamburger", spaw.Position + Vector3.new(0, 100, 0))	
-	end)
-	local breaker = toysFolder:WaitForChild("FoodHamburger")
-	local holdpart = breaker:WaitForChild("HoldPart")
-	holdpart.HoldItemRemoteFunction:InvokeServer(breaker, char)
-	ReplicatedStorage.HoldEvents.Use:FireServer(breaker)
-	task.wait(1.8)
-	hrp.CFrame = CFrame.new(250, 1, 460)
+MC:AddToggle("PLCD", {
+	Text = "PLCD View",
+	Default = false,
+	Callback = function(Value)
+	if Value then
+	plcd = RunService.Heartbeat:Connect(function()
+    for _, part in ipairs(group:GetChildren()) do
+        if part.Name == "PlayerCharacterLocationDetector" and part:IsA("Part") then
+            part.Transparency = 0.85
+			part.Material = Enum.Material.Neon
+ 			hue = (hue + 0.00005) % 1
+ 			part.Color = Color3.fromHSV(hue, 1, 1)
+		end
+	end
+end)
+else
+	if plcd then
+	plcd:Disconnect()
+	plcd = nil
+	for _, part in ipairs(group:GetChildren()) do
+        if part.Name == "PlayerCharacterLocationDetector" and part:IsA("Part") then
+            part.Transparency = 1
+			end
+		end
+	end
+	end
 	end,
 })
 
-MC:AddButton({
-	Text = "Grab All Items",
-	Func = function()
-	for _, obj in ipairs(game.Workspace:GetDescendants()) do
-	pcall(function()
-    if obj:FindFirstChild("HoldPart") then
-    obj.HoldPart.HoldItemRemoteFunction:InvokeServer(obj, char)
-    obj.HoldPart.DropItemRemoteFunction:InvokeServer(obj, char)
+MC:AddToggle("Shaders", {
+	Text = "Shaders",
+	Default = false,
+	Callback = function(Value)
+	local water = game.Workspace.Map.AlwaysHereTweenedObjects.Ocean.Object:FindFirstChild("ObjectModel")
+	local Lighting = game:GetService("Lighting")
+	if Value then
+	Lighting.ClockTime = 7.5
+	local blur = Instance.new("BlurEffect", Lighting)
+	blur.Size = 3
+	local sunrays = Instance.new("SunRaysEffect", Lighting)
+	sunrays.Intensity = 0.1
+    for _, part in ipairs(water:GetChildren()) do
+        if part.Name == "Ocean" and part:IsA("Part") then
+            part.Transparency = 1
+        end
     end
-    end)
+   	else
+	Lighting.ClockTime = 14
+	Lighting.Blur:Destroy()
+	Lighting.SunRays:Destroy()
+    for _, part in ipairs(water:GetChildren()) do
+        if part.Name == "Ocean" and part:IsA("Part") then
+            part.Transparency = 0
+        end
     end
+	end
+	end,
+})
+
+MC:AddToggle("DisableBarrierCollisions", {
+	Text = "Disable Barrier Collisions",
+	Default = false,
+	Callback = function(Value)
+	for plotNumber = 1, 5 do
+            local plotName = "Plot" .. plotNumber
+            local plot = game.Workspace.Plots[plotName]
+            
+            if plot then
+                local group = plot:FindFirstChild("Barrier")
+                if group then
+                    for _, part in ipairs(group:GetChildren()) do
+                        if part.Name == "PlotBarrier" and part:IsA("Part") then
+                            part.CanCollide = not Value
+                            part.CanQuery = not Value
+                        end
+                    end
+                end
+                
+                local plotArea = plot:FindFirstChild("PlotArea")
+                if plotArea and plotArea:IsA("BasePart") then
+                    plotArea.CanQuery = not Value
+                end
+            end
+        end
+	end,
+})
+
+MC:AddToggle("WaterWalk", {
+	Text = "WaterWalk",
+	Default = false,
+	Callback = function(Value)
+	local water = game.Workspace.Map.AlwaysHereTweenedObjects.Ocean.Object:FindFirstChild("ObjectModel")
+if water then
+    for _, part in ipairs(water:GetChildren()) do
+        if part.Name == "Ocean" and part:IsA("Part") then
+            part.CanCollide = Value
+        end
+    end
+end
 	end,
 })
 
@@ -2018,6 +1908,115 @@ MC:AddToggle("LoopRagdoll", {
 	end,
 })
 
+MC:AddToggle("FartherReach", {
+    Text = "FartherReach",
+	Default = false,
+	Callback = function(on)
+	local Activator = game.ReplicatedStorage.MenuToys.LimitedTimeToyEvent
+	local dead
+	if on then
+	local LineTexture = LocalPlayer:FindFirstChild("FartherReach")
+    if LineTexture then
+    LineTexture:Destroy()
+	end
+    local LineTexture = Instance.new("BoolValue")
+    LineTexture.Name = "FartherReach"
+    LineTexture.Value = true
+    LineTexture.Parent = LocalPlayer
+	char.GrabbingScript.Enabled = false
+    char.GrabbingScript.Enabled = true
+	task.delay(0.1, function()
+    Activator:FireServer()
+    end)
+	dead = LocalPlayer.CharacterAdded:Connect(function(Character)
+            Character:WaitForChild("GrabbingScript")
+            Toggles.FartherReach:SetValue(false)
+            Toggles.FartherReach:SetValue(true)
+        end)
+	else
+	local LineTexture = LocalPlayer:FindFirstChild("FartherReach")
+	if LineTexture then
+	LineTexture:Destroy()
+	end
+	char.GrabbingScript.Enabled = false
+    char.GrabbingScript.Enabled = true
+	if dead then
+	dead:Disconnect()
+	dead = nil
+	end
+	end
+    end,
+})
+
+SRV:AddButton({
+	Text = "Break Barrier",
+	Func = function()
+	local hrp = char:FindFirstChild("HumanoidRootPart")
+	local breaker
+	repeat 
+    task.wait()
+    until LocalPlayer.CanSpawnToy.Value == true
+	pcall(function()
+	spawnItem("FoodHamburger", spaw.Position + Vector3.new(0, 100, 0))	
+	end)
+	local breaker = toysFolder:WaitForChild("FoodHamburger")
+	local holdpart = breaker:WaitForChild("HoldPart")
+	holdpart.HoldItemRemoteFunction:InvokeServer(breaker, char)
+	ReplicatedStorage.HoldEvents.Use:FireServer(breaker)
+	task.wait(1.8)
+	hrp.CFrame = CFrame.new(250, 1, 460)
+	end,
+})
+
+SRV:AddButton({
+	Text = "Grab All Items",
+	Func = function()
+	for _, obj in ipairs(game.Workspace:GetDescendants()) do
+	pcall(function()
+    if obj:FindFirstChild("HoldPart") then
+    obj.HoldPart.HoldItemRemoteFunction:InvokeServer(obj, char)
+    obj.HoldPart.DropItemRemoteFunction:InvokeServer(obj, char)
+    end
+    end)
+    end
+	end,
+})
+
+SRV:AddSlider("PacketStrength", {
+        Text = "Packet Lag Strength",
+        Default = 500,
+        Min = 500,
+        Max = 50000,
+        Rounding = 0,
+        Callback = function(Value)
+        PacketAmount = Value
+    end
+})
+
+SRV:AddButton("PacketLagButton", {
+        Text = "Packet Lag",
+        Func = function()
+		local extGrabLineEvent = GrabEvents:WaitForChild("ExtendGrabLine")
+		extGrabLineEvent:FireServer(string.rep("🤣🤣🤣🤣🤣", PacketAmount))
+	end,
+})
+
+SRV:AddToggle("PacketLag", {
+        Text = "Loop Packet Lag",
+        Default = false,
+        Callback = function(Value)
+		local extGrabLineEvent = GrabEvents:WaitForChild("ExtendGrabLine")
+		if Value then
+		PacketLag = true
+            task.spawn(function()
+               extGrabLineEvent:FireServer(string.rep("🤣🤣🤣🤣🤣", PacketAmount))
+            end)
+        else
+            PacketLag = false
+        end
+	end,
+})
+
 local function spawnShurikens()
     repeat
 		task.wait()
@@ -2026,11 +2025,33 @@ local function spawnShurikens()
         spawnItem("NinjaShuriken", char.HumanoidRootPart.Position + Vector3.new(0, 5, 25))
     end)
 end
+
+SRV:AddDropdown("SelProp", {
+		Values = { "InnerUFO", "OuterUFO", "CaveCart", "Train" },
+		Default = nil,
+		Multi = false,
+		Callback = function(Sel)
+		Modelbreak = Sel
+	end,
+})
   
-MC:AddButton("DettachInnerUFO", {
-        Text = "Dettach Inner UFO",
+SRV:AddButton("BreakProp", {
+        Text = "Break",
         Func = function()
-		local UFO = workspace.Map.AlwaysHereTweenedObjects.InnerUFO.Object.ObjectModel.Body
+		chosenModel = Modelbreak
+		if chosenModel == "InnerUFO" then
+		local model = workspace.Map.AlwaysHereTweenedObjects.InnerUFO.Object
+		local partremove = model.ObjectModel.Body
+		elseif chosenModel == "OuterUFO" then
+		local model = workspace.Map.AlwaysHereTweenedObjects.OuterUFO.Object
+		local partremove = model.ObjectModel.Body
+		elseif chosenModel == "CaveCart" then
+		local model = workspace.Map.AlwaysHereTweenedObjects.CaveCart.Object
+		local partremove = model.ObjectModel:FindFirstChild("Part")
+		elseif chosenModel == "Train" then
+		local model = workspace.Map.AlwaysHereTweenedObjects.Train.Object
+		local partremove = model.ObjectModel.BallOctagon
+		end
 		for i = 1, 11 do
         spawnShurikens()
 		task.wait(0.1)
@@ -2041,81 +2062,12 @@ MC:AddButton("DettachInnerUFO", {
     			if del:FindFirstChild("StickyPart") and del.Name == "NinjaShuriken" then
 					SetNetworkOwner:FireServer(del.SoundPart, del.SoundPart.CFrame)
 				task.wait()
-					StickyPartEvent:FireServer(del.StickyPart, UFO, CFrame.new(0, 0, 0))
+					StickyPartEvent:FireServer(del.StickyPart, partremove, CFrame.new(0, 0, 0))
     			end
     		end)
     	end
-		workspace.Map.AlwaysHereTweenedObjects.InnerUFO.Object.FollowThisPart.AlignOrientation.Enabled = false
-		workspace.Map.AlwaysHereTweenedObjects.InnerUFO.Object.FollowThisPart.AlignPosition.Enabled = false
-	end,
-})
-
-MC:AddButton("DettachOuterUFO", {
-        Text = "Dettach Outer UFO",
-        Func = function()
-		local UFO = workspace.Map.AlwaysHereTweenedObjects.OuterUFO.Object.ObjectModel.Body
-		for i = 1, 11 do
-        spawnShurikens()
-		task.wait(0.1)
-		end
-		task.wait(0.1)
-		for _, del in ipairs(toysFolder:GetChildren()) do
-			pcall(function()
-    			if del:FindFirstChild("StickyPart") and del.Name == "NinjaShuriken" then
-					SetNetworkOwner:FireServer(del.SoundPart, del.SoundPart.CFrame)
-				task.wait()
-					StickyPartEvent:FireServer(del.StickyPart, UFO, CFrame.new(0, 0, 0))
-    			end
-    		end)
-    	end
-		workspace.Map.AlwaysHereTweenedObjects.OuterUFO.Object.FollowThisPart.AlignOrientation.Enabled = false
-		workspace.Map.AlwaysHereTweenedObjects.OuterUFO.Object.FollowThisPart.AlignPosition.Enabled = false
-	end,
-})
-
-MC:AddButton("DettachCaveCart", {
-        Text = "Dettach Cave Cart",
-        Func = function()
-		local Cart = workspace.Map.AlwaysHereTweenedObjects.CaveCart.Object.ObjectModel:FindFirstChild("Part")
-		for i = 1, 11 do
-        spawnShurikens()
-		task.wait(0.1)
-		end
-		task.wait(0.1)
-		for _, del in ipairs(toysFolder:GetChildren()) do
-			pcall(function()
-    			if del:FindFirstChild("StickyPart") and del.Name == "NinjaShuriken" then
-					SetNetworkOwner:FireServer(del.SoundPart, del.SoundPart.CFrame)
-				task.wait()
-					StickyPartEvent:FireServer(del.StickyPart, Cart, CFrame.new(0, 0, 0))
-    			end
-    		end)
-    	end
-		workspace.Map.AlwaysHereTweenedObjects.CaveCart.Object.FollowThisPart.AlignOrientation.Enabled = false
-		workspace.Map.AlwaysHereTweenedObjects.CaveCart.Object.FollowThisPart.AlignPosition.Enabled = false
-	end,
-})
-
-MC:AddButton("DettachTrain", {
-        Text = "Dettach Train",
-        Func = function()
-		local Train = workspace.Map.AlwaysHereTweenedObjects.Train.Object.ObjectModel.BallOctagon
-		for i = 1, 11 do
-        spawnShurikens()
-		task.wait(0.1)
-		end
-		task.wait(0.1)
-		for _, del in ipairs(toysFolder:GetChildren()) do
-			pcall(function()
-    			if del:FindFirstChild("StickyPart") and del.Name == "NinjaShuriken" then
-					SetNetworkOwner:FireServer(del.SoundPart, del.SoundPart.CFrame)
-				task.wait()
-					StickyPartEvent:FireServer(del.StickyPart, Train, CFrame.new(0, 0, 0))
-    			end
-    		end)
-    	end
-		workspace.Map.AlwaysHereTweenedObjects.Train.Object.FollowThisPart.AlignOrientation.Enabled = false
-		workspace.Map.AlwaysHereTweenedObjects.Train.Object.FollowThisPart.AlignPosition.Enabled = false
+		model.FollowThisPart.AlignOrientation.Enabled = false
+		model.FollowThisPart.AlignPosition.Enabled = false
 	end,
 })
 
@@ -2285,6 +2237,76 @@ AU:AddToggle("BlobGrabAura", {
 	end,
 })
 
+AU:AddSlider("BananaAuraRadius", {
+	Text = "Banana Aura Radius",
+	Default = 15,
+	Min = 5,
+	Max = 50,
+	Rounding = 1,
+	Compact = false,
+	Callback = function(Value)
+	BananaAuraRadius = Value
+	end,
+})
+
+AU:AddToggle("BananaAura", {
+	Text = "Banana Aura",
+	Default = false,
+	Callback = function(Value)
+	local hrp = char:FindFirstChild("HumanoidRootPart")
+	if Value then
+	repeat 
+    task.wait()
+    until LocalPlayer.CanSpawnToy.Value == true or Value == false
+    spawnItem("FoodBanana", hrp.Position + Vector3.new(0, 5, 20))
+    repeat 
+    RunService.Heartbeat:Wait()
+	banan = toysFolder:FindFirstChild("FoodBanana")
+    until banan
+	task.wait(0.05)
+	local holdPart = banan:FindFirstChild("HoldPart")
+	holdPart.HoldItemRemoteFunction:InvokeServer(banan, char)
+	ReplicatedStorage.HoldEvents.Use:FireServer(banan)
+	local parts = toysFolder:FindFirstChild("FoodBanana").EdiblePart
+    repeat 
+    RunService.Heartbeat:Wait()
+    until not parts
+	task.wait()
+	holdPart.DropItemRemoteFunction:InvokeServer(banan, hrp.CFrame * CFrame.new(-3, 5, 0), Vector3.new(0, 0, 0))
+	task.wait(0.05)
+	SetNetworkOwner:FireServer(toysFolder.FoodBanana.SoundPart, toysFolder.FoodBanana.SoundPart.CFrame)  
+	GrabEvents.DestroyGrabLine:FireServer(toysFolder.FoodBanana.SoundPart, toysFolder.FoodBanana.SoundPart.CFrame)
+	task.wait(0.05)
+	banan.SoundPart.CFrame = CFrame.new(153, 250, 335)
+	banan.SoundPart.Velocity = Vector3.new(0, 0, 0)
+	BananaAura = RunService.Heartbeat:Connect(function()
+	for _, plrsnearby in ipairs(P:GetPlayers()) do
+		if plrsnearby ~= LocalPlayer and plrsnearby.Character then
+			local plrsnearbyRoot = plrsnearby.Character:FindFirstChild("HumanoidRootPart")
+			local plrsnearbyHum = char:FindFirstChildOfClass("Humanoid")
+				if plrsnearbyRoot and plrsnearbyHum and plrsnearbyHum.Health > 0 then
+					local distance = (plrsnearbyRoot.Position - char:FindFirstChild("HumanoidRootPart").Position).Magnitude
+					if distance <= BananaAuraRadius then
+						banan.SoundPart.CFrame = plrsnearbyRoot.CFrame * CFrame.new(0, -1, 0)
+						banan.SoundPart.Velocity = Vector3.new(0, -100, 0)
+						task.wait(0.05)
+						banan.SoundPart.CFrame = CFrame.new(153, 250, 335)
+						banan.SoundPart.Velocity = Vector3.new(0, 0, 0)
+					end
+				end
+			end
+		end
+	end)
+	elseif BananaAura then
+	BananaAura:Disconnect()
+	BananaAura = nil
+	if toysFolder:FindFirstChild("FoodBanana") then
+	DestroyT(toysFolder:FindFirstChild("FoodBanana"))
+	end
+	end
+	end,
+})
+
 -- UI Settings
 local MenuGroup = Tabs["UI Settings"]:AddLeftGroupbox("Menu")
 
@@ -2318,6 +2340,9 @@ Toggles.AntiGrabPlayer:SetValue(false)
 Toggles.InfiniteJump:SetValue(false)
 Toggles.AntiExplode:SetValue(false)
 Toggles.Shaders:SetValue(false)
+Toggles.BananaAura:SetValue(false)
+Toggles.BlobGrabAura:SetValue(false)
+Toggles.GrabAura:SetValue(false)
 jerkoffanimation = false
 task.wait()
 Library:Unload()
