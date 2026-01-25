@@ -2216,6 +2216,7 @@ AU:AddToggle("GrabAura", {
 						local distance = (plrsnearbyRoot.Position - char:FindFirstChild("HumanoidRootPart").Position).Magnitude
 						if distance <= GrabAuraRadius then
 							SetNetworkOwner:FireServer(plrsnearbyRoot, plrsnearbyRoot.CFrame)
+							task.wait(0.01)
 						end
 					end
 				end
