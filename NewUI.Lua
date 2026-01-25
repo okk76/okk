@@ -2267,10 +2267,11 @@ AU:AddToggle("BananaAura", {
 	local holdPart = banan:FindFirstChild("HoldPart")
 	holdPart.HoldItemRemoteFunction:InvokeServer(banan, char)
 	ReplicatedStorage.HoldEvents.Use:FireServer(banan)
+	local startWait = tick()
 	local parts = toysFolder:FindFirstChild("FoodBanana").EdiblePart
     repeat 
     RunService.Heartbeat:Wait()
-    until not parts
+    until not parts or tick() - startWait > 1
 	task.wait()
 	holdPart.DropItemRemoteFunction:InvokeServer(banan, hrp.CFrame * CFrame.new(-3, 5, 0), Vector3.new(0, 0, 0))
 	task.wait(0.05)
