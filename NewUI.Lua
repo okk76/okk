@@ -2258,20 +2258,22 @@ AU:AddToggle("BananaAura", {
 	repeat 
     task.wait()
     until LocalPlayer.CanSpawnToy.Value == true or Value == false
-    spawnItem("FoodBanana", hrp.Position + Vector3.new(0, 5, 20))
-    repeat 
-    RunService.Heartbeat:Wait()
-	banan = toysFolder:FindFirstChild("FoodBanana")
-    until banan
-	task.wait(0.05)
+	pcall(function()
+	spawnItem("FoodBanana", hrp.Position + Vector3.new(0, 5, 20))	
+	task.wait(0.125)
+	end)
+	banan = toysFolder:WaitForChild("FoodBanana", 5)
+	task.wait(0.125)
 	local holdPart = banan:FindFirstChild("HoldPart")
+	pcall(function()
 	holdPart.HoldItemRemoteFunction:InvokeServer(banan, char)
 	ReplicatedStorage.HoldEvents.Use:FireServer(banan)
+	end)
 	local startWait = tick()
 	local parts = toysFolder:FindFirstChild("FoodBanana").EdiblePart
     repeat 
     RunService.Heartbeat:Wait()
-    until not parts or tick() - startWait > 1
+    until not parts or tick() - startWait > 5
 	task.wait()
 	holdPart.DropItemRemoteFunction:InvokeServer(banan, hrp.CFrame * CFrame.new(-3, 5, 0), Vector3.new(0, 0, 0))
 	task.wait(0.05)
