@@ -258,6 +258,33 @@ end)
 	end
 	end,
 })
+
+LP:AddDropdown("AntiLoopPlot", {
+	Values = { "Plot1", "Plot2", "Plot3", "Plot4", "Plot5" },
+	Default = nil, -- number index of the value / string
+	Multi = false, -- true / false, allows multiple choices to be selected
+	Callback = function(Value)
+		selectedplot = Value
+	end,
+})
+
+local function antiloop()
+	LocalPlayer.CharacterAdded:Connect(function(pers)
+		pers:WaitForChild("HumanoidRootPart")
+		if selectedplot == "Plot1" then
+			pers.HumanoidRootPart.CFrame = game.workspace.Plots.Plot1.PlotArea.CFrame * CFrame.new(0, 10, 0)
+		elseif selectedplot == "Plot2" then
+			pers.HumanoidRootPart.CFrame = game.workspace.Plots.Plot2.PlotArea.CFrame * CFrame.new(0, 10, 0)
+		elseif selectedplot == "Plot3" then
+			pers.HumanoidRootPart.CFrame = game.workspace.Plots.Plot3.PlotArea.CFrame * CFrame.new(0, 10, 0)
+		elseif selectedplot == "Plot4" then
+			pers.HumanoidRootPart.CFrame = game.workspace.Plots.Plot4.PlotArea.CFrame * CFrame.new(0, 10, 0)
+		elseif selectedplot == "Plot5" then
+			pers.HumanoidRootPart.CFrame = game.workspace.Plots.Plot5.PlotArea.CFrame * CFrame.new(0, 10, 0)
+		end
+	end)
+end
+
 --local MyButton = LP:AddButton({
 	--Text = "R",
 	--Func = function()
@@ -1215,7 +1242,6 @@ CTR:AddDropdown("Lock Variant", {
 	Callback = function(Value)
 	local tar = selectedTarget
 	local pos = char.HumanoidRootPart.CFrame
-	local posP = char.HumanoidRootPart.Position
 	local hrp = char:FindFirstChild("HumanoidRootPart")
 	local tRoot = tar.Character:FindFirstChild("HumanoidRootPart")
 	local function ragdoll()
@@ -1268,18 +1294,24 @@ CTR:AddDropdown("Lock Variant", {
 	else
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
+	tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
 	char.HumanoidRootPart.CFrame = pos
 	task.spawn(function()
 	while Lgrabk do
+	task.wait(0.1)
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	end
+	end)
+	task.spawn(function()
+	while Lgrabk do
 	if tar.Character.HumanoidRootPart.BodyPosition then
 	tar.Character.HumanoidRootPart.BodyPosition.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
 	end
 	if tar.Character.Head:FindFirstChild("PartOwner") then
-	tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
-	end
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	task.wait()
+	end
+	task.wait(0.05)
 	end
 	end)
 	task.spawn(function()
@@ -1313,7 +1345,7 @@ CTR:AddDropdown("Lock Variant", {
     end
     tRoot = character.HumanoidRootPart
     local bop = Instance.new("BodyPosition")
-    bop.Position = posP + Vector3.new(posX, posY, posZ)
+    bop.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
     bop.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
     bop.D = 100
     bop.Parent = tRoot
@@ -2377,6 +2409,7 @@ Toggles.Trd:SetValue(false)
 Toggles.PLCD:SetValue(false)
 Toggles.Strong:SetValue(false)
 Toggles.DisableBarrierCollisions:SetValue(false)
+Toggles.WaterWalk:SetValue(false)
 Toggles.LoopGrabKick:SetValue(false)
 Toggles.LoopBlobKick:SetValue(false)
 Toggles.LoopGrab:SetValue(false)
