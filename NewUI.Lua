@@ -389,31 +389,56 @@ GB:AddButton("LagServer", {
 	end,
 })
 
+DF:AddDropdown("Type Of Anti Grab", {
+	Values = { "Ragdoll" , "NoRagdoll" },
+	Default = nil, -- number index of the value / string
+	Multi = false, -- true / false, allows multiple choices to be selected
+	Callback = function(Value)
+		TypeOfAntiGrab = Value
+	end,
+})
+
 DF:AddToggle("AntiGrab", {
 	Text = "Anti Grab",
 	Default = false,
 	Callback = function(Value)
-		if Value then
-            autoStruggleCoroutine = RunService.Heartbeat:Connect(function()
-                local character = LocalPlayer.Character
-                if character and character:FindFirstChild("Head") then
-                    local head = character.Head
-                    local partOwner = head:FindFirstChild("PartOwner")
-                    if partOwner then
-					ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 0.1)
-                    Struggle:FireServer()
+	if Value then
+        antigrab = RunService.Heartbeat:Connect(function()
+            if char and char:FindFirstChild("Head") then
+                local head = char.Head
+                local partOwner = head:FindFirstChild("PartOwner")
+                if partOwner then
+				if TypeOfAntiGrab == "Ragdoll" then
+					Struggle:FireServer()
+					ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 0)
 					ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
 					task.wait()
 					char.Humanoid.Sit = false
-                    end
+				elseif TypeOfAntiGrab == "NoRagdoll" then
+					Struggle:FireServer()
+					ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
+					for _, part in pairs(char:GetChildren()) do
+						if part:IsA("BasePart") then
+							part.Anchored = true
+						end
+					end						
+					local isHeld = LocalPlayer:FindFirstChild("IsHeld")
+					while isHeld.Value do
+					task.wait()
+					end
+					for _, part in pairs(char:GetChildren()) do
+						if part:IsA("BasePart") then
+							part.Anchored = false
+						end
+					end
+				end
                 end
-            end)
-        else
-            if autoStruggleCoroutine then
-                autoStruggleCoroutine:Disconnect()
-                autoStruggleCoroutine = nil
             end
-        end
+        end)
+    elseif antigrab then
+		antigrab:Disconnect()
+    	antigrab = nil
+    end
 	end,
 })
 
@@ -1713,6 +1738,24 @@ WL:AddToggle("AntiGrabPlayer", {
             antigrabplayer = nil
             end
         end
+	end,
+})
+
+WL:AddButton({
+	Text = "Blob Grab",
+	Func = function()
+		local player = selectedPlayer
+		local pos = char.HumanoidRootPart.CFrame
+		local hum = char and char:FindFirstChild("Humanoid")
+		local seat = hum and hum.SeatPart
+		local seatParent = seat.Parent
+		local grabB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureGrab")
+		local dropB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureDrop")
+		local leftDet = seatParent:FindFirstChild("LeftDetector")
+		local rightDet = seatParent:FindFirstChild("RightDetector")
+		local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
+		local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
+		grabB:FireServer(leftDet, player.Character.HumanoidRootPart, leftWeld)
 	end,
 })
 
