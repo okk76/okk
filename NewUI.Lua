@@ -376,14 +376,6 @@ GB:AddButton("LagServer", {
 		for i = 1, LagLinesAmount do
         GrabEvents.CreateGrabLine:FireServer(spaw, spaw.CFrame)
 		GrabEvents.DestroyGrabLine:FireServer(char.Torso, char.Torso.CFrame)
-		GrabEvents.CreateGrabLine:FireServer(spaw, spaw.CFrame)
-		GrabEvents.DestroyGrabLine:FireServer(char.Torso, char.Torso.CFrame)
-		GrabEvents.CreateGrabLine:FireServer(spaw, spaw.CFrame)
-		GrabEvents.DestroyGrabLine:FireServer(char.Torso, char.Torso.CFrame)
-		GrabEvents.CreateGrabLine:FireServer(spaw, spaw.CFrame)
-		GrabEvents.DestroyGrabLine:FireServer(char.Torso, char.Torso.CFrame)
-		GrabEvents.CreateGrabLine:FireServer(spaw, spaw.CFrame)
-		GrabEvents.DestroyGrabLine:FireServer(char.Torso, char.Torso.CFrame)
 		task.wait()
         end
 	end,
@@ -1291,7 +1283,6 @@ CTR:AddDropdown("Lock Variant", {
 	end
 	end)
 	task.spawn(function()
-	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	ragdoll()
 	end)
 	task.spawn(function()
@@ -1989,6 +1980,23 @@ MC:AddToggle("FartherReach", {
 	end
 	end
     end,
+})
+
+MC:AddButton("PencilPenis", {
+        Text = "PencilPenis",
+        Func = function()
+		repeat 
+    	task.wait()
+    	until LocalPlayer.CanSpawnToy.Value == true or Value == false
+		pcall(function()
+		spawnItem("ToolPencil", char.HumanoidRootPart.Position + Vector3.new(0, 5, 20))	
+		end)
+		pen = toysFolder:WaitForChild("ToolPencil", 5)
+		task.wait(0.05)
+		SetNetworkOwner:FireServer(pen.SoundPart, pen.SoundPart.CFrame)
+		task.wait(0.05)
+		StickyPartEvent:FireServer(pen.StickyPart, char.Torso, CFrame.new(0, -0.75, 0) * CFrame.Angles(0, math.rad(180), 0))
+	end,
 })
 
 SRV:AddButton({
