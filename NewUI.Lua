@@ -1298,20 +1298,12 @@ CTR:AddDropdown("Lock Variant", {
 	char.HumanoidRootPart.CFrame = pos
 	task.spawn(function()
 	while Lgrabk do
-	task.wait(0.1)
+	task.wait()
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	end
-	end)
-	task.spawn(function()
-	while Lgrabk do
 	if tar.Character.HumanoidRootPart.BodyPosition then
 	tar.Character.HumanoidRootPart.BodyPosition.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
 	end
-	if tar.Character.Head:FindFirstChild("PartOwner") then
-	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	end
-	task.wait(0.05)
 	end
 	end)
 	task.spawn(function()
@@ -1393,7 +1385,7 @@ TR:AddToggle("LoopBlobKick", {
 	if Value then
 	LgrabB = true
 	local bopB = Instance.new("BodyPosition")
-	bopB.Position = char.HumanoidRootPart.Position + Vector3.new(0, 25, 0)
+	bopB.Position = char.HumanoidRootPart.Position + Vector3.new(0, 27.5, 0)
 	bopB.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
 	bopB.D = 100
 	bopB.Parent = tar.Character.HumanoidRootPart
@@ -1406,15 +1398,19 @@ TR:AddToggle("LoopBlobKick", {
 	task.wait()
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	until tar.Character.Humanoid.Sit or LgrabB == false
-	if LgrabB == false then
-	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
-	else
     seatParent.HumanoidRootPart.Velocity = Vector3.zero
     seatParent.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
     seatParent.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
     seatParent.HumanoidRootPart.CFrame = posB
-	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame, false)
+	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait(0.05)
+	task.spawn(function()
+	while LgrabB do
+	task.wait(0.05)    
+	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	end
+	end)
 	task.spawn(function()
 	while LgrabB do    
 	grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
@@ -1423,15 +1419,6 @@ TR:AddToggle("LoopBlobKick", {
 	task.wait()
 	end
 	end)
-	task.spawn(function()
-	while LgrabB do
-    seatParent.HumanoidRootPart.Velocity = Vector3.zero
-    seatParent.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
-    seatParent.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero       
-	task.wait()
-	end
-	end)
-	end
 	else
 	LgrabB = false
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
