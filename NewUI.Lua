@@ -1384,6 +1384,8 @@ TR:AddToggle("LoopBlobKick", {
 	local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
 	if Value then
 	LgrabB = true
+	leftDet.LeftWeld.Enabled = false
+	leftDet.LeftAlignOrientation.Enabled = false
 	local bopB = Instance.new("BodyPosition")
 	bopB.Position = char.HumanoidRootPart.Position + Vector3.new(0, 27.5, 0)
 	bopB.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
@@ -1422,6 +1424,8 @@ TR:AddToggle("LoopBlobKick", {
 	else
 	LgrabB = false
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
+	leftDet.LeftWeld.Enabled = true
+	leftDet.LeftAlignOrientation.Enabled = true
 	end
 	end,
 })
