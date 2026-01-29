@@ -886,17 +886,17 @@ DF:AddToggle("AntiNetwork", {
 	task.wait()
 	end
 	grabanti = RunService.Heartbeat:Connect(function()
+	task.wait()
 	pcall(function()
 	holdPart.HoldItemRemoteFunction:InvokeServer(toy, char)
 	end)
-	task.wait()
 	end)
 	task.spawn(function()
 	while antiinput do
 	pcall(function()
 	holdPart.DropItemRemoteFunction:InvokeServer(toy, spaw.CFrame * CFrame.new(0, 1000, 0), Vector3.zero)
 	end)
-	task.wait()
+	task.wait(0.25)
 	end
 	end)
 	else
