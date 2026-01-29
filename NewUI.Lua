@@ -22,6 +22,7 @@ local posX = 0
 local posY = 15
 local posZ = 0
 
+pcall(function()
 game.Workspace.Map.MapNoises.NoisePart1.Sound1.Volume = 0
 game.Workspace.Map.MapNoises.NoisePart2.Sound1.Volume = 0
 game.Workspace.Map.MapNoises.NoisePart3.Sound1.Volume = 0
@@ -40,30 +41,13 @@ newgrab.Name = "AttachSound1"
 oldgrab.Name = "AttachSound"
 newhold.Name = "BeamSound1"
 oldhold.Name = "BeamSound"
+end)
 
 spaw.Position = Vector3.new(spaw.Position, -10.85, spaw.Position)
 spaw.Decal.Transparency = 0.8
 RunService.Heartbeat:Connect(function()
 spaw.Orientation = spaw.Orientation + Vector3.new(0, math.rad(10) * 0.1, 0)
 task.wait(0.1)
-end)
-
-RunService.Heartbeat:Connect(function()
-for _, cross in ipairs(LocalPlayer.PlayerGui.Crosshairs.CrosshairsFrame:GetChildren()) do
-        if cross.Name == "Frame" and cross:IsA("Frame") then
-		hue = (hue + 0.00005) % 1
-            cross.BackgroundColor3 = Color3.fromHSV(hue, 1, 1)
-        end
-    end
-end)
-
-RunService.Heartbeat:Connect(function()
-for _, cross in ipairs(LocalPlayer.PlayerGui.Crosshairs.Dot:GetChildren()) do
-        if cross.Name == "Frame" and cross:IsA("Frame") then
-		hue = (hue + 0.00005) % 1
-            cross.BackgroundColor3 = Color3.fromHSV(hue, 1, 1)
-        end
-    end
 end)
 
 local function spawnItem(itemName, position, orientation)
@@ -1254,27 +1238,7 @@ CTR:AddDropdown("Lock Variant", {
 	end
 	if Value then
 	Lgrabk = true
-	ragdoS = true
-	spawnItem("PalletLightBrown", hrp.Position + Vector3.new(0, 5, 20))
-	local startWait = tick()
-	repeat 
-    RunService.Heartbeat:Wait()
-	pallet = toysFolder:FindFirstChild("PalletLightBrown")
-    until pallet or tick() - startWait > 3
-	task.wait(0.03)
-	SetNetworkOwner:FireServer(pallet.SoundPart, pallet.SoundPart.CFrame)
-	GrabEvents.DestroyGrabLine:FireServer(pallet.SoundPart, pallet.SoundPart.CFrame)
-	pallet.SoundPart.CanCollide = false
-	for _, part in ipairs(pallet:GetChildren()) do
-        if part.Name == "Part" and part:IsA("Part") then
-            part.Transparency = 1
-        end
-    end
-	local bodypos = Instance.new("BodyPosition")
-	bodypos.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-	bodypos.D = 12500
-	bodypos.Position = Vector3.new(0, 1000000, 0)
-	bodypos.Parent = toysFolder:FindFirstChild("PalletLightBrown").SoundPart
+	ragdoS = ragdollit
     local bop = Instance.new("BodyPosition")
 	bop.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
 	bop.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
@@ -1306,9 +1270,7 @@ CTR:AddDropdown("Lock Variant", {
 	end
 	end
 	end)
-	task.spawn(function()
-	ragdoll()
-	end)
+
 	task.spawn(function()
     while Lgrabk do
 	local distance = (char.HumanoidRootPart.Position - tar.Character:FindFirstChild("HumanoidRootPart").Position).Magnitude
@@ -1329,8 +1291,8 @@ CTR:AddDropdown("Lock Variant", {
 	task.wait(0.25)  
     end
 	end)
+
 	task.spawn(function()
-	if Lgrabk then
 	local function setup(character)
     if not character or not character:FindFirstChild("HumanoidRootPart") then
     return nil, nil
@@ -1348,11 +1310,37 @@ CTR:AddDropdown("Lock Variant", {
 	end
 	tar.CharacterAdded:Connect(function(character)
 	character:WaitForChild("HumanoidRootPart")
+	if Lgrabk then
 	setup(character)
-	end)
 	end
 	end)
+	end)
+
+	task.spawn(function()
+	if ragdoS then
+	spawnItem("PalletLightBrown", hrp.Position + Vector3.new(0, 5, 20))
+	pallet = toysFolder:WaitForChild("PalletLightBrown")
+	task.wait(0.03)
+	SetNetworkOwner:FireServer(pallet.SoundPart, pallet.SoundPart.CFrame)
+	GrabEvents.DestroyGrabLine:FireServer(pallet.SoundPart, pallet.SoundPart.CFrame)
+	pallet.SoundPart.CanCollide = false
+	for _, part in ipairs(pallet:GetChildren()) do
+    if part.Name == "Part" and part:IsA("Part") then
+    part.Transparency = 1
+    end
+    end
+	local bodypos = Instance.new("BodyPosition")
+	bodypos.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+	bodypos.D = 12500
+	bodypos.Position = Vector3.new(0, 1000000, 0)
+	bodypos.Parent = toysFolder:FindFirstChild("PalletLightBrown").SoundPart
+	task.wait()
+	ragdoll()
 	end
+	end)
+
+	end
+
 	else
 	Lgrabk = false
 	ragdoS = false
@@ -1404,15 +1392,15 @@ TR:AddToggle("LoopBlobKick", {
     seatParent.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
     seatParent.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
     seatParent.HumanoidRootPart.CFrame = posB
-	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	task.wait(0.05)
-	task.spawn(function()
-	while LgrabB do
-	task.wait(0.05)    
-	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	end
-	end)
+	--GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	--task.wait(0.05)
+	--task.spawn(function()
+	--while LgrabB do
+	--task.wait(0.05)    
+	--SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	--GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	--end
+	--end)
 	task.spawn(function()
 	while LgrabB do    
 	grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
@@ -1696,6 +1684,14 @@ TR:AddSlider("TargetPosZ", {
 	Compact = false,
 	Callback = function(Value)
 		posZ = Value
+	end,
+})
+
+TR:AddCheckbox("LoopGrabKickRagdoll", {
+	Text = "Loop Grab Kick Ragdoll",
+	Default = false,
+	Callback = function(Value)
+		ragdollit = Value
 	end,
 })
 
