@@ -899,6 +899,25 @@ DF:AddToggle("AntiNetwork", {
 	task.wait(0.25)
 	end
 	end)
+	task.spawn(function()
+	while antiinput do
+	if not toysFolder:FindFirstChild(Item) then
+	repeat 
+    task.wait()
+    until LocalPlayer.CanSpawnToy.Value == true or antiinput == false
+	pcall(function()
+	spawnItem(Item, spaw.Position + Vector3.new(0, 100, 0))
+	end)
+	repeat 
+    task.wait()
+	toy = toysFolder:FindFirstChild(Item)
+    until toy or Value == false
+	holdPart = toy:WaitForChild("HoldPart")
+	task.wait()
+	end
+	task.wait()
+	end
+	end)
 	else
 	antiinput = false
 	if grabanti then
@@ -2130,6 +2149,32 @@ SRV:AddButton("BreakProp", {
     	end
 		model.FollowThisPart.AlignOrientation.Enabled = false
 		model.FollowThisPart.AlignPosition.Enabled = false
+	end,
+})
+
+SRV:AddButton("BringAll", {
+    Text = "Bring All",
+    Func = function()
+	local posj = char.HumanoidRootPart.CFrame
+	for _, plrsnearby in ipairs(P:GetPlayers()) do
+		if plrsnearby ~= LocalPlayer and plrsnearby.Character then
+			local plrsnearbyRoot = plrsnearby.Character:FindFirstChild("HumanoidRootPart")
+			local plrsnearbyHum = char:FindFirstChildOfClass("Humanoid")
+				if plrsnearbyRoot and plrsnearbyHum and plrsnearbyHum.Health > 0 then
+					if plrsnearby.InPlot.Value == false then
+						char.HumanoidRootPart.CFrame = plrsnearbyRoot.CFrame
+						local startWait = tick()
+						repeat
+						SetNetworkOwner:FireServer(plrsnearbyRoot, plrsnearbyRoot.CFrame)
+						task.wait()
+						until plrsnearbyHum.Sit == true and plrsnearby.Character.Head.PartOwner.Value == LocalPlayer.Name or tick() - startWait > 0.5
+						plrsnearbyRoot.CFrame = posj
+						task.wait(0.05)
+						char.HumanoidRootPart.CFrame = posj
+					end
+				end
+			end
+		end
 	end,
 })
 
