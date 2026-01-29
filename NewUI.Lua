@@ -2364,6 +2364,18 @@ AU:AddSlider("BlobGrabAuraRadius", {
 	end,
 })
 
+AU:AddSlider("BlobGrabAuraSpeed", {
+	Text = "Blob Grab Aura Speed (broken)",
+	Default = 0.5,
+	Min = 0.1,
+	Max = 1,
+	Rounding = 1,
+	Compact = false,
+	Callback = function(Value)
+	BlobGrabAuraSpeed = Value
+	end,
+})
+
 AU:AddToggle("BlobGrabAura", {
 	Text = "Blob Grab Aura",
 	Default = false,
@@ -2387,24 +2399,24 @@ AU:AddToggle("BlobGrabAura", {
 					local distance = (plrsnearbyRoot.Position - char:FindFirstChild("HumanoidRootPart").Position).Magnitude
 					if distance <= BlobGrabAuraRadius then
 					if BlobGrabAuraType == "LeftHand" then
-						task.wait(0.01)
 						grabB:FireServer(leftDet, plrsnearbyRoot, leftWeld)
-						task.wait(0.01)
+						task.wait(0.1)
 						dropB:FireServer(leftWeld, plrsnearbyRoot)
+						task.wait(0.1)
 					elseif BlobGrabAuraType == "RightHand" then
-						task.wait(0.01)
 						grabB:FireServer(rightDet, plrsnearbyRoot, rightWeld)
-						task.wait(0.01)
+						task.wait(0.1)
 						dropB:FireServer(rightWeld, plrsnearbyRoot)
+						task.wait(0.1)
 					elseif BlobGrabAuraType == "BothHands" then
-						task.wait(0.05)
 						grabB:FireServer(leftDet, plrsnearbyRoot, leftWeld)
-						task.wait(0.05)
+						task.wait(0.1)
 						dropB:FireServer(leftWeld, plrsnearbyRoot)
-						task.wait(0.05)
+						task.wait(0.1)
 						grabB:FireServer(rightDet, plrsnearbyRoot, rightWeld)
-						task.wait(0.05)
-						dropB:FireServer(rightWeld, plrsnearbyRoot)	
+						task.wait(0.1)
+						dropB:FireServer(rightWeld, plrsnearbyRoot)
+						task.wait(0.1)	
 					end
 					end
 				end
