@@ -1,3 +1,4 @@
+setfpscap(999)
 local P = game:GetService("Players")
 local LocalPlayer = P.LocalPlayer
 local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
@@ -1477,7 +1478,7 @@ TR:AddToggle("LoopBlobKick", {
 	end,
 })
 
-local MyButton = TR:AddButton({
+TR:AddButton({
 	Text = "Blob Kick",
 	Func = function()
 		local tar = selectedTarget
@@ -1567,28 +1568,6 @@ CTR:AddButton({
 	end,
 })
 
-BL:AddLabel("Spawn And Sit Blobman"):AddKeyPicker("seatblobbind", {
-	Default = "X",
-	Callback = function()
-	local blobm
-	task.wait()
-	if not blob then
-	repeat 
-    task.wait()
-    until LocalPlayer.CanSpawnToy.Value == true
-	pcall(function()
-	spawnItem("CreatureBlobman", char.HumanoidRootPart.Position + Vector3.new(0, 5, 20))
-	end)
-	repeat 
-    task.wait()
-	blobm = toysFolder:FindFirstChild("CreatureBlobman")
-    until blobm
-	end
-	blobm:WaitForChild("VehicleSeat")
-	blobm.VehicleSeat:Sit(char.Humanoid)
-	end,
-})
-
 BL:AddToggle("AutoSit", {
 	Text = "Auto Sit",
 	Default = false,
@@ -1631,7 +1610,7 @@ BL:AddToggle("AutoSit", {
 	end,
 })
 
-local MyButton = TR:AddButton({
+CTR:AddButton({
 	Text = "Destroy Blobman Gucci",
 	Func = function()
 		local tar = selectedTarget
@@ -2179,6 +2158,69 @@ FKB:AddLabel("PacketLag"):AddKeyPicker("LagBind", {
 	Description = "Packet Lag",
 	Time = 3,
 	})
+	end,
+})
+
+FKB:AddLabel("Spawn And Sit Blobman"):AddKeyPicker("seatblobbind", {
+	Default = "X",
+	Callback = function()
+	local blobm
+	task.wait()
+	if not blob then
+	repeat 
+    task.wait()
+    until LocalPlayer.CanSpawnToy.Value == true
+	pcall(function()
+	spawnItem("CreatureBlobman", char.HumanoidRootPart.Position + Vector3.new(0, 5, 20))
+	end)
+	repeat 
+    task.wait()
+	blobm = toysFolder:FindFirstChild("CreatureBlobman")
+    until blobm
+	end
+	blobm:WaitForChild("VehicleSeat")
+	blobm.VehicleSeat:Sit(char.Humanoid)
+	end,
+})
+
+FKB:AddLabel("Blob Kick"):AddKeyPicker("blobkickbind", {
+	Default = "H",
+	Callback = function()
+		local tar = selectedTarget
+		local pos = char.HumanoidRootPart.CFrame
+		local hum = char and char:FindFirstChild("Humanoid")
+		local seat = hum and hum.SeatPart
+		local seatParent = seat.Parent
+		local grabB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureGrab")
+		local dropB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureDrop")
+		local leftDet = seatParent:FindFirstChild("LeftDetector")
+		local rightDet = seatParent:FindFirstChild("RightDetector")
+		local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
+		local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
+		local bopBk = Instance.new("BodyPosition")
+		bopBk.Position = tar.Character.HumanoidRootPart.Position + Vector3.new(0, 25, 0)
+		bopBk.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
+		bopBk.D = 100
+		bopBk.Parent = tar.Character.HumanoidRootPart
+		seatParent.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+		seatParent.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+		repeat
+		pcall(function()
+		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+		end)
+		seatParent.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+		seatParent.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+		task.wait()
+		until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name
+		task.wait()
+		seatParent.HumanoidRootPart.Anchored = true
+		task.wait(0.25)
+		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)  
+		GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
+		tar.Character.HumanoidRootPart.BodyPosition:Destroy()
+		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
+		task.wait(1)
+		DestroyT(seatParent)
 	end,
 })
 
