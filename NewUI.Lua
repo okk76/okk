@@ -59,6 +59,10 @@ local function spawnItem(itemName, position, orientation)
     end)
 end
 
+local function explode(toy, hitpart, pos)
+ReplicatedStorage.BombEvents.BombExplode:FireServer(toy, hitpart, pos)
+end
+
 local function DestroyT(toy)
     local toy = toy or toysFolder:FindFirstChildWhichIsA("Model")
     ReplicatedStorage.MenuToys.DestroyToy:FireServer(toy)
@@ -2223,6 +2227,17 @@ FKB:AddLabel("Blob Kick"):AddKeyPicker("blobkickbind", {
 		DestroyT(seatParent)
 	end,
 })
+
+--FKB:AddLabel("Explode"):AddKeyPicker("explodebind", {
+	--Default = "R",
+	--Callback = function()
+	--local mouse = LocalPlayer:GetMouse()
+	--spawnItem("BombMissile", char.HumanoidRootPart.Position + Vector3.new(0, 17.5, 20))
+	--local bomb = toysFolder:WaitForChild("BombMissile", 3)
+	--task.wait(0.1)
+	--explode(bomb, mouse.Target, mouse.Hit.Position)
+	--end,
+--})
 
 AU:AddDropdown("GrabAuraType", {
 		Values = { "Players", "Toys", "Both" },
