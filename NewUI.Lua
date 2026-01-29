@@ -885,17 +885,26 @@ DF:AddToggle("AntiNetwork", {
 	holdPart = toy:WaitForChild("HoldPart")
 	task.wait()
 	end
-	while antiinput do
+	grabanti = RunService.Heartbeat:Connect(function()
 	pcall(function()
 	holdPart.HoldItemRemoteFunction:InvokeServer(toy, char)
 	end)
 	task.wait()
+	end)
+	task.spawn(function()
+	while antiinput do
 	pcall(function()
 	holdPart.DropItemRemoteFunction:InvokeServer(toy, spaw.CFrame * CFrame.new(0, 1000, 0), Vector3.zero)
 	end)
+	task.wait()
 	end
+	end)
 	else
 	antiinput = false
+	if grabanti then
+	grabanti:Disconnect()
+	grabanti = nil
+	end
 	if toysFolder:FindFirstChild(Item) then
 	DestroyT(toysFolder:FindFirstChild(Item))
 	end
