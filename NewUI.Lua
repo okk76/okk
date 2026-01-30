@@ -248,12 +248,28 @@ end)
 	end,
 })
 
-LP:AddDropdown("AntiLoopPlot", {
-	Values = { "Plot1", "Plot2", "Plot3", "Plot4", "Plot5" },
-	Default = nil, -- number index of the value / string
-	Multi = false, -- true / false, allows multiple choices to be selected
-	Callback = function(Value)
-		selectedplot = Value
+LP:AddButton("InputLag", {
+        Text = "Input Lag",
+        Func = function()
+		SetNetworkOwner:FireServer(char.HumanoidRootPart, char.HumanoidRootPart.CFrame)
+	end,
+})
+
+LP:AddButton("BreakPLCD", {
+        Text = "Break PLCD",
+        Func = function()
+		for _, plcd in ipairs(workspace:GetChildren()) do
+			if plcd.Name == "PlayerCharacterLocationDetector" then
+			local distance = (plcd.Position - char:FindFirstChild("HumanoidRootPart").Position).Magnitude
+				if distance < 5 then
+				char.Humanoid.Health = 0
+				plcd.CFrame = CFrame.new(0, -math.huge, 0)
+					LocalPlayer.CharacterAdded:Wait()
+					task.wait(0.25)
+					LocalPlayer.Character:WaitForChild("Humanoid", 3).Health = 0
+				end
+			end
+		end
 	end,
 })
 
@@ -549,83 +565,87 @@ DF:AddToggle("AntiExplode", {
 	end,
 })
 
-local antiGucciConnection
-	local safePosition
-	local restoreFrames = 0
-	local function spawnBlobman()
-		local args = {[1] = "CreatureBlobman", [2] = CFrame.new(0, 5000000, 0), [3] = Vector3.new(0, 60, 0)}
-		pcall(function() ReplicatedStorage.MenuToys.SpawnToyRemoteFunction:InvokeServer(unpack(args)) end)
-		if toysFolder and toysFolder:FindFirstChild("CreatureBlobman") then
-			local blob = toysFolder.CreatureBlobman
-			if blob:FindFirstChild("Head") then blob.Head.CFrame = CFrame.new(0, 50000, 0) blob.Head.Anchored = true end
-			notify("Anti Gucci", "Blobman Spawned", 3)
+local antiGucciConnectionTrain
+	local safePositionTrain
+	local restoreFramesTrain = 0
+	local function startAntiGucciTrain()
+		local character = char
+		local humanoid = character:WaitForChild("Humanoid")
+		local rootPart = character:WaitForChild("HumanoidRootPart")
+		safePositionTrain = rootPart.Position
+		local folder = workspace.Map.AlwaysHereTweenedObjects
+		local train = folder and folder:FindFirstChild("Train")
+		local seat
+		if train then
+	    	for _, d in ipairs(train:GetDescendants()) do
+ 	       	if d:IsA("Seat") then
+  	      	    seat = d
+  	       	   break
+ 	     	  end
+	  	  end
 		end
-	end
-	local function startAntiGucci()
-		local humanoid = char:WaitForChild("Humanoid")
-		local hrp = char:WaitForChild("HumanoidRootPart")
-		safePosition = hrp.Position
-		local blob = toysFolder and toysFolder:FindFirstChild("CreatureBlobman")
-		local seat = blob and blob:FindFirstChild("VehicleSeat")
-		if not blob then spawnBlobman() task.wait(0.75) blob = toysFolder and toysFolder:FindFirstChild("CreatureBlobman") seat = blob and blob:FindFirstChild("VehicleSeat") end
-		if seat and seat:IsA("VehicleSeat") then hrp.CFrame = seat.CFrame + Vector3.new(0, 2, 0) seat:Sit(humanoid) end
-		humanoid:GetPropertyChangedSignal("Jump"):Connect(function() if humanoid.Jump and humanoid.Sit then restoreFrames = 15 safePosition = hrp.Position end end)
-		if antiGucciConnection then antiGucciConnection:Disconnect() end
-		antiGucciConnection = RunService.Heartbeat:Connect(function()
-			if not hrp or not humanoid then return end
-			ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(hrp, 0)
-			if restoreFrames > 0 then hrp.CFrame = CFrame.new(safePosition) restoreFrames = restoreFrames - 1 end
+		safePositionTrain = rootPart.CFrame
+		if seat then rootPart.CFrame = seat.CFrame + Vector3.new(0, 2, 0) seat:Sit(humanoid) end
+		humanoid:GetPropertyChangedSignal("Jump"):Connect(function() if humanoid.Jump and humanoid.Sit then restoreFramesTrain = 15 end end)
+		if antiGucciConnectionTrain then antiGucciConnectionTrain:Disconnect() end
+		antiGucciConnectionTrain = RunService.Heartbeat:Connect(function()
+			if not rootPart or not humanoid then return end
+			ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(rootPart, 0)
+			if restoreFramesTrain > 0 then rootPart.CFrame = safePositionTrain restoreFramesTrain = restoreFramesTrain - 1 end
 		end)
-		task.spawn(function() while humanoid.Sit do task.wait(0.5) end task.wait(0.5) hrp.CFrame = CFrame.new(safePosition) end)
+		task.spawn(function() while humanoid.Sit do task.wait() end task.wait(0.25) rootPart.CFrame = safePositionTrain end)
 	end
-	local function stopAntiGucci()
-		if antiGucciConnection then antiGucciConnection:Disconnect() antiGucciConnection = nil end
-		local blobFolder = Workspace:FindFirstChild(LocalPlayer.Name.."SpawnedInToys")
-		if blobFolder and blobFolder:FindFirstChild("CreatureBlobman") then DestroyT(blobFolder.CreatureBlobman) end
-	end
+	local function stopAntiGucciTrain()
+	local character = char
+	local humanoid = character:WaitForChild("Humanoid")
+		if antiGucciConnectionTrain then antiGucciConnectionTrain:Disconnect() antiGucciConnectionTrain = nil end
+		local trainFolder = workspace.Map.AlwaysHereTweenedObjects
+	if trainFolder and trainFolder:FindFirstChild("Train") then humanoid.Sit = true task.wait(0.05) humanoid.Sit = false end
+end
+
+local autoGucciActiveTrain =  false
 
 DF:AddToggle("AntiGrabGucci", {
-	Text = "Anti Grab Gucci",
-	Default = false,
-	Callback = function(Value)
-		autoGucciActive = Value
+		Text = "Anti Gucci Train",
+		Default = false,
+		Callback = function(Value)
+			autoGucciActiveTrain = Value
 
 			if Value then
-				startAntiGucci()
-				notify("Anti Gucci", "Processing", 3)
+				startAntiGucciTrain()
+				notify("Anti Gucci (Train)", "Processing", 3)
 
 				task.spawn(function()
-					while autoGucciActive do
-						local toysFolder = Workspace:FindFirstChild(LocalPlayer.Name .. "SpawnedInToys")
-						local blobExists = toysFolder and toysFolder:FindFirstChild("CreatureBlobman")
+					while autoGucciActiveTrain do
+						local trainFolder = workspace.Map.AlwaysHereTweenedObjects
+						local trainExists = trainFolder and trainFolder:FindFirstChild("Train")
 
-						if not blobExists then
-							stopAntiGucci() 
-							spawnBlobman() 
-							notify("Anti Gucci", "Broken", 3)
+						if not trainExists then
+							stopAntiGucciTrain() 
+							notify("Anti Gucci (Train)", "Train lost", 3)
 
 							local retries = 0
 							repeat
-								task.wait(0.2)
+								task.wait()
 								retries = retries + 1
-								toysFolder = Workspace:FindFirstChild(LocalPlayer.Name .. "SpawnedInToys")
-							until (toysFolder and toysFolder:FindFirstChild("CreatureBlobman")) or retries > 25 or not autoGucciActive
+								trainFolder = workspace.Map.AlwaysHereTweenedObjects
+							until (trainFolder and trainFolder:FindFirstChild("Train")) or retries > 25 or not autoGucciActiveTrain
 
-							if autoGucciActive and toysFolder and toysFolder:FindFirstChild("CreatureBlobman") then
-								startAntiGucci()
-								notify("Anti Gucci", "Fixed", 3)
+							if autoGucciActiveTrain and trainFolder and trainFolder:FindFirstChild("Train") then
+								startAntiGucciTrain()
+								notify("Anti Gucci (Train)", "Fixed", 3)
 							end
 						end
-						task.wait(0.5) 
+						task.wait(0.1) 
 					end
 				end)
 			else
-				autoGucciActive = false
-				stopAntiGucci()
-				notify("Anti Gucci", "Disabled", 3)
+				autoGucciActiveTrain = false
+				stopAntiGucciTrain()
+				notify("Anti Gucci (Train)", "Disabled.", 3)
+			end
 		end
-	end,
-})
+	})
 
 DF:AddToggle("AntiLag", {
 	Text = "Anti Lag",
@@ -869,6 +889,26 @@ DF:AddToggle("AntiNetwork", {
 	local Item = selectedItem
 	local toy = nil
 	local holdPart = nil
+	local function CheckForPlot()
+	if not workspace.PlotItems.PlayersInPlots:FindFirstChild(LocalPlayer.Name) then 
+		return false
+		end
+		for _, v in pairs(workspace.Plots:GetChildren()) do
+			local sign = v:FindFirstChild("PlotSign")
+			local owners = sign and sign:FindFirstChild("ThisPlotsOwners")
+			if owners then
+				for _, b in pairs(owners:GetChildren()) do
+					if b.Value == LocalPlayer.Name then
+						local folder = workspace.PlotItems:FindFirstChild(v.Name)
+							if folder then
+							return true, folder
+						end
+					end
+				end
+			end
+		end
+	return false
+	end
 	if Value then
 	antiinput = true
 	if not toysFolder:FindFirstChild(Item) then
@@ -913,7 +953,6 @@ DF:AddToggle("AntiNetwork", {
 	toy = toysFolder:FindFirstChild(Item)
     until toy or Value == false
 	holdPart = toy:WaitForChild("HoldPart")
-	task.wait()
 	end
 	task.wait()
 	end
@@ -1571,7 +1610,7 @@ CTR:AddToggle("GrabAntiKick", {
 		end)	
 		end
 		end
-		task.wait()
+		task.wait(0.05)
 		end
 		else
 		GrabAntiKick = false
@@ -2162,9 +2201,9 @@ SRV:AddButton("BringAll", {
 			local plrsnearbyHum = char:FindFirstChildOfClass("Humanoid")
 				if plrsnearbyRoot and plrsnearbyHum and plrsnearbyHum.Health > 0 then
 					if plrsnearby.InPlot.Value == false then
-						char.HumanoidRootPart.CFrame = plrsnearbyRoot.CFrame
 						local startWait = tick()
 						repeat
+						char.HumanoidRootPart.CFrame = plrsnearbyRoot.CFrame * CFrame.new(0, 0, 3)
 						SetNetworkOwner:FireServer(plrsnearbyRoot, plrsnearbyRoot.CFrame)
 						task.wait()
 						until plrsnearbyHum.Sit == true and plrsnearby.Character.Head.PartOwner.Value == LocalPlayer.Name or tick() - startWait > 0.5
