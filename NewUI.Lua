@@ -1503,38 +1503,43 @@ TR:AddToggle("LoopBlobKick", {
 	end,
 })
 
-	CTR:AddToggle("LoopBanana", {
+CTR:AddToggle("LoopBanana", {
 	Text = "Loop Banana",
 	Default = false,
 	Callback = function(Value)
-	local hrp = char:FindFirstChild("HumanoidRootPart")
 	local tar = selectedTarget
 	local pos = char.HumanoidRootPart.CFrame
 	if Value then
 	Lbanana = true
+	E = false
 	repeat 
     task.wait()
     until LocalPlayer.CanSpawnToy.Value == true or Value == false
-    spawnItem("FoodBanana", hrp.Position + Vector3.new(0, 5, 20))
-	local startWait = tick()
-    repeat 
-    RunService.Heartbeat:Wait()
-	banan = toysFolder:FindFirstChild("FoodBanana")
-    until banan or tick() - startWait > 1
+	pcall(function()
+	spawnItem("FoodBanana", char.HumanoidRootPart.Position + Vector3.new(0, 5, 20))
+	end)
+	banan = toysFolder:WaitForChild("FoodBanana", 5)
+	banan.Name = "loopbanan"
 	task.wait(0.05)
-	local holdPart = banan:FindFirstChild("HoldPart")
+	local holdPart = banan:WaitForChild("HoldPart")
+	pcall(function()
 	holdPart.HoldItemRemoteFunction:InvokeServer(banan, char)
 	ReplicatedStorage.HoldEvents.Use:FireServer(banan)
-	local startWait = tick()
-	local parts = toysFolder:FindFirstChild("FoodBanana").EdiblePart
-    repeat 
-    RunService.Heartbeat:Wait()
-    until not parts or tick() - startWait > 3
+	end)
+    repeat
+	if banan:FindFirstChild("EdiblePart") then
+    task.wait()
+	else
+	E = true
+	end
 	task.wait()
-	holdPart.DropItemRemoteFunction:InvokeServer(banan, hrp.CFrame * CFrame.new(-3, 5, 0), Vector3.new(0, 0, 0))
-	task.wait(0.05)
-	SetNetworkOwner:FireServer(toysFolder.FoodBanana.SoundPart, toysFolder.FoodBanana.SoundPart.CFrame)  
-	GrabEvents.DestroyGrabLine:FireServer(toysFolder.FoodBanana.SoundPart, toysFolder.FoodBanana.SoundPart.CFrame)
+    until E or Value == false
+	holdPart.DropItemRemoteFunction:InvokeServer(banan, char.HumanoidRootPart.CFrame * CFrame.new(-3, 5, 0), Vector3.new(0, 0, 0))
+	repeat
+	SetNetworkOwner:FireServer(banan.SoundPart, banan.SoundPart.CFrame)
+	task.wait() 
+	until banan.SoundPart:FindFirstChild("PartOwner") and banan.SoundPart:FindFirstChild("PartOwner").Value == LocalPlayer.Name or Value == false
+	GrabEvents.DestroyGrabLine:FireServer(banan.SoundPart)  
 	task.spawn(function()
 	while Lbanana do
 	task.wait(0.05)
@@ -1555,8 +1560,8 @@ TR:AddToggle("LoopBlobKick", {
 	end)
 	else
 	Lbanana = false
-	if toysFolder:FindFirstChild("FoodBanana") then
-	DestroyT(toysFolder:FindFirstChild("FoodBanana"))
+	if toysFolder:FindFirstChild("loopbanan") then
+	DestroyT(toysFolder:FindFirstChild("loopbanan"))
 	end
 	end
 	end,
@@ -2266,6 +2271,70 @@ SRV:AddButton("BringAll", {
 	end,
 })
 
+SRV:AddToggle("BananaAll", {
+	Text = "Banana All",
+	Default = false,
+	Callback = function(Value)
+	local hrp = char:FindFirstChild("HumanoidRootPart")
+	if Value then
+	E = false
+	repeat 
+    task.wait()
+    until LocalPlayer.CanSpawnToy.Value == true or Value == false
+	pcall(function()
+	spawnItem("FoodBanana", char.HumanoidRootPart.Position + Vector3.new(0, 5, 20))
+	end)
+	banan = toysFolder:WaitForChild("FoodBanana", 5)
+	banan.Name = "loopbananall"
+	task.wait(0.05)
+	local holdPart = banan:WaitForChild("HoldPart")
+	pcall(function()
+	holdPart.HoldItemRemoteFunction:InvokeServer(banan, char)
+	ReplicatedStorage.HoldEvents.Use:FireServer(banan)
+	end)
+    repeat
+	if banan:FindFirstChild("EdiblePart") then
+    task.wait()
+	else
+	E = true
+	end
+	task.wait()
+    until E or Value == false
+	holdPart.DropItemRemoteFunction:InvokeServer(banan, char.HumanoidRootPart.CFrame * CFrame.new(-3, 5, 0), Vector3.new(0, 0, 0))
+	repeat
+	SetNetworkOwner:FireServer(banan.SoundPart, banan.SoundPart.CFrame)
+	task.wait() 
+	until banan.SoundPart:FindFirstChild("PartOwner") and banan.SoundPart:FindFirstChild("PartOwner").Value == LocalPlayer.Name or Value == false
+	GrabEvents.DestroyGrabLine:FireServer(banan.SoundPart)
+	task.wait(0.05)
+	banan.SoundPart.CFrame = CFrame.new(153, 250, 335)
+	banan.SoundPart.Velocity = Vector3.new(0, 0, 0)
+	BananaAll = true
+	while BananaAll do
+	for _, plrs in ipairs(P:GetPlayers()) do
+		if plrs ~= LocalPlayer and plrs.Character then
+			local plrsRoot = plrs.Character:FindFirstChild("HumanoidRootPart")
+			local plrsHum = char:FindFirstChildOfClass("Humanoid")
+				if plrsRoot and plrsHum and plrsHum.Health > 0 then
+					banan.SoundPart.CFrame = plrsRoot.CFrame * CFrame.new(0, -1, 0)
+					banan.SoundPart.Velocity = Vector3.new(0, -100, 0)
+					task.wait(0.15)
+					banan.SoundPart.CFrame = CFrame.new(153, 250, 335)
+					banan.SoundPart.Velocity = Vector3.new(0, 0, 0)
+				end
+			end
+		end
+		task.wait(0.15)
+	end
+	else
+	BananaAll = false
+	if toysFolder:FindFirstChild("loopbananall") then
+	DestroyT(toysFolder:FindFirstChild("loopbananall"))
+	end
+	end
+	end,
+})
+
 FKB:AddLabel("TP Mouse"):AddKeyPicker("Tpbind", {
 	Default = "Z",
 	Callback = function()
@@ -2415,7 +2484,8 @@ AU:AddToggle("GrabAura", {
 	Default = false,
 	Callback = function(Value)
 	if Value then
-	GrabAura = RunService.Heartbeat:Connect(function()
+	GrabAura = true
+	while GrabAura do
 	if GrabAuraType == "Players" then
 		for _, plrsnearby in ipairs(P:GetPlayers()) do
 			if plrsnearby ~= LocalPlayer and plrsnearby.Character then
@@ -2425,16 +2495,15 @@ AU:AddToggle("GrabAura", {
 						local distance = (plrsnearbyRoot.Position - char:FindFirstChild("HumanoidRootPart").Position).Magnitude
 						if distance <= GrabAuraRadius then
 							SetNetworkOwner:FireServer(plrsnearbyRoot, plrsnearbyRoot.CFrame)
-							task.wait(0.01)
 						end
 					end
 				end
 			end
 		end
-	end)
-	elseif GrabAura then
-	GrabAura:Disconnect()
-	GrabAura = nil
+		task.wait(0.01)
+	end
+	else
+	GrabAura = false
 	end
 	end,
 })
@@ -2461,11 +2530,11 @@ AU:AddSlider("BlobGrabAuraRadius", {
 })
 
 AU:AddSlider("BlobGrabAuraSpeed", {
-	Text = "Blob Grab Aura Speed (broken)",
+	Text = "Blob Grab Aura Speed",
 	Default = 0.5,
-	Min = 0.1,
+	Min = 0.01,
 	Max = 1,
-	Rounding = 1,
+	Rounding = 10,
 	Compact = false,
 	Callback = function(Value)
 	BlobGrabAuraSpeed = Value
@@ -2486,7 +2555,8 @@ AU:AddToggle("BlobGrabAura", {
 	local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
 	local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
 	if Value then
-	BlobGrabAura = RunService.Heartbeat:Connect(function()
+	BlobGrabAura = true
+	while BlobGrabAura do
 		for _, plrsnearby in ipairs(P:GetPlayers()) do
 			if plrsnearby ~= LocalPlayer and plrsnearby.Character then
 				local plrsnearbyRoot = plrsnearby.Character:FindFirstChild("HumanoidRootPart")
@@ -2496,32 +2566,32 @@ AU:AddToggle("BlobGrabAura", {
 					if distance <= BlobGrabAuraRadius then
 					if BlobGrabAuraType == "LeftHand" then
 						grabB:FireServer(leftDet, plrsnearbyRoot, leftWeld)
-						task.wait(0.1)
+						task.wait(BlobGrabAuraSpeed)
 						dropB:FireServer(leftWeld, plrsnearbyRoot)
-						task.wait(0.1)
+						task.wait(BlobGrabAuraSpeed)
 					elseif BlobGrabAuraType == "RightHand" then
 						grabB:FireServer(rightDet, plrsnearbyRoot, rightWeld)
-						task.wait(0.1)
+						task.wait(BlobGrabAuraSpeed)
 						dropB:FireServer(rightWeld, plrsnearbyRoot)
-						task.wait(0.1)
+						task.wait(BlobGrabAuraSpeed)
 					elseif BlobGrabAuraType == "BothHands" then
 						grabB:FireServer(leftDet, plrsnearbyRoot, leftWeld)
-						task.wait(0.1)
+						task.wait(BlobGrabAuraSpeed)
 						dropB:FireServer(leftWeld, plrsnearbyRoot)
-						task.wait(0.1)
+						task.wait(BlobGrabAuraSpeed)
 						grabB:FireServer(rightDet, plrsnearbyRoot, rightWeld)
-						task.wait(0.1)
+						task.wait(BlobGrabAuraSpeed)
 						dropB:FireServer(rightWeld, plrsnearbyRoot)
-						task.wait(0.1)	
+						task.wait(BlobGrabAuraSpeed)	
 					end
 					end
 				end
 			end
 		end
-	end)
-	elseif BlobGrabAura then
-	BlobGrabAura:Disconnect()
-	BlobGrabAura = nil
+		task.wait()
+	end
+	else
+	BlobGrabAura = false
 	end
 	end,
 })
@@ -2542,36 +2612,40 @@ AU:AddToggle("BananaAura", {
 	Text = "Banana Aura",
 	Default = false,
 	Callback = function(Value)
-	local hrp = char:FindFirstChild("HumanoidRootPart")
 	if Value then
+	E = false
 	repeat 
     task.wait()
     until LocalPlayer.CanSpawnToy.Value == true or Value == false
 	pcall(function()
-	spawnItem("FoodBanana", hrp.Position + Vector3.new(0, 5, 20))	
-	task.wait(0.125)
+	spawnItem("FoodBanana", char.HumanoidRootPart.Position + Vector3.new(0, 5, 20))
 	end)
-	banan = toysFolder:WaitForChild("FoodBanana", 5)
-	task.wait(0.125)
-	local holdPart = banan:FindFirstChild("HoldPart")
+	task.wait(0.05)
+	bananA = toysFolder:WaitForChild("FoodBanana", 5)
+	bananA.Name = "bananaura"
+	local holdPart = bananA:WaitForChild("HoldPart")
 	pcall(function()
-	holdPart.HoldItemRemoteFunction:InvokeServer(banan, char)
-	ReplicatedStorage.HoldEvents.Use:FireServer(banan)
+	holdPart.HoldItemRemoteFunction:InvokeServer(bananA, char)
+	ReplicatedStorage.HoldEvents.Use:FireServer(bananA)
 	end)
-	local startWait = tick()
-	local parts = toysFolder:FindFirstChild("FoodBanana").EdiblePart
-    repeat 
-    RunService.Heartbeat:Wait()
-    until not parts or tick() - startWait > 5
+    repeat
+	if bananA:FindFirstChild("EdiblePart") then
+    task.wait()
+	else
+	E = true
+	end
 	task.wait()
-	holdPart.DropItemRemoteFunction:InvokeServer(banan, hrp.CFrame * CFrame.new(-3, 5, 0), Vector3.new(0, 0, 0))
-	task.wait(0.05)
-	SetNetworkOwner:FireServer(toysFolder.FoodBanana.SoundPart, toysFolder.FoodBanana.SoundPart.CFrame)  
-	GrabEvents.DestroyGrabLine:FireServer(toysFolder.FoodBanana.SoundPart, toysFolder.FoodBanana.SoundPart.CFrame)
-	task.wait(0.05)
+    until E or Value == false
+	holdPart.DropItemRemoteFunction:InvokeServer(bananA, char.HumanoidRootPart.CFrame * CFrame.new(-3, 5, 0), Vector3.new(0, 0, 0))
+	repeat
+	SetNetworkOwner:FireServer(bananA.SoundPart, bananA.SoundPart.CFrame)
+	task.wait() 
+	until bananA.SoundPart:FindFirstChild("PartOwner") and bananA.SoundPart:FindFirstChild("PartOwner").Value == LocalPlayer.Name or Value == false
+	GrabEvents.DestroyGrabLine:FireServer(bananA.SoundPart)
 	banan.SoundPart.CFrame = CFrame.new(153, 250, 335)
 	banan.SoundPart.Velocity = Vector3.new(0, 0, 0)
-	BananaAura = RunService.Heartbeat:Connect(function()
+	BananaAura = true
+	while BananaAura do
 	for _, plrsnearby in ipairs(P:GetPlayers()) do
 		if plrsnearby ~= LocalPlayer and plrsnearby.Character then
 			local plrsnearbyRoot = plrsnearby.Character:FindFirstChild("HumanoidRootPart")
@@ -2588,12 +2662,12 @@ AU:AddToggle("BananaAura", {
 				end
 			end
 		end
-	end)
-	elseif BananaAura then
-	BananaAura:Disconnect()
-	BananaAura = nil
-	if toysFolder:FindFirstChild("FoodBanana") then
-	DestroyT(toysFolder:FindFirstChild("FoodBanana"))
+		task.wait(0.05)
+	end
+	else
+	BananaAura = false
+	if toysFolder:FindFirstChild("bananaura") then
+	DestroyT(toysFolder:FindFirstChild("bananaura"))
 	end
 	end
 	end,
@@ -2638,6 +2712,8 @@ Toggles.BlobGrabAura:SetValue(false)
 Toggles.GrabAura:SetValue(false)
 Toggles.BoomBox:SetValue(false)
 Toggles.LoopGrabKickRagdoll:SetValue(false)
+Toggles.AutoSit:SetValue(false)
+Toggles.BananaAll:SetValue(false)
 jerkoffanimation = false
 task.wait()
 Library:Unload()
