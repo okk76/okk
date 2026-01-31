@@ -348,6 +348,7 @@ GB:AddToggle("KillGrabLine", {
                 if model.Name == "GrabParts" then
                     local partTokill = model.GrabPart.WeldConstraint.Part1.Parent
                     if partTokill then
+					SetNetworkOwner:FireServer(partTokill.HumanoidRootPart, partTokill.HumanoidRootPart.CFrame)
 					partTokill.Humanoid:ChangeState(Enum.HumanoidStateType.Dead)
                     end
                 end
@@ -1051,22 +1052,20 @@ task.wait()
 Toggles.GrabAntiKick:SetValue(true)
 end)
 
-local MyButton = CTR:AddButton({
+CTR:AddButton({
 	Text = "Kill",
 	Func = function()
 		local tar = selectedTarget
 		local pos = char.HumanoidRootPart.CFrame
-		char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
-		task.wait(0.25)
+		local startWait = tick()
 		repeat
 		char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 		task.wait()
-		until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name
-		tar.Character.Humanoid.Health = 0
-		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame) 
-		GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
-    	task.wait(0.1)
+		until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or tick() - startWait > 3
+		tar.Character.HumanoidRootPart.CFrame = CFrame.new(0, -1e95, 0)
+		GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+    	task.wait(0.05)
     	char.HumanoidRootPart.CFrame = pos
 	end,
 })
@@ -2011,6 +2010,49 @@ MC:AddToggle("LoopRagdoll", {
 	end,
 })
 
+MC:AddToggle("BoomBox", {
+	Text = "BoomBox",
+	Default = false,
+	Callback = function(Value)
+	if Value then
+		repeat 
+    		task.wait()
+    	until LocalPlayer.CanSpawnToy.Value == true
+
+		pcall(function()
+			spawnItem("Boombox", char.HumanoidRootPart.Position + Vector3.new(0, 10, 20))	
+		end)
+
+		local box = toysFolder:WaitForChild("Boombox")
+		local CP = box:WaitForChild("ColorPart")
+
+		task.wait(0.05)
+
+		for _, obj in ipairs(box:GetChildren()) do
+			if obj:IsA("Part") or obj:IsA("MeshPart") then
+    			obj.CanCollide = false
+			end
+    	end
+
+		boombox = RunService.Heartbeat:Connect(function()
+			if not CP:FindFirstChild("PartOwner") or CP:FindFirstChild("PartOwner").Value ~= LocalPlayer.Name then
+				SetNetworkOwner:FireServer(CP, CP.CFrame)
+			end
+			CP.CFrame = char.Torso.CFrame * CFrame.new(0, -0.1, 1.25) * CFrame.Angles(0, math.rad(180), 0)
+			CP.Velocity = Vector3.zero
+		end)
+
+   		elseif boombox then
+		boombox:Disconnect()
+		boombox = nil
+		if toysFolder:FindFirstChild("Boombox") then
+		DestroyT(toysFolder:FindFirstChild("Boombox"))
+		end	
+
+		end
+	end,
+})
+
 MC:AddToggle("FartherReach", {
     Text = "FartherReach",
 	Default = false,
@@ -2321,6 +2363,14 @@ FKB:AddLabel("Blob Kick"):AddKeyPicker("blobkickbind", {
 	end,
 })
 
+FKB:AddLabel("Anchor"):AddKeyPicker("AnchorBind", {
+	Default = "K",
+	Callback = function()
+	char.GrabbingScript.Enabled = false
+    char.GrabbingScript.Enabled = true
+	end,
+})
+
 --FKB:AddLabel("Explode"):AddKeyPicker("explodebind", {
 	--Default = "R",
 	--Callback = function()
@@ -2579,6 +2629,7 @@ Toggles.Shaders:SetValue(false)
 Toggles.BananaAura:SetValue(false)
 Toggles.BlobGrabAura:SetValue(false)
 Toggles.GrabAura:SetValue(false)
+Toggles.BoomBox:SetValue(false)
 jerkoffanimation = false
 task.wait()
 Library:Unload()
