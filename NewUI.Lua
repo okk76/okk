@@ -1072,7 +1072,7 @@ CTR:AddButton({
 	end,
 })
 
-local MyButton = CTR:AddButton({
+CTR:AddButton({
 	Text = "Bring Target Grab",
 	Func = function()
 		local tar = selectedTarget
@@ -1091,7 +1091,7 @@ local MyButton = CTR:AddButton({
 	end,
 })
 
-local MyButton = CTR:AddButton({
+CTR:AddButton({
 	Text = "Bring Target Blob",
 	Func = function()
 		local tar = selectedTarget
@@ -1114,6 +1114,34 @@ local MyButton = CTR:AddButton({
     	char.HumanoidRootPart.CFrame = pos
 		task.wait(0.5)
 		dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
+	end,
+})
+
+CTR:AddButton({
+	Text = "Kill Target Blob",
+	Func = function()
+		local tar = selectedTarget
+		local pos = char.HumanoidRootPart.CFrame
+		local hum = char and char:FindFirstChild("Humanoid")
+		local seat = hum and hum.SeatPart
+		local seatParent = seat.Parent
+		local grabB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureGrab")
+		local dropB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureDrop")
+		local releaseB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureRelease")
+		local leftDet = seatParent:FindFirstChild("LeftDetector")
+		local rightDet = seatParent:FindFirstChild("RightDetector")
+		local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
+		local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
+		repeat
+		char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
+		task.wait()
+		releaseB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
+		task.wait(0.05)
+		tar.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Dead)
+		until tar.Character.Humanoid.Health == 0
+		task.wait(0.05)
+    	char.HumanoidRootPart.CFrame = pos
 	end,
 })
 
@@ -1477,15 +1505,6 @@ TR:AddToggle("LoopBlobKick", {
     seatParent.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
     seatParent.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
     seatParent.HumanoidRootPart.CFrame = posB
-	--GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	--task.wait(0.05)
-	--task.spawn(function()
-	--while LgrabB do
-	--task.wait(0.05)    
-	--SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	--GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	--end
-	--end)
 	task.spawn(function()
 	while LgrabB do    
 	grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
@@ -1813,7 +1832,7 @@ WL:AddToggle("AntiGrabPlayer", {
 })
 
 WL:AddButton({
-	Text = "Blob Grab",
+	Text = "Break",
 	Func = function()
 		local player = selectedPlayer
 		local pos = char.HumanoidRootPart.CFrame
@@ -1822,11 +1841,15 @@ WL:AddButton({
 		local seatParent = seat.Parent
 		local grabB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureGrab")
 		local dropB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureDrop")
+		local releaseB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureRelease")
 		local leftDet = seatParent:FindFirstChild("LeftDetector")
 		local rightDet = seatParent:FindFirstChild("RightDetector")
 		local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
 		local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
 		grabB:FireServer(leftDet, player.Character.HumanoidRootPart, leftWeld)
+		task.wait()
+		releaseB:FireServer(leftWeld, player.Character.HumanoidRootPart)
+		player.Character.Humanoid.Health = 0
 	end,
 })
 
