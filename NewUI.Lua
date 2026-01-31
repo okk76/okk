@@ -872,6 +872,7 @@ DF:AddDropdown("AntiInputLagItem", {
 	Values = { "PoopPileSparkle", "FoodHamburger", "CupMugWhite", "FoodBanana", "FoodCoconut", "FoodSodaCan", "CupMugBrown", "FoodBread", "FoodBroccoli", "FoodDippyEgg", "FoodDonut", "FoodHotdog", "FoodMayonnaise", "FoodMeatStick", "FoodMushroomPoison", "FoodPizzaCheese", "PoopPile", "FoodPizzaPepperoni", "FoodFrenchFries", "FoodCakePink", "InstrumentBrassBugle", "InstrumentBrassTrumpet", "InstrumentBrassVuvuzela", "InstrumentDrumBongos", "InstrumentDrumSnare", "InstrumentGuitarAcoustic", "InstrumentGuitarBanjo", "InstrumentGuitarLyre", "InstrumentGuitarUkulele", "InstrumentGuitarViolin", "InstrumentPianoKeyboard", "InstrumentPianoMelodica", "InstrumentVoiceMicrophone", "InstrumentWoodwindOcarina", "InstrumentWoodwindSaxophone" },
 	Default = nil, -- number index of the value / string
 	Multi = false, -- true / false, allows multiple choices to be selected
+	MaxVisibleDropdownItems = 15,
 	Callback = function(Value)
 		selectedItem = Value
 	end,
@@ -1041,6 +1042,7 @@ TR:AddDropdown("TargetPlayer", {
 		Values = getPlayerList(),
 		Default = nil,
 		Multi = false,
+		MaxVisibleDropdownItems = 35,
 		Callback = function(Selected)
 		selectedTarget = getPlayerFromSelection(Selected)
 	end,
@@ -1621,7 +1623,7 @@ CTR:AddToggle("GrabAntiKick", {
 		end)	
 		end
 		end
-		task.wait(0.05)
+		task.wait()
 		end
 		else
 		GrabAntiKick = false
@@ -1760,6 +1762,7 @@ WL:AddDropdown("SelectPlayer", {
 		Values = getPlayerList(),
 		Default = nil,
 		Multi = false,
+		MaxVisibleDropdownItems = 15,
 		Callback = function(Selected)
 		selectedPlayer = getPlayerFromSelection(Selected)
 	end,
@@ -2634,6 +2637,7 @@ Toggles.BananaAura:SetValue(false)
 Toggles.BlobGrabAura:SetValue(false)
 Toggles.GrabAura:SetValue(false)
 Toggles.BoomBox:SetValue(false)
+Toggles.LoopGrabKickRagdoll:SetValue(false)
 jerkoffanimation = false
 task.wait()
 Library:Unload()
