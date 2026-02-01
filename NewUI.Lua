@@ -431,14 +431,32 @@ DF:AddToggle("AntiGrab", {
         antigrab = RunService.Heartbeat:Connect(function()
             if char and char:FindFirstChild("Head") then
                 local head = char.Head
+				local hrp = char:FindFirstChild("HumanoidRootPart")
                 local partOwner = head:FindFirstChild("PartOwner")
                 if partOwner then
 				if TypeOfAntiGrab == "Ragdoll" then
 					Struggle:FireServer()
 					ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 0)
 					ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
-					task.wait()
+					local isHeld = LocalPlayer:FindFirstChild("IsHeld")
+					if isHeld.Value then
+					local stop = Instance.new("BodyVelocity", hrp)
+					stop.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+					stop.Velocity = Vector3.zero
+					while isHeld.Value do
+					if UserInputService:IsKeyDown(Enum.KeyCode.W) then hrp.CFrame = hrp.CFrame + workspace.CurrentCamera.CFrame.LookVector end
+					if UserInputService:IsKeyDown(Enum.KeyCode.S) then hrp.CFrame = hrp.CFrame - workspace.CurrentCamera.CFrame.LookVector end
+					if UserInputService:IsKeyDown(Enum.KeyCode.A) then hrp.CFrame = hrp.CFrame - workspace.CurrentCamera.CFrame.RightVector end
+					if UserInputService:IsKeyDown(Enum.KeyCode.D) then hrp.CFrame = hrp.CFrame + workspace.CurrentCamera.CFrame.RightVector end
+					task.wait(0.05)
 					char.Humanoid.Sit = false
+					end
+					for _, vel in pairs(hrp:GetChildren()) do
+						if vel.Name == "BodyVelocity" then
+							vel:Destroy()
+						end
+					end
+					end
 				elseif TypeOfAntiGrab == "NoRagdoll" then
 					Struggle:FireServer()
 					ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
@@ -1329,7 +1347,6 @@ CTR:AddDropdown("Lock Variant", {
 	local tRoot = tar.Character:FindFirstChild("HumanoidRootPart")
 	if Value then
 	Lgrabk = true
-	ragdoS = true
     local bop = Instance.new("BodyPosition")
 	bop.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
 	bop.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
@@ -1349,11 +1366,17 @@ CTR:AddDropdown("Lock Variant", {
 	else
 	char.HumanoidRootPart.CFrame = pos
 	tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
+	tar.Character.Head.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
+	tar.Character["Left Leg"].CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
+	tar.Character["Right Leg"].CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
+	tar.Character["Left Arm"].CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
+	tar.Character["Right Arm"].CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
+	ragdoS = true
 	task.spawn(function()
 	while Lgrabk do
-	task.wait()
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	task.wait()
 	if tar.Character.HumanoidRootPart.BodyPosition then
 	tar.Character.HumanoidRootPart.BodyPosition.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
 	end
@@ -1370,6 +1393,11 @@ CTR:AddDropdown("Lock Variant", {
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait(0.25)	
 	tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
+	tar.Character.Head.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
+	tar.Character["Left Leg"].CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
+	tar.Character["Right Leg"].CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
+	tar.Character["Left Arm"].CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
+	tar.Character["Right Arm"].CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
 	char.HumanoidRootPart.CFrame = pos
     char.HumanoidRootPart.Velocity = Vector3.zero
     char.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
