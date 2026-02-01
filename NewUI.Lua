@@ -433,51 +433,28 @@ DF:AddToggle("AntiGrab", {
                 local head = char.Head
 				local hrp = char:FindFirstChild("HumanoidRootPart")
                 local partOwner = head:FindFirstChild("PartOwner")
-                if partOwner then
-				if TypeOfAntiGrab == "Ragdoll" then
-					Struggle:FireServer()
-					ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 0)
-					ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
-					local isHeld = LocalPlayer:FindFirstChild("IsHeld")
-					if isHeld.Value then
-					local stop = Instance.new("BodyVelocity", hrp)
-					stop.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-					stop.Velocity = Vector3.zero
-					while isHeld.Value do
-					if UserInputService:IsKeyDown(Enum.KeyCode.W) then hrp.CFrame = hrp.CFrame + workspace.CurrentCamera.CFrame.LookVector end
-					if UserInputService:IsKeyDown(Enum.KeyCode.S) then hrp.CFrame = hrp.CFrame - workspace.CurrentCamera.CFrame.LookVector end
-					if UserInputService:IsKeyDown(Enum.KeyCode.A) then hrp.CFrame = hrp.CFrame - workspace.CurrentCamera.CFrame.RightVector end
-					if UserInputService:IsKeyDown(Enum.KeyCode.D) then hrp.CFrame = hrp.CFrame + workspace.CurrentCamera.CFrame.RightVector end
-					task.wait(0.05)
-					char.Humanoid.Sit = false
-					end
-					for _, vel in pairs(hrp:GetChildren()) do
-						if vel.Name == "BodyVelocity" then
-							vel:Destroy()
-						end
-					end
-					end
-				elseif TypeOfAntiGrab == "NoRagdoll" then
-					Struggle:FireServer()
-					ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
-					for _, part in pairs(char:GetChildren()) do
-						if part:IsA("BasePart") then
-							part.Anchored = true
-						end
-					end						
-					local isHeld = LocalPlayer:FindFirstChild("IsHeld")
-					while isHeld.Value do
-					task.wait()
-					end
-					for _, part in pairs(char:GetChildren()) do
-						if part:IsA("BasePart") then
-							part.Anchored = false
-						end
-					end
-				end
-                end
-            end
-        end)
+				local isHeld = LocalPlayer:FindFirstChild("IsHeld")
+                if partOwner or isHeld.Value then
+					if TypeOfAntiGrab == "Ragdoll" then
+						Struggle:FireServer()
+						hrp.Anchored = true
+						ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 0)
+						ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
+						task.wait()
+						char.Humanoid.Sit = false
+						hrp.Anchored = false
+					elseif TypeOfAntiGrab == "NoRagdoll" then
+						Struggle:FireServer()
+						ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
+						hrp.Anchored = true					
+							while partOwner or isHeld.Value do
+								task.wait()
+							end
+						hrp.Anchored = false
+               		end
+            	end
+			end
+    	end)
     elseif antigrab then
 		antigrab:Disconnect()
     	antigrab = nil
@@ -1072,6 +1049,38 @@ task.wait()
 Toggles.GrabAntiKick:SetValue(true)
 end)
 
+
+
+
+CTR:AddButton({
+	Text = "babah",
+	Func = function()
+		local tar = selectedTarget
+		local targetHRP = tar.Character:FindFirstChild("HumanoidRootPart")
+		repeat 
+    	task.wait()
+    	until LocalPlayer.CanSpawnToy.Value == true or Value == false
+		pcall(function()
+		spawnItem("BombMissile", char.HumanoidRootPart.Position + Vector3.new(0, 15, 20))	
+		end)
+		bom = toysFolder:WaitForChild("BombMissile", 5)
+		task.wait(0.05)
+		repeat
+		SetNetworkOwner:FireServer(bom.Part, bom.Part.CFrame)
+		task.wait()
+		until bom.Part:FindFirstChild("PartOwner")
+		local args = {
+    		[1] = {
+        	["Hitbox"] = bom:FindFirstChild("PartHitDetector"),
+        	["Model"] = bom,
+        	["PositionPart"] = targetHRP,
+    		},
+    	[2] = targetHRP.Position,
+		}
+		game.ReplicatedStorage.BombEvents.BombExplode:FireServer(unpack(args))
+	end,
+})
+
 CTR:AddButton({
 	Text = "Kill",
 	Func = function()
@@ -1277,15 +1286,24 @@ CTR:AddToggle("LoopGrab", {
 	end,
 })
 
-selectedVariant = "OneHand"
-
 CTR:AddDropdown("Lock Variant", {
 	Values = { "OneHand", "TwoHands" },
-	Default = 1, -- number index of the value / string
+	Default = nil, -- number index of the value / string
 	Multi = false, -- true / false, allows multiple choices to be selected
 	Callback = function(Value)
 		selectedVariant = Value
 	end,
+})
+
+CTR:AddSlider("LockSpeed", {
+        Text = "Lock Speed",
+        Default = 0,
+        Min = 0,
+        Max = 0.5,
+        Rounding = 10,
+        Callback = function(Value)
+        lockwait = Value
+    end
 })
 
 	CTR:AddToggle("Lock Target", {
@@ -1293,40 +1311,45 @@ CTR:AddDropdown("Lock Variant", {
 	Default = false,
 	Callback = function(Value)
 	local tar = selectedTarget
-	local hum = char and char:FindFirstChild("Humanoid")
 	local pos = char.HumanoidRootPart.CFrame
+	local hum = char and char:FindFirstChild("Humanoid")
 	local seat = hum and hum.SeatPart
 	local seatParent = seat.Parent
 	local grabB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureGrab")
 	local dropB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureDrop")
+	local releaseB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureRelease")
 	local leftDet = seatParent:FindFirstChild("LeftDetector")
 	local rightDet = seatParent:FindFirstChild("RightDetector")
 	local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
 	local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
 	if Value then
 	LockB = true
+	local distance = (char.HumanoidRootPart.Position - tar.Character:FindFirstChild("HumanoidRootPart").Position).Magnitude
+	if distance > 50 then
 	seatParent.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 	task.wait(0.25)
 	grabB:FireServer(rightDet, tar.Character.HumanoidRootPart, rightWeld)
 	task.wait(0.25)
 	char.HumanoidRootPart.CFrame = pos
 	task.wait(0.5)
+	dropB:FireServer(rightWeld, tar.Character.HumanoidRootPart)
+	end
 	task.spawn(function()
 	while LockB do
 	if selectedVariant == "OneHand" then
 	grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
-	task.wait()
-	dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
-	task.wait()
+	task.wait(lockwait)
+	releaseB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
+	task.wait(lockwait)
 	elseif selectedVariant == "TwoHands" then
 	grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
-	task.wait()
-	dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
-	task.wait()
+	task.wait(lockwait)
+	releaseB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
+	task.wait(lockwait)
 	grabB:FireServer(rightDet, tar.Character.HumanoidRootPart, rightWeld)
-	task.wait()
-	dropB:FireServer(rightWeld, tar.Character.HumanoidRootPart)
-	task.wait()
+	task.wait(lockwait)
+	releaseB:FireServer(rightWeld, tar.Character.HumanoidRootPart)
+	task.wait(lockwait)
 	end
 	task.wait()
 	end
