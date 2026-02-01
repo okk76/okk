@@ -1506,10 +1506,12 @@ TR:AddToggle("LoopBlobKick", {
     seatParent.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
     seatParent.HumanoidRootPart.CFrame = posB
 	task.spawn(function()
-	while LgrabB do    
+	while LgrabB do
+	if tar.Character.Humanoid.Health > 0 then    
 	grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
 	task.wait()
 	dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
+	end
 	task.wait()
 	end
 	end)
@@ -1539,8 +1541,8 @@ CTR:AddToggle("LoopBanana", {
 	end)
 	banan = toysFolder:WaitForChild("FoodBanana", 5)
 	banan.Name = "loopbanan"
-	task.wait(0.05)
 	local holdPart = banan:WaitForChild("HoldPart")
+	task.wait(0.05)
 	pcall(function()
 	holdPart.HoldItemRemoteFunction:InvokeServer(banan, char)
 	ReplicatedStorage.HoldEvents.Use:FireServer(banan)
@@ -1849,8 +1851,31 @@ WL:AddButton({
 		grabB:FireServer(leftDet, player.Character.HumanoidRootPart, leftWeld)
 		task.wait()
 		releaseB:FireServer(leftWeld, player.Character.HumanoidRootPart)
-		player.Character.Humanoid.Health = 0
+		player.Character.Humanoid.WalkSpeed = PWS
+		player.Character.Humanoid.JumpPower = PJP
 	end,
+})
+
+WL:AddSlider("PlayerWalkSpeed", {
+        Text = "Player WalkSpeed",
+        Default = 16,
+        Min = 16,
+        Max = 500,
+        Rounding = 0,
+        Callback = function(Value)
+        PWS = Value
+    end
+})
+
+WL:AddSlider("PlayerJumpPower", {
+        Text = "Player JumpPower",
+        Default = 24,
+        Min = 24,
+        Max = 500,
+        Rounding = 0,
+        Callback = function(Value)
+        PJP = Value
+    end
 })
 
 KB:AddLabel("Spawn"):AddKeyPicker("KeyPicker1", {
@@ -2309,8 +2334,8 @@ SRV:AddToggle("BananaAll", {
 	end)
 	banan = toysFolder:WaitForChild("FoodBanana", 5)
 	banan.Name = "loopbananall"
-	task.wait(0.05)
 	local holdPart = banan:WaitForChild("HoldPart")
+	task.wait(0.05)
 	pcall(function()
 	holdPart.HoldItemRemoteFunction:InvokeServer(banan, char)
 	ReplicatedStorage.HoldEvents.Use:FireServer(banan)
@@ -2643,10 +2668,10 @@ AU:AddToggle("BananaAura", {
 	pcall(function()
 	spawnItem("FoodBanana", char.HumanoidRootPart.Position + Vector3.new(0, 5, 20))
 	end)
-	task.wait(0.05)
 	bananA = toysFolder:WaitForChild("FoodBanana", 5)
 	bananA.Name = "bananaura"
 	local holdPart = bananA:WaitForChild("HoldPart")
+	task.wait(0.05)
 	pcall(function()
 	holdPart.HoldItemRemoteFunction:InvokeServer(bananA, char)
 	ReplicatedStorage.HoldEvents.Use:FireServer(bananA)
@@ -2664,9 +2689,10 @@ AU:AddToggle("BananaAura", {
 	SetNetworkOwner:FireServer(bananA.SoundPart, bananA.SoundPart.CFrame)
 	task.wait() 
 	until bananA.SoundPart:FindFirstChild("PartOwner") and bananA.SoundPart:FindFirstChild("PartOwner").Value == LocalPlayer.Name or Value == false
+	task.wait(0.1)
 	GrabEvents.DestroyGrabLine:FireServer(bananA.SoundPart)
-	banan.SoundPart.CFrame = CFrame.new(153, 250, 335)
-	banan.SoundPart.Velocity = Vector3.new(0, 0, 0)
+	bananA.SoundPart.CFrame = CFrame.new(153, 250, 335)
+	bananA.SoundPart.Velocity = Vector3.new(0, 0, 0)
 	BananaAura = true
 	while BananaAura do
 	for _, plrsnearby in ipairs(P:GetPlayers()) do
@@ -2676,11 +2702,11 @@ AU:AddToggle("BananaAura", {
 				if plrsnearbyRoot and plrsnearbyHum and plrsnearbyHum.Health > 0 then
 					local distance = (plrsnearbyRoot.Position - char:FindFirstChild("HumanoidRootPart").Position).Magnitude
 					if distance <= BananaAuraRadius then
-						banan.SoundPart.CFrame = plrsnearbyRoot.CFrame * CFrame.new(0, -1, 0)
-						banan.SoundPart.Velocity = Vector3.new(0, -100, 0)
-						task.wait(0.05)
-						banan.SoundPart.CFrame = CFrame.new(153, 250, 335)
-						banan.SoundPart.Velocity = Vector3.new(0, 0, 0)
+						bananA.SoundPart.CFrame = plrsnearbyRoot.CFrame * CFrame.new(0, -1, 0)
+						bananA.SoundPart.Velocity = Vector3.new(0, -100, 0)
+						task.wait(0.1)
+						bananA.SoundPart.CFrame = CFrame.new(153, 250, 335)
+						bananA.SoundPart.Velocity = Vector3.new(0, 0, 0)
 					end
 				end
 			end
