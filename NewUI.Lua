@@ -109,7 +109,7 @@ local Tabs = {
 	Auras = Window:AddTab("Auras"),
 	Misc = Window:AddTab("Misc"),
 	Keybinds = Window:AddTab("Keybinds"),
-	["UI Settings"] = Window:AddTab("UI Settings"),
+	["UI Settings"] = Window:AddTab("Settings"),
 }
 
 local LP = Tabs.Main:AddLeftGroupbox("LocalPlayer")
@@ -123,7 +123,8 @@ local WL = Tabs.Target:AddLeftGroupbox("Whitelist")
 local BL = Tabs.Target:AddRightGroupbox("Blobman Settings")
 local MC = Tabs.Misc:AddLeftGroupbox("Functions")
 local SRV = Tabs.Misc:AddRightGroupbox("Server")
-local AU = Tabs.Auras:AddLeftGroupbox("Auras")
+local AU = Tabs.Auras:AddLeftGroupbox("Default Auras")
+local BAU = Tabs.Auras:AddRightGroupbox("Blobman Auras")
 
 LP:AddSlider("WalkSpeed", {
 	Text = "WalkSpeed",
@@ -415,7 +416,7 @@ GB:AddButton("LagServer", {
 })
 
 DF:AddDropdown("Type Of Anti Grab", {
-	Values = { "Ragdoll" , "NoRagdoll" },
+	Values = { "Default" , "AntiThrow" },
 	Default = nil, -- number index of the value / string
 	Multi = false, -- true / false, allows multiple choices to be selected
 	Callback = function(Value)
@@ -435,21 +436,19 @@ DF:AddToggle("AntiGrab", {
                 local partOwner = head:FindFirstChild("PartOwner")
 				local isHeld = LocalPlayer:FindFirstChild("IsHeld")
                 if partOwner or isHeld.Value then
-					if TypeOfAntiGrab == "Ragdoll" then
+					if TypeOfAntiGrab == "Default" then
+						Struggle:FireServer()
+						ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 0)
+						ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
+						task.wait()
+						char.Humanoid.Sit = false
+					elseif TypeOfAntiGrab == "AntiThrow" then
 						Struggle:FireServer()
 						hrp.Anchored = true
 						ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 0)
 						ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
 						task.wait()
 						char.Humanoid.Sit = false
-						hrp.Anchored = false
-					elseif TypeOfAntiGrab == "NoRagdoll" then
-						Struggle:FireServer()
-						ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
-						hrp.Anchored = true					
-							while partOwner or isHeld.Value do
-								task.wait()
-							end
 						hrp.Anchored = false
                		end
             	end
@@ -485,8 +484,7 @@ DF:AddToggle("Counterattack", {
 	if targeted and targeted.Character then
 	if TypeOfCounterattack == "Kill" then
 	SetNetworkOwner:FireServer(targeted.Character.HumanoidRootPart, targeted.Character.HumanoidRootPart.CFrame)
-	targeted.Character.Humanoid.Health = 0
-	SetNetworkOwner:FireServer(targeted.Character.HumanoidRootPart, targeted.Character.HumanoidRootPart.CFrame)
+	targeted.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Dead)
 	GrabEvents.DestroyGrabLine:FireServer(targeted.Character.HumanoidRootPart)
 	elseif TypeOfCounterattack == "Fling" then
 	SetNetworkOwner:FireServer(targeted.Character.HumanoidRootPart, targeted.Character.HumanoidRootPart.CFrame)
@@ -923,7 +921,7 @@ DF:AddToggle("AntiNetwork", {
 	task.wait()
 	end
 	grabanti = RunService.Heartbeat:Connect(function()
-	task.wait()
+	task.wait(0.1)
 	pcall(function()
 	holdPart.HoldItemRemoteFunction:InvokeServer(toy, char)
 	end)
@@ -1049,9 +1047,6 @@ task.wait()
 Toggles.GrabAntiKick:SetValue(true)
 end)
 
-
-
-
 CTR:AddButton({
 	Text = "babah",
 	Func = function()
@@ -1061,21 +1056,23 @@ CTR:AddButton({
     	task.wait()
     	until LocalPlayer.CanSpawnToy.Value == true or Value == false
 		pcall(function()
-		spawnItem("BombMissile", char.HumanoidRootPart.Position + Vector3.new(0, 15, 20))	
+		spawnItem("BallSnowball", char.HumanoidRootPart.Position + Vector3.new(0, 15, 20))	
 		end)
-		bom = toysFolder:WaitForChild("BombMissile", 5)
+		bom = toysFolder:WaitForChild("BallSnowball", 5)
 		task.wait(0.05)
 		repeat
-		SetNetworkOwner:FireServer(bom.Part, bom.Part.CFrame)
+		SetNetworkOwner:FireServer(bom.SoundPart, bom.SoundPart.CFrame)
 		task.wait()
-		until bom.Part:FindFirstChild("PartOwner")
+		until bom.SoundPart:FindFirstChild("PartOwner")
+		GrabEvents.DestroyGrabLine:FireServer(bom.SoundPart)
+		task.wait(0.05)
 		local args = {
     		[1] = {
-        	["Hitbox"] = bom:FindFirstChild("PartHitDetector"),
+        	["Hitbox"] = bom:FindFirstChild("SoundPart"),
         	["Model"] = bom,
-        	["PositionPart"] = targetHRP,
+        	["PositionPart"] = bom.PrimaryPart,
     		},
-    	[2] = targetHRP.Position,
+    	[2] = targetHRP:FindFirstChild("RagdollTouchedHitbox").Position,
 		}
 		game.ReplicatedStorage.BombEvents.BombExplode:FireServer(unpack(args))
 	end,
@@ -1092,9 +1089,10 @@ CTR:AddButton({
 		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 		task.wait()
 		until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name or tick() - startWait > 3
-		tar.Character.HumanoidRootPart.CFrame = CFrame.new(0, -1e95, 0)
+		task.wait(0.05)
+		tar.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Dead)
+		task.wait(0.05)
 		GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-    	task.wait(0.05)
     	char.HumanoidRootPart.CFrame = pos
 	end,
 })
@@ -1397,9 +1395,12 @@ CTR:AddSlider("LockSpeed", {
 	ragdoS = true
 	task.spawn(function()
 	while Lgrabk do
-	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	task.wait()
+	--GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	--if tar.IsHeld.Value == false then
+	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	--end
+	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	if tar.Character.HumanoidRootPart.BodyPosition then
 	tar.Character.HumanoidRootPart.BodyPosition.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
 	end
@@ -2607,7 +2608,7 @@ AU:AddToggle("GrabAura", {
 	end,
 })
 
-AU:AddDropdown("BlobGrabAuraType", {
+BAU:AddDropdown("BlobGrabAuraType", {
 		Values = { "LeftHand", "RightHand", "BothHands" },
 		Default = nil,
 		Multi = false,
@@ -2616,7 +2617,7 @@ AU:AddDropdown("BlobGrabAuraType", {
 	end,
 })
 
-AU:AddSlider("BlobGrabAuraRadius", {
+BAU:AddSlider("BlobGrabAuraRadius", {
 	Text = "Blob Grab Aura Radius",
 	Default = 25,
 	Min = 5,
@@ -2628,7 +2629,7 @@ AU:AddSlider("BlobGrabAuraRadius", {
 	end,
 })
 
-AU:AddSlider("BlobGrabAuraSpeed", {
+BAU:AddSlider("BlobGrabAuraSpeed", {
 	Text = "Blob Grab Aura Speed",
 	Default = 0.5,
 	Min = 0.01,
@@ -2640,7 +2641,7 @@ AU:AddSlider("BlobGrabAuraSpeed", {
 	end,
 })
 
-AU:AddToggle("BlobGrabAura", {
+BAU:AddToggle("BlobGrabAura", {
 	Text = "Blob Grab Aura",
 	Default = false,
 	Callback = function(Value)
