@@ -447,7 +447,9 @@ DF:AddToggle("AntiGrab", {
 						hrp.Anchored = true
 						ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 0)
 						ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
+						while partOwner do
 						task.wait()
+						end
 						char.Humanoid.Sit = false
 						hrp.Anchored = false
                		end
@@ -2282,9 +2284,10 @@ SRV:AddToggle("PacketLag", {
 		local extGrabLineEvent = GrabEvents:WaitForChild("ExtendGrabLine")
 		if Value then
 		PacketLag = true
-            task.spawn(function()
+            while PacketLag do
                extGrabLineEvent:FireServer(string.rep("🤣🤣🤣🤣🤣", PacketAmount))
-            end)
+			   task.wait(0.5)
+            end
         else
             PacketLag = false
         end
