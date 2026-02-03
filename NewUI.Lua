@@ -68,14 +68,6 @@ local function DestroyT(toy)
     ReplicatedStorage.MenuToys.DestroyToy:FireServer(toy)
 end
 
-local function createline()
-	GrabEvents.CreateGrabLine:FireServer(spaw, spaw.CFrame)
-end
-
-local function destroyline()
-	GrabEvents.DestroyGrabLine:FireServer(spaw, spaw.CFrame)
-end
-
 loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
 
 local repo = "https://raw.githubusercontent.com/deividcomsono/Obsidian/main/"
@@ -1398,14 +1390,13 @@ CTR:AddSlider("LockSpeed", {
 	task.spawn(function()
 	while Lgrabk do
 	task.wait()
-	--GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	--if tar.IsHeld.Value == false then
+	if not tar.Character.Head:FindFirstChild("PartOwner") then
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	--end
-	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	end
 	if tar.Character.HumanoidRootPart.BodyPosition then
 	tar.Character.HumanoidRootPart.BodyPosition.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
 	end
+	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	end
 	end)
 
@@ -1775,7 +1766,7 @@ BL:AddToggle("AutoSit", {
 })
 
 CTR:AddButton({
-	Text = "Destroy Blobman Gucci",
+	Text = "Destroy Gucci (Sit)",
 	Func = function()
 		local tar = selectedTarget
 		local pos = char.HumanoidRootPart.CFrame
@@ -1791,6 +1782,38 @@ CTR:AddButton({
 			char.HumanoidRootPart.CFrame = pos
 			char.HumanoidRootPart.Velocity = Vector3.zero
 		end
+	end,
+})
+
+CTR:AddButton({
+	Text = "Destroy Gucci (Use Blobman)",
+	Func = function()
+		local tar = selectedTarget
+		local pos = char.HumanoidRootPart.CFrame
+		local hum = char and char:FindFirstChild("Humanoid")
+		local seat = hum and hum.SeatPart
+		local seatParent = seat.Parent
+		local grabB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureGrab")
+		local dropB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureDrop")
+		local releaseB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureRelease")
+		local leftDet = seatParent:FindFirstChild("LeftDetector")
+		local rightDet = seatParent:FindFirstChild("RightDetector")
+		local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
+		local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
+		repeat
+		char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+		task.wait(0.1)
+		until (char.HumanoidRootPart.Position - tar.Character:FindFirstChild("HumanoidRootPart").Position).Magnitude < 30
+		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
+		task.wait(0.1)
+		releaseB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
+		task.wait(0.1)	
+		tar.Character.Humanoid.Sit = true
+		task.wait(0.1)
+		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
+		task.wait(0.1)
+		dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
+    	char.HumanoidRootPart.CFrame = pos
 	end,
 })
 
@@ -1831,7 +1854,7 @@ TR:AddSlider("TargetPosZ", {
 })
 
 P.PlayerAdded:Connect(function()
-    Options.SelectPlayerr:SetValues(getPlayerList())
+    Options.SelectPlayer:SetValues(getPlayerList())
 end)
 
 P.PlayerRemoving:Connect(function()
@@ -1845,6 +1868,16 @@ WL:AddDropdown("SelectPlayer", {
 		MaxVisibleDropdownItems = 15,
 		Callback = function(Selected)
 		selectedPlayer = getPlayerFromSelection(Selected)
+	end,
+})
+
+WL:AddButton({
+	Text = "tESTIFICATe",
+	Func = function()
+		local player = selectedPlayer
+		SetNetworkOwner:FireServer(player.Character.HumanoidRootPart, player.Character.HumanoidRootPart.CFrame)
+		task.wait(0.5)  
+		GrabEvents.DestroyGrabLine:FireServer(player.Character.HumanoidRootPart)
 	end,
 })
 
