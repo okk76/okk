@@ -867,7 +867,6 @@ DF:AddDropdown("AntiInputLagItem", {
 
 Options.AntiInputLagItem:OnChanged(function()
 Toggles.AntiNetwork:SetValue(false)
-Toggles.AntiNetwork:SetValue(true)
 end)
 
 
@@ -878,26 +877,6 @@ DF:AddToggle("AntiNetwork", {
 	local Item = selectedItem
 	local toy = nil
 	local holdPart = nil
-	local function CheckForPlot()
-	if not workspace.PlotItems.PlayersInPlots:FindFirstChild(LocalPlayer.Name) then 
-		return false
-		end
-		for _, v in pairs(workspace.Plots:GetChildren()) do
-			local sign = v:FindFirstChild("PlotSign")
-			local owners = sign and sign:FindFirstChild("ThisPlotsOwners")
-			if owners then
-				for _, b in pairs(owners:GetChildren()) do
-					if b.Value == LocalPlayer.Name then
-						local folder = workspace.PlotItems:FindFirstChild(v.Name)
-							if folder then
-							return true, folder
-						end
-					end
-				end
-			end
-		end
-	return false
-	end
 	if Value then
 	antiinput = true
 	if not toysFolder:FindFirstChild(Item) then
@@ -1034,12 +1013,6 @@ TR:AddDropdown("TargetPlayer", {
 		selectedTarget = getPlayerFromSelection(Selected)
 	end,
 })
-
-Options.TargetPlayer:OnChanged(function()
-Toggles.GrabAntiKick:SetValue(false)
-task.wait()
-Toggles.GrabAntiKick:SetValue(true)
-end)
 
 CTR:AddButton({
 	Text = "babah",
@@ -1291,7 +1264,7 @@ CTR:AddSlider("LockSpeed", {
         Text = "Lock Speed",
         Default = 0,
         Min = 0,
-        Max = 0.5,
+        Max = 0.1,
         Rounding = 10,
         Callback = function(Value)
         lockwait = Value
@@ -1680,23 +1653,25 @@ CTR:AddToggle("GrabAntiKick", {
 		Text = "Grab Anti Kick",
 		Default = false,
 		Callback = function(Value)
-		local tar = selectedTarget
 		if Value then
 		GrabAntiKick = true
 		while GrabAntiKick do
+		local tar = selectedTarget
 		if tar then
 		local toysFolderTarget = workspace:FindFirstChild(tar.Name.."SpawnedInToys")
 		for _, obj in ipairs(toysFolderTarget:GetChildren()) do
 		pcall(function()
 		if obj:FindFirstChild("StickyPart") then
 		SetNetworkOwner:FireServer(obj.SoundPart, obj.SoundPart.CFrame)
+		elseif obj:FindFirstChild("Hitbox") then
 		SetNetworkOwner:FireServer(obj.Hitbox, obj.Hitbox.CFrame)
+		elseif obj:FindFirstChild("MeshPart") then
 		SetNetworkOwner:FireServer(obj.MeshPart, obj.MeshPart.CFrame)
 		end
 		end)	
 		end
 		end
-		task.wait()
+		task.wait(0.05)
 		end
 		else
 		GrabAntiKick = false
@@ -1874,7 +1849,7 @@ WL:AddDropdown("SelectPlayer", {
 })
 
 WL:AddButton({
-	Text = "tESTIFICATe",
+	Text = "test",
 	Func = function()
 		local player = selectedPlayer
 		SetNetworkOwner:FireServer(player.Character.HumanoidRootPart, player.Character.HumanoidRootPart.CFrame)
