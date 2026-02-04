@@ -1389,14 +1389,16 @@ CTR:AddSlider("LockSpeed", {
 	ragdoS = true
 	task.spawn(function()
 	while Lgrabk do
-	task.wait()
 	if not tar.Character.Head:FindFirstChild("PartOwner") then
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	end
 	if tar.Character.HumanoidRootPart.BodyPosition then
 	tar.Character.HumanoidRootPart.BodyPosition.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
 	end
+	task.wait()
+	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	task.wait()
 	end
 	end)
 
