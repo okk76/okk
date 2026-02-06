@@ -894,20 +894,23 @@ DF:AddToggle("AntiNetwork", {
 	holdPart = toy:WaitForChild("HoldPart")
 	task.wait()
 	end
+
 	grabanti = RunService.Heartbeat:Connect(function()
-	task.wait(0.1)
 	pcall(function()
+	task.wait(0.1)
 	holdPart.HoldItemRemoteFunction:InvokeServer(toy, char)
 	end)
 	end)
+
 	task.spawn(function()
 	while antiinput do
+	task.wait(0.25)
 	pcall(function()
 	holdPart.DropItemRemoteFunction:InvokeServer(toy, spaw.CFrame * CFrame.new(0, 1000, 0), Vector3.zero)
 	end)
-	task.wait(0.25)
 	end
 	end)
+
 	task.spawn(function()
 	while antiinput do
 	if not toysFolder:FindFirstChild(Item) then
@@ -934,6 +937,150 @@ DF:AddToggle("AntiNetwork", {
 	end
 	if toysFolder:FindFirstChild(Item) then
 	DestroyT(toysFolder:FindFirstChild(Item))
+	end
+    end
+    end,
+})
+
+DF:AddToggle("AntiNetworkNew", {
+	Text = "Anti Network Resonance",
+	Default = false,
+	Callback = function(Value)
+	local Itemone = "CupMugBrown"
+	local Itemtwo = "CupMugWhite"
+	local toyone = nil
+	local holdPartone = nil
+	local toytwo = nil
+	local holdParttwo = nil
+	if Value then
+	antiinputnew = true
+
+	if not toysFolder:FindFirstChild(Itemone) then
+	repeat 
+    task.wait()
+    until LocalPlayer.CanSpawnToy.Value == true or Value == false
+	pcall(function()
+	spawnItem(Itemone, spaw.Position + Vector3.new(0, 100, 0))
+	end)
+	repeat 
+    task.wait()
+	toyone = toysFolder:FindFirstChild(Itemone)
+    until toyone or Value == false
+	holdPartone = toyone:WaitForChild("HoldPart")
+	task.wait()
+	end
+
+	if not toysFolder:FindFirstChild(Itemtwo) then
+	repeat 
+    task.wait()
+    until LocalPlayer.CanSpawnToy.Value == true or Value == false
+	pcall(function()
+	spawnItem(Itemtwo, spaw.Position + Vector3.new(0, 100, 0))
+	end)
+	repeat 
+    task.wait()
+	toytwo = toysFolder:FindFirstChild(Itemtwo)
+    until toytwo or Value == false
+	holdParttwo = toytwo:WaitForChild("HoldPart")
+	task.wait()
+	end
+
+	task.spawn(function()
+	while antiinputnew do
+	
+	task.wait()
+	pcall(function()
+	if holdPartone.RigidConstraint.Attachment1 == nil then
+	holdPartone.HoldItemRemoteFunction:InvokeServer(toyone, char)
+	end
+	end)
+
+	end
+	end)
+	
+	task.spawn(function()
+	while antiinputnew do
+
+	pcall(function()
+	holdPartone.DropItemRemoteFunction:InvokeServer(toyone, spaw.CFrame * CFrame.new(0, 1000, 0), Vector3.zero)
+	end)
+	task.wait(0.025)
+
+	end
+	end)
+	
+	task.spawn(function()
+	while antiinputnew do
+	
+	task.wait()
+	pcall(function()
+	if holdParttwo.RigidConstraint.Attachment1 == nil then
+	holdParttwo.HoldItemRemoteFunction:InvokeServer(toytwo, char)
+	end
+	end)
+
+	end
+	end)
+	
+	task.spawn(function()
+	while antiinputnew do
+
+	pcall(function()
+	holdParttwo.DropItemRemoteFunction:InvokeServer(toytwo, spaw.CFrame * CFrame.new(0, 1000, 0), Vector3.zero)
+	end)
+	task.wait(0.025)
+
+	end
+	end)
+
+	task.spawn(function()
+	while antiinputnew do
+
+	if not toysFolder:FindFirstChild(Itemone) then
+	repeat 
+    task.wait()
+    until LocalPlayer.CanSpawnToy.Value == true or Value == false
+	pcall(function()
+	spawnItem(Itemone, spaw.Position + Vector3.new(0, 100, 0))
+	end)
+	repeat 
+    task.wait()
+	toyone = toysFolder:FindFirstChild(Itemone)
+    until toyone or Value == false
+	holdPartone = toyone:WaitForChild("HoldPart")
+	task.wait()
+	end
+
+	if not toysFolder:FindFirstChild(Itemtwo) then
+	repeat 
+    task.wait()
+    until LocalPlayer.CanSpawnToy.Value == true or Value == false
+	pcall(function()
+	spawnItem(Itemtwo, spaw.Position + Vector3.new(0, 100, 0))
+	end)
+	repeat 
+    task.wait()
+	toytwo = toysFolder:FindFirstChild(Itemtwo)
+    until toytwo or Value == false
+	holdParttwo = toytwo:WaitForChild("HoldPart")
+	task.wait()
+	end
+
+	task.wait()
+
+	end
+	end)
+	else
+	antiinputnew = false
+	if grabantiinput then
+	grabantiinput:Disconnect()
+	grabantiinput = nil
+	end
+	if toysFolder:FindFirstChild(Itemone) then
+	DestroyT(toysFolder:FindFirstChild(Itemone))
+	end
+	if toysFolder:FindFirstChild(Itemtwo) then
+	DestroyT(toysFolder:FindFirstChild(Itemtwo))
 	end
     end
     end,
@@ -1363,15 +1510,21 @@ CTR:AddSlider("LockSpeed", {
 	ragdoS = true
 	task.spawn(function()
 	while Lgrabk do
+
 	if not tar.Character.Head:FindFirstChild("PartOwner") then
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	end
+
+	task.wait()
+
+	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+
 	if tar.Character.HumanoidRootPart.BodyPosition then
 	tar.Character.HumanoidRootPart.BodyPosition.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
 	end
-	task.wait()
-	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+
 	task.wait()
 	end
 	end)
@@ -2814,6 +2967,7 @@ Toggles.Strength:SetValue(false)
 Toggles.PacketLag:SetValue(false)
 Toggles.FartherReach:SetValue(false)
 Toggles.AntiNetwork:SetValue(false)
+Toggles.AntiNetworkNew:SetValue(false)
 Toggles.AntiGrabGucci:SetValue(false)
 Toggles.KillGrabLine:SetValue(false)
 Toggles.Counterattack:SetValue(false)
