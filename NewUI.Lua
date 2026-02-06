@@ -451,6 +451,7 @@ DF:AddToggle("AntiGrab", {
     elseif antigrab then
 		antigrab:Disconnect()
     	antigrab = nil
+		hrp.Anchored = false
     end
 	end,
 })
@@ -2272,7 +2273,7 @@ SRV:AddSlider("PacketStrength", {
         Text = "Packet Lag Strength",
         Default = 500,
         Min = 500,
-        Max = 50000,
+        Max = 100000,
         Rounding = 0,
         Callback = function(Value)
         PacketAmount = Value
