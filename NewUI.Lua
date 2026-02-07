@@ -1455,7 +1455,9 @@ CTR:AddSlider("LockSpeed", {
 	task.spawn(function()
 	while Lgrabk do
 
-	if not tar.Character.Head:FindFirstChild("PartOwner") then
+	if tar.Character.Humanoid.Health ~= 0 then
+
+	if not tar.Character.Head:FindFirstChild("PartOwner") or tar.Character.Head:FindFirstChild("PartOwner").Value ~= LocalPlayer.Name then
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	end
 
@@ -1463,11 +1465,13 @@ CTR:AddSlider("LockSpeed", {
 
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 
-	if tar.Character.HumanoidRootPart.BodyPosition then
+	if tar.Character.HumanoidRootPart:FindFirstChild("BodyPosition") then
 	tar.Character.HumanoidRootPart.BodyPosition.Position = char.HumanoidRootPart.Position + Vector3.new(posX, posY, posZ)
 	end
 
 	GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+
+	end
 
 	task.wait()
 	end
