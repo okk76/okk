@@ -1532,7 +1532,7 @@ CTR:AddSlider("LockSpeed", {
 	pos = char.HumanoidRootPart.CFrame
 	char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	task.wait(0.25)	
+	task.wait(0.35)	
 	tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
 	tar.Character.Head.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
 	tar.Character["Left Leg"].CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
@@ -1619,7 +1619,7 @@ TR:AddCheckbox("LoopGrabKickRagdoll", {
 	pcall(function()
 	tar = selectedTarget
 	if ragdoS then
-	task.wait(0.075)
+	task.wait(0.1)
 	SP.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 1, 0)
 	task.wait()
 	SP.CFrame = CFrame.new(0, 1000000, 0)
@@ -1654,31 +1654,29 @@ TR:AddToggle("LoopBlobKick", {
 	local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
 	if Value then
 	LgrabB = true
-	leftDet.LeftWeld.Enabled = false
+	leftWeld.Enabled = false
 	leftDet.LeftAlignOrientation.Enabled = false
 	local bopB = Instance.new("BodyPosition")
-	bopB.Position = char.HumanoidRootPart.Position + Vector3.new(0, 27.5, 0)
+	bopB.Position = char.HumanoidRootPart.Position + Vector3.new(0, 30, 0)
 	bopB.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
 	bopB.D = 100
 	bopB.Parent = tar.Character.HumanoidRootPart
 	repeat
 	seatParent.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 	seatParent.HumanoidRootPart.Velocity = Vector3.zero
-    seatParent.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
-    seatParent.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
 	grabB:FireServer(rightDet, tar.Character.HumanoidRootPart, rightWeld)
 	task.wait()
 	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 	until tar.Character.Humanoid.Sit or LgrabB == false
+	seatParent.HumanoidRootPart.CFrame = posB
     seatParent.HumanoidRootPart.Velocity = Vector3.zero
     seatParent.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
     seatParent.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
-    seatParent.HumanoidRootPart.CFrame = posB
 	task.spawn(function()
 	while LgrabB do
 	if tar.Character.Humanoid.Health > 0 then    
 	grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
-	task.wait()
+	task.wait(0.075)
 	dropB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
 	end
 	task.wait()
@@ -1686,8 +1684,10 @@ TR:AddToggle("LoopBlobKick", {
 	end)
 	else
 	LgrabB = false
+	if tar.Character.HumanoidRootPart:FindFirstChild("BodyPosition") then
 	tar.Character.HumanoidRootPart.BodyPosition:Destroy()
-	leftDet.LeftWeld.Enabled = true
+	end
+	leftWeld.Enabled = true
 	leftDet.LeftAlignOrientation.Enabled = true
 	end
 	end,
