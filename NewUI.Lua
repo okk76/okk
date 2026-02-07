@@ -868,6 +868,7 @@ DF:AddDropdown("AntiInputLagItem", {
 
 Options.AntiInputLagItem:OnChanged(function()
 Toggles.AntiNetwork:SetValue(false)
+Toggles.AntiNetworkNew:SetValue(false)
 end)
 
 
@@ -943,57 +944,42 @@ DF:AddToggle("AntiNetwork", {
 })
 
 DF:AddToggle("AntiNetworkNew", {
-	Text = "Anti Network Resonance",
+	Text = "Anti Network (Resonance)",
 	Default = false,
 	Callback = function(Value)
-	local Itemone = "CupMugBrown"
-	local Itemtwo = "CupMugWhite"
-	local toyone = nil
-	local holdPartone = nil
+	local ItemR = selectedItem
+	local toyR = nil
+	local holdPartR = nil
 	local toytwo = nil
 	local holdParttwo = nil
 	if Value then
 	antiinputnew = true
 
-	if not toysFolder:FindFirstChild(Itemone) then
+	if not toysFolder:FindFirstChild(ItemR) then
 	repeat 
     task.wait()
     until LocalPlayer.CanSpawnToy.Value == true or Value == false
 	pcall(function()
-	spawnItem(Itemone, spaw.Position + Vector3.new(0, 100, 0))
+	spawnItem(ItemR, spaw.Position + Vector3.new(0, 100, 0))
 	end)
 	repeat 
-    task.wait()
-	toyone = toysFolder:FindFirstChild(Itemone)
-    until toyone or Value == false
-	holdPartone = toyone:WaitForChild("HoldPart")
-	task.wait()
-	end
-
-	if not toysFolder:FindFirstChild(Itemtwo) then
-	repeat 
-    task.wait()
-    until LocalPlayer.CanSpawnToy.Value == true or Value == false
-	pcall(function()
-	spawnItem(Itemtwo, spaw.Position + Vector3.new(0, 100, 0))
-	end)
-	repeat 
-    task.wait()
-	toytwo = toysFolder:FindFirstChild(Itemtwo)
-    until toytwo or Value == false
-	holdParttwo = toytwo:WaitForChild("HoldPart")
-	task.wait()
+	toyR = toysFolder:FindFirstChild(ItemR)
+	task.wait(0.05)
+    until toyR or Value == false
+	holdPartR = toyR:WaitForChild("HoldPart")
+	task.wait(0.05)
 	end
 
 	task.spawn(function()
 	while antiinputnew do
 	
 	task.wait()
+	
+	if holdPartR.RigidConstraint.Attachment1 == nil then
 	pcall(function()
-	if holdPartone.RigidConstraint.Attachment1 == nil then
-	holdPartone.HoldItemRemoteFunction:InvokeServer(toyone, char)
-	end
+	holdPartR.HoldItemRemoteFunction:InvokeServer(toyR, char)
 	end)
+	end
 
 	end
 	end)
@@ -1002,31 +988,7 @@ DF:AddToggle("AntiNetworkNew", {
 	while antiinputnew do
 
 	pcall(function()
-	holdPartone.DropItemRemoteFunction:InvokeServer(toyone, spaw.CFrame * CFrame.new(0, 1000, 0), Vector3.zero)
-	end)
-	task.wait(0.025)
-
-	end
-	end)
-	
-	task.spawn(function()
-	while antiinputnew do
-	
-	task.wait()
-	pcall(function()
-	if holdParttwo.RigidConstraint.Attachment1 == nil then
-	holdParttwo.HoldItemRemoteFunction:InvokeServer(toytwo, char)
-	end
-	end)
-
-	end
-	end)
-	
-	task.spawn(function()
-	while antiinputnew do
-
-	pcall(function()
-	holdParttwo.DropItemRemoteFunction:InvokeServer(toytwo, spaw.CFrame * CFrame.new(0, 1000, 0), Vector3.zero)
+	holdPartR.DropItemRemoteFunction:InvokeServer(toyR, spaw.CFrame * CFrame.new(0, 1000, 0), Vector3.zero)
 	end)
 	task.wait(0.025)
 
@@ -1036,33 +998,18 @@ DF:AddToggle("AntiNetworkNew", {
 	task.spawn(function()
 	while antiinputnew do
 
-	if not toysFolder:FindFirstChild(Itemone) then
+	if not toysFolder:FindFirstChild(ItemR) then
 	repeat 
     task.wait()
     until LocalPlayer.CanSpawnToy.Value == true or Value == false
 	pcall(function()
-	spawnItem(Itemone, spaw.Position + Vector3.new(0, 100, 0))
+	spawnItem(ItemR, spaw.Position + Vector3.new(0, 100, 0))
 	end)
 	repeat 
     task.wait()
-	toyone = toysFolder:FindFirstChild(Itemone)
-    until toyone or Value == false
-	holdPartone = toyone:WaitForChild("HoldPart")
-	task.wait()
-	end
-
-	if not toysFolder:FindFirstChild(Itemtwo) then
-	repeat 
-    task.wait()
-    until LocalPlayer.CanSpawnToy.Value == true or Value == false
-	pcall(function()
-	spawnItem(Itemtwo, spaw.Position + Vector3.new(0, 100, 0))
-	end)
-	repeat 
-    task.wait()
-	toytwo = toysFolder:FindFirstChild(Itemtwo)
-    until toytwo or Value == false
-	holdParttwo = toytwo:WaitForChild("HoldPart")
+	toyR = toysFolder:FindFirstChild(ItemR)
+    until toyR or Value == false
+	holdPartR = toyR:WaitForChild("HoldPart")
 	task.wait()
 	end
 
@@ -1076,11 +1023,8 @@ DF:AddToggle("AntiNetworkNew", {
 	grabantiinput:Disconnect()
 	grabantiinput = nil
 	end
-	if toysFolder:FindFirstChild(Itemone) then
-	DestroyT(toysFolder:FindFirstChild(Itemone))
-	end
-	if toysFolder:FindFirstChild(Itemtwo) then
-	DestroyT(toysFolder:FindFirstChild(Itemtwo))
+	if toysFolder:FindFirstChild(ItemR) then
+	DestroyT(toysFolder:FindFirstChild(ItemR))
 	end
     end
     end,
@@ -1999,16 +1943,6 @@ WL:AddDropdown("SelectPlayer", {
 		MaxVisibleDropdownItems = 15,
 		Callback = function(Selected)
 		selectedPlayer = getPlayerFromSelection(Selected)
-	end,
-})
-
-WL:AddButton({
-	Text = "test",
-	Func = function()
-		local player = selectedPlayer
-		SetNetworkOwner:FireServer(player.Character.HumanoidRootPart, player.Character.HumanoidRootPart.CFrame)
-		task.wait(0.5)  
-		GrabEvents.DestroyGrabLine:FireServer(player.Character.HumanoidRootPart)
 	end,
 })
 
