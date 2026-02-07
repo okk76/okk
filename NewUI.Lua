@@ -960,25 +960,32 @@ DF:AddToggle("AntiNetworkNew", {
     task.wait()
     until LocalPlayer.CanSpawnToy.Value == true or Value == false
 	pcall(function()
-	spawnItem(ItemR, spaw.Position + Vector3.new(0, 100, 0))
+	spawnItem(ItemR, char.Head.Position + Vector3.new(0, 1, 20))
 	end)
 	repeat 
 	toyR = toysFolder:FindFirstChild(ItemR)
-	task.wait(0.05)
+	task.wait(0.025)
     until toyR or Value == false
 	holdPartR = toyR:WaitForChild("HoldPart")
-	task.wait(0.05)
+	task.wait()
+	local hg = Instance.new("Highlight", toyR)
+	hg.FillTransparency = 1	
 	end
 
 	task.spawn(function()
 	while antiinputnew do
 	
 	task.wait()
+
+	if toysFolder:FindFirstChild(ItemR) then
 	
-	if holdPartR.RigidConstraint.Attachment1 == nil then
+	
+	if holdPartR:FindFirstChild("RigidConstraint").Attachment1 == nil then
 	pcall(function()
 	holdPartR.HoldItemRemoteFunction:InvokeServer(toyR, char)
 	end)
+	end
+
 	end
 
 	end
@@ -987,9 +994,14 @@ DF:AddToggle("AntiNetworkNew", {
 	task.spawn(function()
 	while antiinputnew do
 
+	if toysFolder:FindFirstChild(ItemR) then
+
 	pcall(function()
 	holdPartR.DropItemRemoteFunction:InvokeServer(toyR, spaw.CFrame * CFrame.new(0, 1000, 0), Vector3.zero)
 	end)
+	
+	end
+	
 	task.wait(0.025)
 
 	end
@@ -1006,11 +1018,13 @@ DF:AddToggle("AntiNetworkNew", {
 	spawnItem(ItemR, spaw.Position + Vector3.new(0, 100, 0))
 	end)
 	repeat 
-    task.wait()
+    task.wait(0.025)
 	toyR = toysFolder:FindFirstChild(ItemR)
     until toyR or Value == false
 	holdPartR = toyR:WaitForChild("HoldPart")
 	task.wait()
+	local hg = Instance.new("Highlight", toyR)
+	hg.FillTransparency = 1
 	end
 
 	task.wait()
@@ -1106,8 +1120,17 @@ TR:AddDropdown("TargetPlayer", {
 	end,
 })
 
+CTR:AddDropdown("BabahType", {
+		Values = { "BombMissile", "BombBalloon", "BombDarkMatter" },
+		Default = nil,
+		Multi = false,
+		Callback = function(Value)
+		babahtip = Value
+	end,
+})
+
 CTR:AddButton({
-	Text = "babah",
+	Text = "Explode",
 	Func = function()
 		local tar = selectedTarget
 		local targetHRP = tar.Character:FindFirstChild("HumanoidRootPart")
@@ -1115,25 +1138,48 @@ CTR:AddButton({
     	task.wait()
     	until LocalPlayer.CanSpawnToy.Value == true or Value == false
 		pcall(function()
-		spawnItem("BallSnowball", char.HumanoidRootPart.Position + Vector3.new(0, 15, 20))	
+		spawnItem(babahtip, char.HumanoidRootPart.Position + Vector3.new(0, 15, 20))	
 		end)
-		bom = toysFolder:WaitForChild("BallSnowball", 5)
-		task.wait(0.05)
+		bom = toysFolder:WaitForChild(babahtip, 5)
+		if babahtip == "BombBalloon" then
+		task.wait(0.1)
 		repeat
-		SetNetworkOwner:FireServer(bom.SoundPart, bom.SoundPart.CFrame)
+		pcall(function()
+		SetNetworkOwner:FireServer(bom.Balloon, bom.Balloon.CFrame)
+		end)
 		task.wait()
-		until bom.SoundPart:FindFirstChild("PartOwner")
-		GrabEvents.DestroyGrabLine:FireServer(bom.SoundPart)
+		until bom.Balloon:FindFirstChild("PartOwner")
+		GrabEvents.DestroyGrabLine:FireServer(bom.Balloon)
 		task.wait(0.05)
 		local args = {
     		[1] = {
-        	["Hitbox"] = bom:FindFirstChild("SoundPart"),
+        	["Hitbox"] = bom:FindFirstChild("Balloon"),
         	["Model"] = bom,
-        	["PositionPart"] = bom.PrimaryPart,
+        	["PositionPart"] = targetHRP,
     		},
-    	[2] = targetHRP:FindFirstChild("RagdollTouchedHitbox").Position,
+    	[2] = targetHRP.Position,
 		}
 		game.ReplicatedStorage.BombEvents.BombExplode:FireServer(unpack(args))
+		elseif babahtip == "BombMissile" then
+		task.wait(0.1)
+		repeat
+		pcall(function()
+		SetNetworkOwner:FireServer(bom.HitboxBodyTop, bom.HitboxBodyTop.CFrame)	
+		end)
+		task.wait()
+		until bom.HitboxBodyTop:FindFirstChild("PartOwner")
+		GrabEvents.DestroyGrabLine:FireServer(bom.HitboxBodyTop)
+		task.wait(0.05)
+		local args = {
+    		[1] = {
+        	["Hitbox"] = bom:FindFirstChild("PartHitDetector"),
+        	["Model"] = bom,
+        	["PositionPart"] = targetHRP,
+    		},
+    	[2] = targetHRP.Position,
+		}
+		game.ReplicatedStorage.BombEvents.BombExplode:FireServer(unpack(args))
+		end
 	end,
 })
 
@@ -1216,6 +1262,7 @@ CTR:AddButton({
 		local rightDet = seatParent:FindFirstChild("RightDetector")
 		local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
 		local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
+		local startWait = tick()
 		repeat
 		char.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
@@ -1223,7 +1270,7 @@ CTR:AddButton({
 		releaseB:FireServer(leftWeld, tar.Character.HumanoidRootPart)
 		task.wait(0.05)
 		tar.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Dead)
-		until tar.Character.Humanoid.Health == 0
+		until tar.Character.Humanoid.Health == 0 or tick() - startWait > 2
 		task.wait(0.05)
     	char.HumanoidRootPart.CFrame = pos
 	end,
