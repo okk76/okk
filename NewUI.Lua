@@ -436,10 +436,10 @@ DF:AddToggle("AntiGrab", {
 						char.Humanoid.Sit = false
 					elseif TypeOfAntiGrab == "AntiThrow" then
 						Struggle:FireServer()
-						hrp.Anchored = true
 						ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(char.HumanoidRootPart, 0)
 						ReplicatedStorage.GameCorrectionEvents.StopAllVelocity:FireServer()
 						while partOwner do
+						hrp.Anchored = true
 						task.wait()
 						end
 						char.Humanoid.Sit = false
@@ -1667,7 +1667,8 @@ TR:AddToggle("LoopBlobKick", {
 	seatParent.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 	seatParent.HumanoidRootPart.Velocity = Vector3.zero
 	grabB:FireServer(rightDet, tar.Character.HumanoidRootPart, rightWeld)
-	until rightWeld.Attachment0 == "RootAttachment" or LgrabB == false
+	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
+	until tar.Character.Humanoid.Sit or LgrabB == false
 	seatParent.HumanoidRootPart.CFrame = posB
 	tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(0, 30, 0)
     seatParent.HumanoidRootPart.Velocity = Vector3.zero
@@ -2546,20 +2547,20 @@ SRV:AddButton("KickAll", {
 					if plrsnearby.InPlot.Value == false then
 						local startWait = tick()
 						repeat
-						char.HumanoidRootPart.CFrame = plrsnearbyRoot.CFrame * CFrame.new(0, 0, 3)
+						task.wait()
+						char.HumanoidRootPart.CFrame = plrsnearbyRoot.CFrame * CFrame.new(0, 3, 3)
 						SetNetworkOwner:FireServer(plrsnearbyRoot, plrsnearbyRoot.CFrame)
-						task.wait()
-						until plrsnearbyHum.Sit == true and plrsnearby.Character.Head:FindFirstChild("PartOwner") and plrsnearby.Character.Head:FindFirstChild("PartOwner").Value == LocalPlayer.Name or tick() - startWait > 1.5
-						task.wait()
-						seatParent.HumanoidRootPart.Anchored = true
-						plrsnearbyRoot.Velocity = Vector3.new(0, 20, 0)
-						task.wait(0.1)
+						until plrsnearbyHum.Sit == true and plrsnearby.Character.Head:FindFirstChild("PartOwner") and plrsnearby.Character.Head:FindFirstChild("PartOwner").Value == LocalPlayer.Name or tick() - startWait > 1
+						plrsnearbyRoot.Velocity = Vector3.new(0, 50, 0)
+						task.wait(0.125)
 						GrabEvents.DestroyGrabLine:FireServer(plrsnearbyRoot)
 						grabB:FireServer(leftDet, plrsnearbyRoot, leftWeld)
+						task.wait(0.125)
 					end
 				end
 			end
 		end
+	DestroyT(seatParent)
 	end,
 })
 
