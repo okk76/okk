@@ -1494,8 +1494,8 @@ CTR:AddSlider("LockSpeed", {
 	char.HumanoidRootPart.CFrame = pos
 	tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
 	tar.Character.Head.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
-	tar.Character["Left Leg"].CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
-	tar.Character["Right Leg"].CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
+	--tar.Character["Left Leg"].CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
+	--tar.Character["Right Leg"].CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
 	tar.Character["Left Arm"].CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
 	tar.Character["Right Arm"].CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
 	ragdoS = true
@@ -1535,8 +1535,8 @@ CTR:AddSlider("LockSpeed", {
 	task.wait(0.35)	
 	tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
 	tar.Character.Head.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
-	tar.Character["Left Leg"].CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
-	tar.Character["Right Leg"].CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
+	--tar.Character["Left Leg"].CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
+	--tar.Character["Right Leg"].CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
 	tar.Character["Left Arm"].CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
 	tar.Character["Right Arm"].CFrame = char.HumanoidRootPart.CFrame * CFrame.new(posX, posY, posZ)
 	char.HumanoidRootPart.CFrame = pos
@@ -1648,6 +1648,7 @@ TR:AddToggle("LoopBlobKick", {
     local posB = seatParent.HumanoidRootPart.CFrame
 	local grabB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureGrab")
 	local dropB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureDrop")
+	local releaseB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureRelease")
 	local leftDet = seatParent:FindFirstChild("LeftDetector")
 	local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
 	local rightDet = seatParent:FindFirstChild("RightDetector")
@@ -1662,13 +1663,13 @@ TR:AddToggle("LoopBlobKick", {
 	bopB.D = 100
 	bopB.Parent = tar.Character.HumanoidRootPart
 	repeat
+	task.wait()
 	seatParent.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 	seatParent.HumanoidRootPart.Velocity = Vector3.zero
 	grabB:FireServer(rightDet, tar.Character.HumanoidRootPart, rightWeld)
-	task.wait()
-	SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-	until tar.Character.Humanoid.Sit or LgrabB == false
+	until rightWeld.Attachment0 == "RootAttachment" or LgrabB == false
 	seatParent.HumanoidRootPart.CFrame = posB
+	tar.Character.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(0, 30, 0)
     seatParent.HumanoidRootPart.Velocity = Vector3.zero
     seatParent.HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
     seatParent.HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
@@ -1772,7 +1773,7 @@ TR:AddButton({
 		local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
 		local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
 		local bopBk = Instance.new("BodyPosition")
-		bopBk.Position = tar.Character.HumanoidRootPart.Position + Vector3.new(0, 25, 0)
+		bopBk.Position = tar.Character.HumanoidRootPart.Position + Vector3.new(0, 35, 0)
 		bopBk.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
 		bopBk.D = 100
 		bopBk.Parent = tar.Character.HumanoidRootPart
@@ -1783,18 +1784,19 @@ TR:AddButton({
 		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
 		end)
 		seatParent.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
-		seatParent.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+		seatParent.HumanoidRootPart.Velocity = Vector3.zero
 		task.wait()
 		until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name
 		task.wait()
 		seatParent.HumanoidRootPart.Anchored = true
-		task.wait(0.25)
-		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)  
+		task.wait(0.1)
 		GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
 		tar.Character.HumanoidRootPart.BodyPosition:Destroy()
 		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
-		task.wait(1)
+		task.wait(0.1)
 		DestroyT(seatParent)
+		task.wait(0.1)
+		char.HumanoidRootPart.Velocity = Vector3.zero
 	end,
 })
 
@@ -2523,6 +2525,44 @@ SRV:AddButton("BringAll", {
 	end,
 })
 
+SRV:AddButton("KickAll", {
+    Text = "Kick All",
+    Func = function()
+	local hum = char and char:FindFirstChild("Humanoid")
+	local seat = hum and hum.SeatPart
+	local seatParent = seat.Parent
+	local grabB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureGrab")
+	local dropB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureDrop")
+	local releaseB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureRelease")
+	local leftDet = seatParent:FindFirstChild("LeftDetector")
+	local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
+	local rightDet = seatParent:FindFirstChild("RightDetector")
+	local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
+	for _, plrsnearby in ipairs(P:GetPlayers()) do
+		if plrsnearby ~= LocalPlayer and plrsnearby.Character then
+			local plrsnearbyRoot = plrsnearby.Character:FindFirstChild("HumanoidRootPart")
+			local plrsnearbyHum = char:FindFirstChildOfClass("Humanoid")
+				if plrsnearbyRoot and plrsnearbyHum and plrsnearbyHum.Health > 0 then
+					if plrsnearby.InPlot.Value == false then
+						local startWait = tick()
+						repeat
+						char.HumanoidRootPart.CFrame = plrsnearbyRoot.CFrame * CFrame.new(0, 0, 3)
+						SetNetworkOwner:FireServer(plrsnearbyRoot, plrsnearbyRoot.CFrame)
+						task.wait()
+						until plrsnearbyHum.Sit == true and plrsnearby.Character.Head:FindFirstChild("PartOwner") and plrsnearby.Character.Head:FindFirstChild("PartOwner").Value == LocalPlayer.Name or tick() - startWait > 1.5
+						task.wait()
+						seatParent.HumanoidRootPart.Anchored = true
+						plrsnearbyRoot.Velocity = Vector3.new(0, 20, 0)
+						task.wait(0.1)
+						GrabEvents.DestroyGrabLine:FireServer(plrsnearbyRoot)
+						grabB:FireServer(leftDet, plrsnearbyRoot, leftWeld)
+					end
+				end
+			end
+		end
+	end,
+})
+
 SRV:AddToggle("BananaAll", {
 	Text = "Banana All",
 	Default = false,
@@ -2647,47 +2687,6 @@ FKB:AddLabel("Spawn And Sit Blobman"):AddKeyPicker("seatblobbind", {
 	end
 	blobm:WaitForChild("VehicleSeat")
 	blobm.VehicleSeat:Sit(char.Humanoid)
-	end,
-})
-
-FKB:AddLabel("Blob Kick"):AddKeyPicker("blobkickbind", {
-	Default = "H",
-	Callback = function()
-		local tar = selectedTarget
-		local pos = char.HumanoidRootPart.CFrame
-		local hum = char and char:FindFirstChild("Humanoid")
-		local seat = hum and hum.SeatPart
-		local seatParent = seat.Parent
-		local grabB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureGrab")
-		local dropB = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureDrop")
-		local leftDet = seatParent:FindFirstChild("LeftDetector")
-		local rightDet = seatParent:FindFirstChild("RightDetector")
-		local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
-		local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
-		local bopBk = Instance.new("BodyPosition")
-		bopBk.Position = tar.Character.HumanoidRootPart.Position + Vector3.new(0, 25, 0)
-		bopBk.MaxForce = Vector3.new(10e+37, 10e+37, 10e+37)
-		bopBk.D = 100
-		bopBk.Parent = tar.Character.HumanoidRootPart
-		seatParent.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
-		seatParent.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
-		repeat
-		pcall(function()
-		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)
-		end)
-		seatParent.HumanoidRootPart.CFrame = tar.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
-		seatParent.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
-		task.wait()
-		until tar.Character.Humanoid.Sit == true and tar.Character.Head.PartOwner.Value == LocalPlayer.Name
-		task.wait()
-		seatParent.HumanoidRootPart.Anchored = true
-		task.wait(0.25)
-		SetNetworkOwner:FireServer(tar.Character.HumanoidRootPart, tar.Character.HumanoidRootPart.CFrame)  
-		GrabEvents.DestroyGrabLine:FireServer(tar.Character.HumanoidRootPart)
-		tar.Character.HumanoidRootPart.BodyPosition:Destroy()
-		grabB:FireServer(leftDet, tar.Character.HumanoidRootPart, leftWeld)
-		task.wait(1)
-		DestroyT(seatParent)
 	end,
 })
 
@@ -2819,22 +2818,14 @@ BAU:AddToggle("BlobGrabAura", {
 					if BlobGrabAuraType == "LeftHand" then
 						grabB:FireServer(leftDet, plrsnearbyRoot, leftWeld)
 						task.wait(BlobGrabAuraSpeed)
-						dropB:FireServer(leftWeld, plrsnearbyRoot)
-						task.wait(BlobGrabAuraSpeed)
 					elseif BlobGrabAuraType == "RightHand" then
 						grabB:FireServer(rightDet, plrsnearbyRoot, rightWeld)
-						task.wait(BlobGrabAuraSpeed)
-						dropB:FireServer(rightWeld, plrsnearbyRoot)
 						task.wait(BlobGrabAuraSpeed)
 					elseif BlobGrabAuraType == "BothHands" then
 						grabB:FireServer(leftDet, plrsnearbyRoot, leftWeld)
 						task.wait(BlobGrabAuraSpeed)
-						dropB:FireServer(leftWeld, plrsnearbyRoot)
-						task.wait(BlobGrabAuraSpeed)
 						grabB:FireServer(rightDet, plrsnearbyRoot, rightWeld)
 						task.wait(BlobGrabAuraSpeed)
-						dropB:FireServer(rightWeld, plrsnearbyRoot)
-						task.wait(BlobGrabAuraSpeed)	
 					end
 					end
 				end
